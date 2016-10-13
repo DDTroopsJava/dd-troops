@@ -32,6 +32,11 @@ public class HeroDaoImpl implements HeroDao {
     }
 
     @Override
+    public void update(Hero hero) {
+        hero = em.merge(hero);
+    }
+
+    @Override
     public void delete(Hero c) {
         em.remove(c);
     }
