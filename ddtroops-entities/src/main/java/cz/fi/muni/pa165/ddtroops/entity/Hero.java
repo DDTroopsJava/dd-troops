@@ -29,7 +29,6 @@ public class Hero {
     private int experienceLevel;
 
 
-
     public Long getId() {
         return id;
     }
