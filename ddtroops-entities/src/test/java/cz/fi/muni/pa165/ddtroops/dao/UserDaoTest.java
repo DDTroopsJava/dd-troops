@@ -2,12 +2,13 @@ package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
 import cz.fi.muni.pa165.ddtroops.entity.User;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,7 +22,7 @@ import java.util.Date;
 @ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
-public class UserDaoTest {
+public class UserDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private UserDao userDao;
@@ -41,7 +42,7 @@ public class UserDaoTest {
 
     @Test
     public void findByEmail() {
-        Assert.assertNotNull(userDao.findByEmail("filip@fi.cz"));
+        Assert.assertNotNull(userDao.findByEmail(u1.getEmail()));
     }
 
     @Test
