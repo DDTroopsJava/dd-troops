@@ -24,15 +24,11 @@ public class User {
     @NotNull
     private String email;
     @NotNull
-    private String givenName;
-    @NotNull
-    private String surname;
+    private String name;
 
     @Pattern(regexp="\\+?\\d+")
     private String phone;
 
-    @NotNull
-    private String address;
 
     @NotNull
     @Temporal(TemporalType.DATE)
@@ -65,23 +61,13 @@ public class User {
     }
 
 
-    public String getGivenName() {
-        return givenName;
+    public String getName() {
+        return name;
     }
 
 
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
-
-    public String getSurname() {
-        return surname;
-    }
-
-
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setName(String givenName) {
+        this.name = givenName;
     }
 
 
@@ -93,13 +79,6 @@ public class User {
         this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public Date getJoinedDate() {
         return joinedDate;
@@ -148,10 +127,8 @@ public class User {
                 "id=" + id +
                 ", passwordHash='" + passwordHash + '\'' +
                 ", email='" + email + '\'' +
-                ", givenName='" + givenName + '\'' +
-                ", surname='" + surname + '\'' +
+                ", givenName='" + name + '\'' +
                 ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
                 ", joinedDate=" + joinedDate +
                 ", admin=" + admin +
                 '}';

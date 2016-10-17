@@ -21,19 +21,19 @@ public interface HeroDao {
      * Persist hero into database
      * @param hero - instance of hero
      */
-    public void create(Hero hero);
+    public Hero create(Hero hero);
 
     /**
      * Updates hero in database
      * @param hero - instance of hero
      */
-    public void update(Hero hero);
+    public Hero update(Hero hero);
 
     /**
      * Delete hero from database
      * @param hero - instance of hero
      */
-    public void delete(Hero hero);
+    public Hero delete(Hero hero);
 
     /**
      * List all heroes

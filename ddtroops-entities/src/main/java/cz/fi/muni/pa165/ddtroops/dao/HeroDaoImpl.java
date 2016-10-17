@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -15,11 +16,11 @@ import java.util.List;
  */
 
 @Repository
+@Transactional
 public class HeroDaoImpl implements HeroDao {
 
     @PersistenceContext
     private EntityManager em;
-
 
     @Override
     public Hero findById(Long id) {
@@ -27,18 +28,21 @@ public class HeroDaoImpl implements HeroDao {
     }
 
     @Override
-    public void create(Hero c) {
-        em.persist(c);
+    public Hero create(Hero hero) {
+        em.persist(hero);
+        return hero;
     }
 
     @Override
-    public void update(Hero hero) {
+    public Hero update(Hero hero) {
         hero = em.merge(hero);
+        return hero;
     }
 
     @Override
-    public void delete(Hero c) {
+    public Hero delete(Hero c) {
         em.remove(c);
+        return c;
     }
 
     @Override
