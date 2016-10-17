@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -41,7 +42,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             return em
-                    .createQuery("select u from User u where email=:email",
+                    .createQuery("select u from Users u where email=:email",
                             User.class).setParameter("email", email)
                     .getSingleResult();
         } catch (NoResultException nre) {

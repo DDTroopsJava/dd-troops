@@ -9,9 +9,8 @@ import java.util.Date;
  *
  * @author pstanko
  */
-@Entity
+@Entity(name="Users")
 //In Derby, its forbiden to 'USER' is reserved keyword, we need to rename table
-@Table(name="Users")
 public class User {
 
     @Id
