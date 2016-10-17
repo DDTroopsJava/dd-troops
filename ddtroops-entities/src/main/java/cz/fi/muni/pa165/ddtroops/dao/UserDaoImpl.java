@@ -16,27 +16,35 @@ import java.util.List;
  * @author pstanko
  */
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public void create(User u) {
+    public User create(User u) {
+        if(u == null) throw new IllegalArgumentException(User.class.getName());
         em.persist(u);
+        return u;
     }
 
     @Override
-    public void update(User user) {
+    public User update(User user) {
+        if(user == null) throw new IllegalArgumentException(User.class.getName());
         user = em.merge(user);
+        return user;
     }
 
     @Override
-    public void delete(User user) {
+    public User delete(User user) {
+        if(user == null) throw new IllegalArgumentException(User.class.getName());
+
         em.remove(user);
+        return user;
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User getByEmail(String email) {
         if (email == null || email.isEmpty())
             throw new IllegalArgumentException("Cannot search for null e-mail");
 
@@ -51,13 +59,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findById(Long id) {
+    public User getById(Long id) {
         return em.find(User.class, id);
     }
 
     @Override
-    public List<User> findAll() {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u",
+    public List<User> listAll() {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM Users u",
                 User.class);
         return (List<User>) query.getResultList();
     }

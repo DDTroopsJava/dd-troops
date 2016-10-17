@@ -1,6 +1,6 @@
 package cz.fi.muni.pa165.ddtroops;
 
-import cz.fi.muni.pa165.ddtroops.dao.UserDao;
+import cz.fi.muni.pa165.ddtroops.dao.HeroDao;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,7 +27,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories
-@ComponentScan(basePackageClasses = {UserDao.class})
+@ComponentScan(basePackageClasses = {HeroDao.class})
 public class PersistenceSampleApplicationContext {
     /**
      * Enables automatic translation of exceptions to DataAccessExceptions.
