@@ -23,7 +23,8 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
+            <version>1.10.19</version>
+            <scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -48,6 +49,7 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
+            <version>3.0.0</version>
 			<scope>test</scope><!-- conflicts with tomcat libraries, needed only for tests anyway -->
 		</dependency>
 		<dependency>
@@ -93,13 +95,6 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.10.19</version>
-			<scope>test</scope>
-		</dependency>
-
 
 	</dependencies>
 </project>
