@@ -34,7 +34,7 @@
         </build> 
 
     <modules>
-        <module>ddtroops-entities</module>
+        <module>ddtroops-persistence</module>
   </modules>
 
     <dependencies>
