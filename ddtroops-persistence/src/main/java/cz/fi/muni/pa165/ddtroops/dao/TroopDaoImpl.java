@@ -25,6 +25,11 @@ public class TroopDaoImpl implements TroopDao {
     }
 
     @Override
+    public Troop getByName(String troop) {
+        return null;
+    }
+
+    @Override
     public Troop getById(long id) {
         return null;
     }
