@@ -14,20 +14,42 @@ import org.springframework.transaction.annotation.Transactional;
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
 public class TroopDaoTest extends AbstractTestNGSpringContextTests {
-/*
 
+/*
     @Autowired
     private TroopDao troopDao;
+
+    @Autowired
+    private HeroDao heroDao;
 
     private Troop troop1;
     private Troop troop2;
     private Troop troop3;
 
+    private Hero hero1;
+    private Hero hero2;
+    private Hero hero3;
+    private Hero unassignedHero;
+
     @BeforeMethod
     public void createToops() throws Exception {
+        hero1 = createHero("Kunigunda");
+        hero2 = createHero("Shakira");
+        hero3 = createHero("Chuck Norris");
+        unassignedHero = createHero("The Rock");
+
+        heroDao.create(hero1);
+        heroDao.create(hero2);
+        heroDao.create(hero3);
+        heroDao.create(unassignedHero);
+
         troop1 = createTroop("Troop1", "Lol", 1000L);
         troop2 = createTroop("Troop2", "Lol", 1500L);
         troop3 = createTroop("Troop3", "Heroic", 2000L);
+
+        troop1.addHero(hero1);
+        troop2.addHero(hero2);
+        troop3.addHero(hero3);
 
         troopDao.create(troop1);
         troopDao.create(troop2);
@@ -46,7 +68,7 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
 
     @Test(expectedExceptions = JpaSystemException.class)
-    public void shouldNotCreateExistingUser() throws Exception {
+    public void shouldNotCreateExistingTroop() throws Exception {
         Troop troop = createTroop("Troop1", "Heroic", 2500L);
         Troop created = troopDao.create(troop);
 
@@ -109,7 +131,32 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         assertEquals(troop, null);
     }
 
+    @Test
+    public void shouldAddHeroToTroop1() throws Exception
+    {
+        Troop troop = troopDao.getById(troop1.getId());
+        troop.addHero(unassignedHero);
+        troopDao.update(troop);
+        Troop result = troopDao.getById(troop.getId());
+        assertTrue(result.getHeroes().contains(unassignedHero));
+        assertTrue(result.getHeroes().contains(hero1));
+        assertTrue(result.getHeroes().size(), 2);
+    }
 
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void shouldNotAddHero2ToTroop1()
+    {
+        Troop troop = troopDao.getById(troop1.getId());
+        troop.addHero(hero2);
+        troopDao.update(troop);
+    }
+
+    private static Hero createHero(String name){
+        Hero hero = new Hero();
+        hero.setName(name);
+        hero.setExperience(1000);
+        return hero;
+    }
 
     private static Troop createTroop(String name, String mission, Long gold){
         Troop troop = new Troop();
@@ -117,8 +164,6 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         troop.setMission(mission);
         troop.setGold(gold);
         return troop;
-    }
-
-*/
+    }*/
 
 }
