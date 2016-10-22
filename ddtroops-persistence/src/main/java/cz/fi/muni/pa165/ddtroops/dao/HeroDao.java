@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by pstanko.
+ * Created by Peter Zaoral.
  *
- * @author pstanko
+ * @author P. Zaoral
  */
 public interface HeroDao {
     /**
