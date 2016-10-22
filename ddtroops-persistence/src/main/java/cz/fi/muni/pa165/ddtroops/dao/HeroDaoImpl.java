@@ -19,48 +19,34 @@ import java.util.List;
 @Transactional
 public class HeroDaoImpl implements HeroDao {
 
-    @PersistenceContext
-    private EntityManager em;
 
     @Override
     public Hero findById(Long id) {
-        return em.find(Hero.class, id);
+        return null;
     }
 
     @Override
     public Hero create(Hero hero) {
-        em.persist(hero);
-        return hero;
+        return null;
     }
 
     @Override
     public Hero update(Hero hero) {
-        hero = em.merge(hero);
-        return hero;
+        return null;
     }
 
     @Override
-    public Hero delete(Hero c) {
-        em.remove(c);
-        return c;
+    public Hero delete(Hero hero) {
+        return null;
     }
 
     @Override
     public List<Hero> findAll() {
-        return em.createQuery("select h from Hero h", Hero.class)
-                .getResultList();
+        return null;
     }
 
     @Override
     public Hero findByName(String name) {
-
-        try {
-            return em
-                    .createQuery("select h from Hero h where name = :name",
-                            Hero.class).setParameter("name", name)
-                    .getSingleResult();
-        } catch (NoResultException nrf) {
-            return null;
-        }
+        return null;
     }
 }
