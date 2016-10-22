@@ -10,9 +10,9 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Created by pstanko.
+ * Created by Peter Zaoral.
  *
- * @author pstanko
+ * @author P. Zaoral
  */
 
 @Repository
@@ -20,33 +20,48 @@ import java.util.List;
 public class HeroDaoImpl implements HeroDao {
 
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Override
     public Hero findById(Long id) {
-        return null;
+        return em.find(Hero.class, id);
     }
 
     @Override
     public Hero create(Hero hero) {
-        return null;
+        em.persist(hero);
+        return hero;
     }
 
     @Override
     public Hero update(Hero hero) {
-        return null;
+        hero = em.merge(hero);
+        return hero;
     }
 
     @Override
     public Hero delete(Hero hero) {
-        return null;
+        em.remove(hero);
+        return hero;
     }
 
     @Override
     public List<Hero> findAll() {
-        return null;
+        return em.createQuery("select h from Hero h", Hero.class)
+                .getResultList();
     }
 
     @Override
     public Hero findByName(String name) {
-        return null;
+
+        try {
+            return em
+                    .createQuery("select h from Hero h where name = :name",
+                            Hero.class).setParameter("name", name)
+                    .getSingleResult();
+        } catch (NoResultException nrf) {
+            return null;
+        }
     }
 }
