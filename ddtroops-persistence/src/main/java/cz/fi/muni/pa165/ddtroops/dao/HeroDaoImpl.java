@@ -19,7 +19,6 @@ import java.util.List;
 @Transactional
 public class HeroDaoImpl implements HeroDao {
 
-
     @PersistenceContext
     private EntityManager em;
 
@@ -42,12 +41,12 @@ public class HeroDaoImpl implements HeroDao {
 
     @Override
     public Hero delete(Hero hero) {
-        em.remove(hero);
+        em.remove(em.contains(hero) ? hero : em.merge(hero));
         return hero;
     }
 
     @Override
-    public List<Hero> findAll() {
+    public List<Hero> listAll() {
         return em.createQuery("select h from Hero h", Hero.class)
                 .getResultList();
     }

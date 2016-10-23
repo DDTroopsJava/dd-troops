@@ -25,7 +25,7 @@ public class Troop {
     @Column(nullable = false)
     private int gold;
     
-//    @OneToMany(mappedBy = "troop")
+    @OneToMany
     private Set<Hero> heroes = new HashSet<>();
 
 

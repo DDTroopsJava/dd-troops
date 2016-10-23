@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.entity.*;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import java.util.*;
@@ -32,7 +33,7 @@ public class TroopDaoImpl implements TroopDao {
 
     @Override
     public Troop delete(Troop troop) {
-        em.remove(troop);
+        em.remove(em.contains(troop) ? troop : em.merge(troop));
         return troop;
     }
 
@@ -42,7 +43,7 @@ public class TroopDaoImpl implements TroopDao {
     }
 
     @Override
-    public List<Troop> findAll() {
+    public List<Troop> listAll() {
         return em.createQuery("select t from Troop t", Troop.class).getResultList();
     }
     

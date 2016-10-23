@@ -40,7 +40,7 @@ public interface TroopDao {
      * List all troops
      * @return List of all troops from DB, null if none found
      */
-    List<Troop> findAll();
+    List<Troop> listAll();
     
     /**
      * Returns the troop from DB with the given name

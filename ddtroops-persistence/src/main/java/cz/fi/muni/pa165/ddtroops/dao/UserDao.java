@@ -15,14 +15,14 @@ public interface UserDao {
      * @param id - User ID
      * @return instance of user with given ID, null if not exists
      */
-    public User getById(Long id);
+    public User findById(Long id);
 
     /**
      * Find user by its name
      * @param email - user name
      * @return  user if exists, null if none
      */
-    public User getByEmail(String email);
+    public User findByEmail(String email);
 
     /**
      * Persist user into database

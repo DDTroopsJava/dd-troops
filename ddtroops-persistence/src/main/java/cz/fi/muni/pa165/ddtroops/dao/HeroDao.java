@@ -40,7 +40,7 @@ public interface HeroDao {
      * List all heroes
      * @return List of heroes, null if none
      */
-    public List<Hero> findAll();
+    public List<Hero> listAll();
 
     /**
      * Find hero by its name
