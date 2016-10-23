@@ -25,7 +25,7 @@ public class Troop {
     @Column(nullable = false)
     private int gold;
     
-    @OneToMany(mappedBy = "troop")
+//    @OneToMany(mappedBy = "troop")
     private Set<Hero> heroes = new HashSet<>();
 
 
@@ -79,12 +79,21 @@ public class Troop {
             return false;
         
         Troop troop = (Troop)obj;
-        return getName().equals(troop.getName());
+        if (getName() == null) {
+            if (troop.getName() != null)
+                return false;
+        } else if (!getName().equals(troop.getName())) {
+            return false;
+        }
+        return true;
     }
     
     @Override
     public int hashCode() {
-        return getName().hashCode();
+        final int prime = 37;
+        int result = 1;
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+        return result;
     }
     
     
