@@ -1,7 +1,6 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
-import cz.fi.muni.pa165.ddtroops.entity.*;
-import org.springframework.orm.jpa.JpaSystemException;
+import cz.fi.muni.pa165.ddtroops.entity.Troop;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import java.util.*;

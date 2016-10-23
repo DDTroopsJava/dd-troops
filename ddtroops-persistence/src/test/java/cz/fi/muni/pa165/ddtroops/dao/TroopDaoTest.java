@@ -1,9 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
-import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
-import org.hibernate.exception.ConstraintViolationException;
+import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
