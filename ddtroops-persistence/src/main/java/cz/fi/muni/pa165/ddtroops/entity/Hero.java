@@ -73,3 +73,4 @@ public class Hero {
         return name.hashCode();
     }
 }
+

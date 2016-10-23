@@ -3,7 +3,6 @@ package cz.fi.muni.pa165.ddtroops.dao;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Peter Zaoral.

@@ -1,7 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 
-import cz.fi.muni.pa165.ddtroops.entity.*;
+import cz.fi.muni.pa165.ddtroops.entity.Troop;
+
 import java.util.*;
 
 /**

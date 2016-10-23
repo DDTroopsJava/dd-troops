@@ -1,7 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
-import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
+import cz.fi.muni.pa165.ddtroops.entity.Hero;
+
 import javax.persistence.*;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.*;
