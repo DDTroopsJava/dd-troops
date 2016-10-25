@@ -36,6 +36,7 @@
     <modules>
         <module>ddtroops-persistence</module>
         <module>ddtroops-api</module>
+        <module>ddtroops-service</module>
     </modules>
 
     <dependencies>

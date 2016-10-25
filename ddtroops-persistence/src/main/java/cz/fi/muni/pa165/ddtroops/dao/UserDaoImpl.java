@@ -39,12 +39,12 @@ public class UserDaoImpl implements UserDao {
     public User delete(User user) {
         if(user == null) throw new IllegalArgumentException(User.class.getName());
 
-        em.remove(user);
+        em.remove(em.contains(user) ? user : em.merge(user));
         return user;
     }
 
     @Override
-    public User getByEmail(String email) {
+    public User findByEmail(String email) {
         if (email == null || email.isEmpty())
             throw new IllegalArgumentException("Cannot search for null e-mail");
 
@@ -59,7 +59,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getById(Long id) {
+    public User findById(Long id) {
         return em.find(User.class, id);
     }
 

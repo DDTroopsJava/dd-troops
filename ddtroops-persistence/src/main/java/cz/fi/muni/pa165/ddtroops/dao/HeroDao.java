@@ -3,7 +3,6 @@ package cz.fi.muni.pa165.ddtroops.dao;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Peter Zaoral.
@@ -40,7 +39,7 @@ public interface HeroDao {
      * List all heroes
      * @return List of heroes, null if none
      */
-    public List<Hero> findAll();
+    public List<Hero> listAll();
 
     /**
      * Find hero by its name

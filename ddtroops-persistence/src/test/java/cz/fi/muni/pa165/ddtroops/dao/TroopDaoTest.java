@@ -1,11 +1,21 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
+import cz.fi.muni.pa165.ddtroops.entity.Troop;
+import cz.fi.muni.pa165.ddtroops.entity.Hero;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * @author pstanko
@@ -15,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
-/*
     @Autowired
     private TroopDao troopDao;
 
@@ -43,9 +52,9 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         heroDao.create(hero3);
         heroDao.create(unassignedHero);
 
-        troop1 = createTroop("Troop1", "Lol", 1000L);
-        troop2 = createTroop("Troop2", "Lol", 1500L);
-        troop3 = createTroop("Troop3", "Heroic", 2000L);
+        troop1 = createTroop("Troop1", "Lol", 1000);
+        troop2 = createTroop("Troop2", "Lol", 1500);
+        troop3 = createTroop("Troop3", "Heroic", 2000);
 
         troop1.addHero(hero1);
         troop2.addHero(hero2);
@@ -58,34 +67,34 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldCreateNewTroop() throws Exception {
-        Troop troop = createTroop("NewTroop", "Heroic", 2500L);
+        Troop troop = createTroop("NewTroop", "Heroic", 2500);
         Troop created = troopDao.create(troop);
 
         assertEquals(troopDao.listAll().size(), 4);
         assertTrue(troopDao.listAll().contains(created));
-        assertEquals(troopDao.getById(created.getId()), troop);
+        assertEquals(troopDao.findById(created.getId()), troop);
     }
 
 
     @Test(expectedExceptions = JpaSystemException.class)
     public void shouldNotCreateExistingTroop() throws Exception {
-        Troop troop = createTroop("Troop1", "Heroic", 2500L);
+        Troop troop = createTroop("Troop1", "Heroic", 2500);
         Troop created = troopDao.create(troop);
 
         assertEquals(troopDao.listAll().size(), 3);
         assertTrue(troopDao.listAll().contains(created));
-        assertEquals(troopDao.getById(created.getId()), troop);
+        assertEquals(troopDao.findById(created.getId()), troop);
     }
 
     @Test
     public void shouldUpdateTroop2() throws Exception {
-        Troop troop = troopDao.getById(troop2.getId());
+        Troop troop = troopDao.findById(troop2.getId());
         troop.setGold(0);
         troop.setMission("New Mission");
         troopDao.update(troop);
 
         assertTrue(troopDao.listAll().contains(troop));
-        Troop updatedTroop = troopDao.getById(troop.getId());
+        Troop updatedTroop = troopDao.findById(troop.getId());
         assertEquals(updatedTroop, troop);
         assertEquals(updatedTroop.getGold(), 0);
         assertEquals(updatedTroop.getMission(), "New Mission");
@@ -101,9 +110,11 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         assertFalse(troopDao.listAll().contains(troop3));
     }
 
+
+
     @Test
     public void shouldGetByIdTroop1() throws Exception {
-        Troop troop = troopDao.getById(troop1.getId());
+        Troop troop = troopDao.findById(troop1.getId());
         assertEquals(troop1, troop);
         assertEquals(troop.getName(), "Troop1");
         assertEquals(troop.getMission(), "Lol");
@@ -112,13 +123,13 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldGetNullForNonExistingTroopId() throws Exception {
-        Troop troop = troopDao.getById(1000);
+        Troop troop = troopDao.findById(1000);
         assertEquals(troop, null);
     }
 
     @Test
     public void shouldGetByNameTroop1() throws Exception {
-        Troop troop = troopDao.getByName(troop1.getName());
+        Troop troop = troopDao.findByName(troop1.getName());
         assertEquals(troop1, troop);
         assertEquals(troop.getName(), "Troop1");
         assertEquals(troop.getMission(), "Lol");
@@ -127,28 +138,20 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldGetNullForNonExistingTroopName() throws Exception {
-        Troop troop = troopDao.getByName("Non existing name");
+        Troop troop = troopDao.findByName("Non existing name");
         assertEquals(troop, null);
     }
 
     @Test
     public void shouldAddHeroToTroop1() throws Exception
     {
-        Troop troop = troopDao.getById(troop1.getId());
+        Troop troop = troopDao.findById(troop1.getId());
         troop.addHero(unassignedHero);
         troopDao.update(troop);
-        Troop result = troopDao.getById(troop.getId());
+        Troop result = troopDao.findById(troop.getId());
         assertTrue(result.getHeroes().contains(unassignedHero));
         assertTrue(result.getHeroes().contains(hero1));
-        assertTrue(result.getHeroes().size(), 2);
-    }
-
-    @Test(expectedExceptions = ConstraintViolationException.class)
-    public void shouldNotAddHero2ToTroop1()
-    {
-        Troop troop = troopDao.getById(troop1.getId());
-        troop.addHero(hero2);
-        troopDao.update(troop);
+        assertEquals(result.getHeroes().size(), 2);
     }
 
     private static Hero createHero(String name){
@@ -158,12 +161,12 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         return hero;
     }
 
-    private static Troop createTroop(String name, String mission, Long gold){
+    private static Troop createTroop(String name, String mission, int gold){
         Troop troop = new Troop();
         troop.setName(name);
         troop.setMission(mission);
         troop.setGold(gold);
         return troop;
-    }*/
+    }
 
 }

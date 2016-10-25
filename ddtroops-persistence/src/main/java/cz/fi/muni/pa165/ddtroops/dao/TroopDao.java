@@ -1,7 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 
-import cz.fi.muni.pa165.ddtroops.entity.*;
+import cz.fi.muni.pa165.ddtroops.entity.Troop;
+
 import java.util.*;
 
 /**
@@ -40,7 +41,7 @@ public interface TroopDao {
      * List all troops
      * @return List of all troops from DB, null if none found
      */
-    List<Troop> findAll();
+    List<Troop> listAll();
     
     /**
      * Returns the troop from DB with the given name
