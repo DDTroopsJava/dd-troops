@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
+import java.util.HashSet;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class Hero {
     private String name;
 
     @ManyToMany
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     private int experience;
 
