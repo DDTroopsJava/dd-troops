@@ -49,6 +49,10 @@ public class Hero {
         roles.add(role);
     }
 
+    public Boolean removeRole(Role role) {
+        return roles.remove(role);
+    }
+
     public int getExperience() {
         return experience;
     }
