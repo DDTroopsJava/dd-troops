@@ -150,6 +150,5 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
         hero.setExperience(1);
         return hero;
     }
-    
-    
+       
 }
