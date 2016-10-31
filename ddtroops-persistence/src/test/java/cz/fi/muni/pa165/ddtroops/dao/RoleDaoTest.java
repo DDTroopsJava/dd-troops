@@ -17,7 +17,6 @@ import org.testng.annotations.BeforeMethod;
 
 
 /**
- * Created by pstanko.
  *
  * @author Petr Kolacek
  */
@@ -52,10 +51,17 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
         
         // persist
         roleDao.create(role1);
+        assertTrue(roleDao.listAll().contains(role1));
+
         roleDao.create(role2);
+        assertTrue(roleDao.listAll().contains(role2));
         roleDao.create(role3);
-        
+        assertTrue(roleDao.listAll().contains(role3));
+
+
         heroDao.create(hero);
+        assertTrue(heroDao.listAll().contains(hero));
+
     }
     
     @Test
