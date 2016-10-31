@@ -1,5 +1,6 @@
-package cz.fi.muni.pa165.ddtroops.dao;
+package cz.fi.muni.pa165.ddtroops.dao.impl;
 
+import cz.fi.muni.pa165.ddtroops.dao.RoleDao;
 import cz.fi.muni.pa165.ddtroops.entity.Role;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.NoResultException;
 
 /**
- * Created by pstanko.
  *
  * @author P. Kolacek
  */
@@ -24,6 +24,9 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Role create(Role role)
     {
+        if(role == null) {
+            throw new IllegalArgumentException("role");
+        }
         em.persist(role);
         return role;
     }
@@ -31,6 +34,9 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Role delete(Role role)
     {
+        if(role == null) {
+            throw new IllegalArgumentException("role");
+        }
         em.remove(em.contains(role) ? role : em.merge(role));
         return role;
     }
@@ -38,6 +44,9 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Role update(Role role)
     {
+        if(role == null) {
+            throw new IllegalArgumentException("role");
+        }
         role = em.merge(role);
         return role;
     }
@@ -51,6 +60,9 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Role findByName(String name)
     {
+        if(name == null) {
+            throw new IllegalArgumentException("name");
+        }
         try{
             return em.createQuery("select r from Role r where name = :name", Role.class)
                     .setParameter("name", name)

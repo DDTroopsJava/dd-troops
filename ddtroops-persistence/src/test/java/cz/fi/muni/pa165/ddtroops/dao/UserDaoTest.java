@@ -30,21 +30,25 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private UserDao userDao;
 
-    private User u1;
-    private User u2;
+    private User user1;
+    private User user2;
 
     @BeforeMethod
     public void createUsers() {
-        u1 = getUser("Rambo");
-        u2 = getUser("Rocky");
+        user1 = getUser("Rambo");
+        user2 = getUser("Rocky");
 
-        userDao.create(u1);
-        userDao.create(u2);
+        userDao.create(user1);
+        Assert.assertTrue(userDao.listAll().contains(user1));
+
+        userDao.create(user2);
+        Assert.assertTrue(userDao.listAll().contains(user2));
+
     }
 
     @Test
     public void getByEmail() {
-        Assert.assertNotNull(userDao.findByEmail(u1.getEmail()));
+        Assert.assertNotNull(userDao.findByEmail(user1.getEmail()));
     }
 
     @Test
@@ -72,26 +76,26 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = JpaSystemException.class)
     public void createAlreadyCreatedUser() {
-        User u_new = getUser(u1.getName());
+        User u_new = getUser(user1.getName());
         userDao.create(u_new);
     }
 
 
     @Test
     public void listUsers() {
-        Assert.assertTrue(userDao.listAll().contains(u1));
-        Assert.assertTrue(userDao.listAll().contains(u2));
+        Assert.assertTrue(userDao.listAll().contains(user1));
+        Assert.assertTrue(userDao.listAll().contains(user2));
         Assert.assertEquals(userDao.listAll().size(), 2);
 
     }
 
     @Test
     public void deleteUser() {
-        userDao.delete(u1);
+        userDao.delete(user1);
 
         Assert.assertEquals(userDao.listAll().size(), 1);
-        Assert.assertTrue(userDao.listAll().contains(u2));
-        Assert.assertFalse(userDao.listAll().contains(u1));
+        Assert.assertTrue(userDao.listAll().contains(user2));
+        Assert.assertFalse(userDao.listAll().contains(user1));
     }
 
 
@@ -101,21 +105,21 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         userDao.delete(u);
 
         Assert.assertEquals(userDao.listAll().size(), 2);
-        Assert.assertTrue(userDao.listAll().contains(u2));
-        Assert.assertTrue(userDao.listAll().contains(u1));
+        Assert.assertTrue(userDao.listAll().contains(user2));
+        Assert.assertTrue(userDao.listAll().contains(user1));
     }
 
 
     @Test
     public void updateUser() {
-        User up = userDao.findById(u1.getId());
+        User up = userDao.findById(user1.getId());
         up.setAdmin(true);
         up.setPhone("123456789");
         up.setName("Updated name");
 
         userDao.update(up);
 
-        User my_user = userDao.findById(u1.getId());
+        User my_user = userDao.findById(user1.getId());
 
         Assert.assertEquals(my_user.getPhone(), "123456789");
         Assert.assertEquals(my_user.getName(), "Updated name");
