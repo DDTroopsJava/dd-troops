@@ -10,6 +10,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -48,9 +49,16 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         unassignedHero = createHero("The Rock");
 
         heroDao.create(hero1);
+        Assert.assertTrue(heroDao.listAll().contains(hero1));
+
         heroDao.create(hero2);
+        Assert.assertTrue(heroDao.listAll().contains(hero2));
+
         heroDao.create(hero3);
+        Assert.assertTrue(heroDao.listAll().contains(hero3));
         heroDao.create(unassignedHero);
+        Assert.assertTrue(heroDao.listAll().contains(unassignedHero));
+
 
         troop1 = createTroop("Troop1", "Lol", 1000);
         troop2 = createTroop("Troop2", "Lol", 1500);
@@ -61,8 +69,11 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         troop3.addHero(hero3);
 
         troopDao.create(troop1);
+        Assert.assertTrue(troopDao.listAll().contains(troop1));
         troopDao.create(troop2);
+        Assert.assertTrue(troopDao.listAll().contains(troop2));
         troopDao.create(troop3);
+        Assert.assertTrue(troopDao.listAll().contains(troop3));
     }
 
     @Test

@@ -53,16 +53,22 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         
         // persist roles
         roleDao.create(role1);
+        assertTrue(roleDao.listAll().contains(role1));
         roleDao.create(role2);
+        assertTrue(roleDao.listAll().contains(role2));
         roleDao.create(unusedRole);
-        
+        assertTrue(roleDao.listAll().contains(unusedRole));
+
+
         // assing roles to Heroes
         hero1.addRole(role1);
         hero2.addRole(role2);
         
         // persist them
         heroDao.create(hero1);
+        assertTrue(heroDao.listAll().contains(hero1));
         heroDao.create(hero2);
+        assertTrue(heroDao.listAll().contains(hero2));
     }
 
     @Test
