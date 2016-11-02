@@ -69,7 +69,7 @@ public class Hero {
 
         Hero hero = (Hero) o;
 
-        return name.equals(hero.name);
+        return name.equals(hero.getName());
 
     }
 
