@@ -50,24 +50,24 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
         hero = createHero("Hero");
         
         // persist
-        roleDao.create(role1);
-        assertTrue(roleDao.listAll().contains(role1));
+        roleDao.save(role1);
+        assertTrue(roleDao.findAll().contains(role1));
 
-        roleDao.create(role2);
-        assertTrue(roleDao.listAll().contains(role2));
-        roleDao.create(role3);
-        assertTrue(roleDao.listAll().contains(role3));
+        roleDao.save(role2);
+        assertTrue(roleDao.findAll().contains(role2));
+        roleDao.save(role3);
+        assertTrue(roleDao.findAll().contains(role3));
 
 
-        heroDao.create(hero);
-        assertTrue(heroDao.listAll().contains(hero));
+        heroDao.save(hero);
+        assertTrue(heroDao.findAll().contains(hero));
 
     }
     
     @Test
     public void testGetRoleById() throws Exception 
     {
-        Role role = roleDao.findById(role1.getId());
+        Role role = roleDao.findOne(role1.getId());
         assertNotNull(role, "None role exists.");
         assertEquals(role, role1, "Wrong role returned.");
     }
@@ -75,7 +75,7 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetRoleByNonExistingId() throws Exception
     {
-        Role role = roleDao.findById(-10L);
+        Role role = roleDao.findOne(-10L);
         assertNull(role, "Should be null.");
     }
     
@@ -101,12 +101,12 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     public void testCreateNewRole() throws Exception
     {
         Role role = createRole("Pikeman", "Very universal soldier.");
-        roleDao.create(role);
+        roleDao.save(role);
         
-        assertEquals(roleDao.listAll().size(), 4);
-        assertTrue(roleDao.listAll().contains(role),
+        assertEquals(roleDao.findAll().size(), 4);
+        assertTrue(roleDao.findAll().contains(role),
                 "Failed to add new Role");
-        assertTrue(roleDao.listAll().contains(role1),
+        assertTrue(roleDao.findAll().contains(role1),
                 "Somehow managed to delete an already existing Role");
         
     }
@@ -114,7 +114,7 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     @org.testng.annotations.Test(expectedExceptions = JpaSystemException.class)
     public void testCreatingAlreadyExistingRole() throws Exception {
         Role role = createRole(role2.getName(), role2.getDescription());
-        roleDao.create(role);
+        roleDao.save(role);
     }
     
     @Test
@@ -131,8 +131,8 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     public void testDeleteExistingRole() throws Exception
     {
         roleDao.delete(role3);
-        assertEquals(roleDao.listAll().size(), 3, "Failed to delete role.");
-        assertFalse(roleDao.listAll().contains(role3), "Failed to delete the right role.");
+        assertEquals(roleDao.findAll().size(), 3, "Failed to delete role.");
+        assertFalse(roleDao.findAll().contains(role3), "Failed to delete the right role.");
     }
     
     /**
