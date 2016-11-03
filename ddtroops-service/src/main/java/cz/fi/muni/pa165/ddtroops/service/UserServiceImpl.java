@@ -22,12 +22,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(User u, String unencryptedPassword) {
         u.setPasswordHash(createHash(unencryptedPassword));
-        userDao.create(u);
+        userDao.save(u);
     }
 
     @Override
     public List<User> listAll() {
-        return userDao.listAll();
+        return userDao.findAll();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long userId) {
-        return userDao.findById(userId);
+        return userDao.findOne(userId);
     }
 
     @Override
