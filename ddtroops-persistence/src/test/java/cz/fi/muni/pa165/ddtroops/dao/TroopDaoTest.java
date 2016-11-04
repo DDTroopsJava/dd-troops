@@ -14,7 +14,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -48,15 +51,15 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         hero3 = createHero("Chuck Norris");
         unassignedHero = createHero("The Rock");
 
-        heroDao.save(hero1);
+        hero1 = heroDao.save(hero1);
         Assert.assertTrue(heroDao.findAll().contains(hero1));
 
-        heroDao.save(hero2);
+        hero2 =heroDao.save(hero2);
         Assert.assertTrue(heroDao.findAll().contains(hero2));
 
-        heroDao.save(hero3);
+        hero3 =heroDao.save(hero3);
         Assert.assertTrue(heroDao.findAll().contains(hero3));
-        heroDao.save(unassignedHero);
+        unassignedHero = heroDao.save(unassignedHero);
         Assert.assertTrue(heroDao.findAll().contains(unassignedHero));
 
 
@@ -64,16 +67,18 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         troop2 = createTroop("Troop2", "Lol", 1500);
         troop3 = createTroop("Troop3", "Heroic", 2000);
 
+        troop1 = troopDao.save(troop1);
+        Assert.assertTrue(troopDao.findAll().contains(troop1));
+        troop2 = troopDao.save(troop2);
+        Assert.assertTrue(troopDao.findAll().contains(troop2));
+        troop3 = troopDao.save(troop3);
+        Assert.assertTrue(troopDao.findAll().contains(troop3));
+
         troop1.addHero(hero1);
         troop2.addHero(hero2);
         troop3.addHero(hero3);
 
-        troopDao.save(troop1);
-        Assert.assertTrue(troopDao.findAll().contains(troop1));
-        troopDao.save(troop2);
-        Assert.assertTrue(troopDao.findAll().contains(troop2));
-        troopDao.save(troop3);
-        Assert.assertTrue(troopDao.findAll().contains(troop3));
+
     }
 
     @Test
@@ -113,14 +118,20 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldDeleteTroop() throws Exception {
+        List<Troop> allBeforeDelete = troopDao.findAll();
+        assertEquals(allBeforeDelete.size(), 3);
+
         troopDao.delete(troop3);
 
-        assertEquals(troopDao.findAll().size(), 2);
-        assertTrue(troopDao.findAll().contains(troop1));
-        assertTrue(troopDao.findAll().contains(troop2));
-        assertFalse(troopDao.findAll().contains(troop3));
-    }
+        List<Troop> allAfterDelete = troopDao.findAll();
+        Hero resultHero = heroDao.findOne(hero3.getId());
 
+        assertEquals(allAfterDelete.size(), 2);
+        assertNull(resultHero.getTroop());
+        assertTrue(allAfterDelete.contains(troop1));
+        assertTrue(allAfterDelete.contains(troop2));
+        assertFalse(allAfterDelete.contains(troop3));
+    }
 
 
     @Test
@@ -159,10 +170,32 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         Troop troop = troopDao.findOne(troop1.getId());
         troop.addHero(unassignedHero);
         troopDao.save(troop);
-        Troop result = troopDao.findOne(troop.getId());
-        assertTrue(result.getHeroes().contains(unassignedHero));
-        assertTrue(result.getHeroes().contains(hero1));
-        assertEquals(result.getHeroes().size(), 2);
+        Troop resultTroop = troopDao.findOne(troop.getId());
+        Hero resultHero = heroDao.findOne(unassignedHero.getId());
+
+        assertTrue(resultTroop.getHeroes().contains(unassignedHero));
+        assertTrue(resultTroop.getHeroes().contains(hero1));
+        assertEquals(resultHero.getTroop(), resultTroop);
+        assertEquals(hero1.getTroop(), resultTroop);
+        assertEquals(resultTroop.getHeroes().size(), 2);
+    }
+
+    @Test
+    public void shouldDeleteHeroFromTroop1() throws Exception
+    {
+        Troop troop = troopDao.findOne(troop1.getId());
+        troop.addHero(unassignedHero);
+        troop.removeHero(hero1);
+
+        Troop resultTroop = troopDao.findOne(troop.getId());
+        Hero resultHero = heroDao.findOne(unassignedHero.getId());
+        Hero resultHero1 = heroDao.findOne(hero1.getId());
+
+        assertTrue(resultTroop.getHeroes().contains(unassignedHero));
+        assertEquals(resultHero.getTroop(), resultTroop);
+        assertFalse(resultTroop.getHeroes().contains(hero1));
+        assertNull(resultHero1.getTroop());
+        assertEquals(resultTroop.getHeroes().size(), 1);
     }
 
     private static Hero createHero(String name){

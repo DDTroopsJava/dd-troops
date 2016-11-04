@@ -1,8 +1,10 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import java.util.*;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by xgono
@@ -25,7 +27,7 @@ public class Troop {
     @Column(nullable = false)
     private int gold;
     
-    @OneToMany
+    @OneToMany(mappedBy = "troop", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Hero> heroes = new HashSet<>();
 
 
@@ -58,15 +60,32 @@ public class Troop {
     }
 
     public Set<Hero> getHeroes() {
-        return heroes;
+        return Collections.unmodifiableSet(heroes);
     }
     
     public void addHero(Hero hero) {
         heroes.add(hero);
+        if (hero != null) {
+            hero.setTroopWithoutUpdate(this);
+        }
     }
 
-    public void setHeroes(Set<Hero> heroes) {
-        this.heroes = heroes;
+    public void addHeroWithoutUpdate(Hero hero) {
+        heroes.add(hero);
+    }
+
+    public void removeHero(Hero hero) {
+        if(hero.getTroop().equals(this)) {
+            heroes.remove(hero);
+            hero.setTroopWithoutUpdate(null);
+        }
+    }
+
+    @PreRemove
+    private void removeHeroesFromTroop() {
+        for (Hero hero : heroes) {
+            hero.setTroopWithoutUpdate(null);
+        }
     }
 
     @Override
