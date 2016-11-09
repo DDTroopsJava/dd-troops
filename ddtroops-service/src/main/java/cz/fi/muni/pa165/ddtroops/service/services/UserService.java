@@ -1,9 +1,9 @@
-package cz.fi.muni.pa165.ddtroops.service;
+package cz.fi.muni.pa165.ddtroops.service.services;
+
+import java.util.List;
 
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author pstanko
@@ -14,12 +14,16 @@ public interface UserService {
     /**
      * Register the given user with the given unencrypted password.
      */
-    void registerUser(User u, String unencryptedPassword);
+    void register(User u, String unencryptedPassword);
+
+    void update(User u);
+
+    boolean updatePassword(User u, String oldPassword, String newPassword);
 
     /**
      * Get all registered users
      */
-    List<User> listAll();
+    List<User> findAll();
 
     /**
      * Try to authenticate a user. Return true only if the hashed password matches the records.

@@ -1,9 +1,9 @@
-package cz.fi.muni.pa165.ddtroops.service;
-
-import org.dozer.Mapper;
+package cz.fi.muni.pa165.ddtroops.service.services;
 
 import java.util.Collection;
 import java.util.List;
+
+import org.dozer.Mapper;
 
 /**
  * @author pstanko

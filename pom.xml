@@ -39,10 +39,13 @@
         <module>ddtroops-persistence</module>
         <module>ddtroops-api</module>
         <module>ddtroops-service</module>
+        <module>ddtroops-mvc</module>
+        <module>ddtroops-rest</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tomcat.version>2.2</tomcat.version>
     </properties>
 
     <dependencies>

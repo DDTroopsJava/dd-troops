@@ -51,6 +51,11 @@
             <artifactId>logback-classic</artifactId>
             <scope>test</scope><!-- logging implementation should not be part of a library, but is needed for tests -->
         </dependency>
+      <dependency>
+        <groupId>cz.fi.muni.pa165.ddtroops</groupId>
+        <artifactId>ddtroops-api</artifactId>
+        <version>1.0</version>
+      </dependency>
     </dependencies>
 
 </project>

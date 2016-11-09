@@ -1,15 +1,17 @@
-package cz.fi.muni.pa165.ddtroops.service;
+package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
-import cz.fi.muni.pa165.ddtroops.dao.UserDao;
-import cz.fi.muni.pa165.ddtroops.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+import cz.fi.muni.pa165.ddtroops.dao.UserDao;
+import cz.fi.muni.pa165.ddtroops.entity.User;
+import cz.fi.muni.pa165.ddtroops.service.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author pstanko
@@ -20,13 +22,28 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public void registerUser(User u, String unencryptedPassword) {
+    public void register(User u, String unencryptedPassword) {
         u.setPasswordHash(createHash(unencryptedPassword));
         userDao.save(u);
     }
 
     @Override
-    public List<User> listAll() {
+    public void update(User u) {
+        userDao.save(u);
+    }
+
+    @Override
+    public boolean updatePassword(User u, String oldPassword, String newPassword) {
+        if(validatePassword(oldPassword,u.getPasswordHash())){
+            u.setPasswordHash(createHash(newPassword));
+            userDao.save(u);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<User> findAll() {
         return userDao.findAll();
     }
 
