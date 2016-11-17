@@ -1,9 +1,16 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import javax.persistence.*;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
 
 /**
  *
@@ -35,6 +42,21 @@ public class User {
     private Date joinedDate;
 
     private boolean admin;
+
+    public User(String name, boolean admin) {
+        this.name = name;
+        this.email = name + "@example.com";
+        this.admin = admin;
+    }
+
+    public User(String name) {
+        this.name = name;
+        this.email = name + "@example.com";
+    }
+
+
+    public User() {
+    }
 
     public Long getId() {
         return id;

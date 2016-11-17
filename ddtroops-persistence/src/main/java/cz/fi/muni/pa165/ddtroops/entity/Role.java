@@ -1,11 +1,10 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author P. Kolacek <xkolac11>
@@ -23,6 +22,33 @@ public class Role {
     
     @Column(nullable = false)
     private String description;
+
+    public Role(String name) {
+        this.name = name;
+        this.description = name + "'s sample description!";
+    }
+
+    public Role() {
+
+    }
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "Role_Hero",
+            joinColumns = {
+                    @JoinColumn(
+                            name = "role_id",
+                            referencedColumnName = "id"
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            name = "hero_id",
+                            referencedColumnName = "id"
+                    )
+            }
+    )
+
+    private Set<Hero> heroes = new HashSet<>();
     
     public Long getId() {
         return id;
@@ -72,6 +98,42 @@ public class Role {
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         return result;
     }
-    
-    
+
+    @PreRemove
+    public void removeHeroes(){
+        for (Hero hero : heroes) {
+            hero.removeRole(this);
+        }
+    }
+
+    public Set<Hero> getHeroes() {
+        return Collections.unmodifiableSet(heroes);
+    }
+
+    public Hero addHeroWithoutUpdate(Hero h){
+        heroes.add(h);
+        return h;
+    }
+
+    public Hero addHero(Hero h){
+        addHeroWithoutUpdate(h);
+        if(h != null) {
+            h.addRoleWithoutUpdate(this);
+        }
+        return h;
+    }
+
+    public Hero removeHeroWithoutUpdate(Hero h){
+        heroes.remove(h);
+        return h;
+
+    }
+
+    public Hero removeHero(Hero h){
+        if (h != null) {
+            h.removeRoleWithoutUpdate(this);
+        }
+        removeHeroWithoutUpdate(h);
+        return h;
+    }
 }

@@ -1,8 +1,9 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import java.util.HashSet;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,10 +21,23 @@ public class Hero {
     @NotNull
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "heroes", cascade =
+            {CascadeType.PERSIST, CascadeType.MERGE})
+
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "troopId")
+    private Troop troop;
+
     private int experience;
+
+    public Hero(String name) {
+        this.name = name;
+    }
+
+    public Hero() {
+    }
 
     public Long getId() {
         return id;
@@ -42,14 +56,26 @@ public class Hero {
     }
 
     public Set<Role> getRoles() {
-        return roles;
+        return Collections.unmodifiableSet(roles);
     }
 
-    public void addRole(Role role) {
+    public void addRoleWithoutUpdate(Role role) {
         roles.add(role);
     }
 
-    public Boolean removeRole(Role role) {
+    public void addRole(Role role) {
+        addRoleWithoutUpdate(role);
+        if(role != null) {
+            role.addHeroWithoutUpdate(this);
+        }
+    }
+
+    public boolean removeRole(Role role) {
+        role.removeHeroWithoutUpdate(this);
+        return removeRoleWithoutUpdate(role);
+    }
+
+    public boolean removeRoleWithoutUpdate(Role role) {
         return roles.remove(role);
     }
 
@@ -69,7 +95,7 @@ public class Hero {
 
         Hero hero = (Hero) o;
 
-        return name.equals(hero.name);
+        return name.equals(hero.getName());
 
     }
 
@@ -77,4 +103,33 @@ public class Hero {
     public int hashCode() {
         return name.hashCode();
     }
+
+    public Troop getTroop() {
+        return troop;
+    }
+
+    public void setTroop(Troop troop){
+
+        if(troop != null) {
+            troop.addHeroWithoutUpdate(this);
+        }else if(this.troop != null) {
+            this.troop.removeHero(this);
+        }
+        setTroopWithoutUpdate(troop);
+    }
+
+    public void setTroopWithoutUpdate(Troop troop) {
+        this.troop = troop;
+    }
+
+    @PreRemove
+    public void removeRolesAndTroop(){
+        for (Role role : roles) {
+            role.removeHero(this);
+        }
+        if(troop != null) {
+            troop.removeHero(this);
+        }
+    }
+
 }
