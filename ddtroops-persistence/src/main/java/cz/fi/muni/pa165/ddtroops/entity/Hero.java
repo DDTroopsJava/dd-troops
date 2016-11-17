@@ -32,6 +32,13 @@ public class Hero {
 
     private int experience;
 
+    public Hero(String name) {
+        this.name = name;
+    }
+
+    public Hero() {
+    }
+
     public Long getId() {
         return id;
     }

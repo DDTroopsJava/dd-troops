@@ -23,6 +23,15 @@ public class Role {
     @Column(nullable = false)
     private String description;
 
+    public Role(String name) {
+        this.name = name;
+        this.description = name + "'s sample description!";
+    }
+
+    public Role() {
+
+    }
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "Role_Hero",
             joinColumns = {
