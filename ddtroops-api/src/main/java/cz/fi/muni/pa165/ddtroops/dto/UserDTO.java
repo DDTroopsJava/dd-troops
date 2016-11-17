@@ -9,19 +9,28 @@ import java.util.Date;
  */
 public class UserDTO {
     private Long id;
-
     private String passwordHash;
-
     private String email;
-
     private String name;
-
     private String phone;
-
     private Date joinedDate;
+    private boolean admin;
 
     public UserDTO(){
 
+    }
+
+
+
+
+    public UserDTO(String name) {
+        this.email = name + "@example.com";
+        this.name = name;
+    }
+
+    public UserDTO(String name, boolean admin) {
+        this.name = name;
+        this.admin = admin;
     }
 
     public Long getId() {
@@ -76,6 +85,15 @@ public class UserDTO {
         this.joinedDate = joinedDate;
     }
 
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -90,7 +108,7 @@ public class UserDTO {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (! (obj instanceof UserDTO) )
             return false;
         UserDTO other = (UserDTO) obj;
         if (email == null) {

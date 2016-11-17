@@ -1,10 +1,18 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by xgono
@@ -30,6 +38,23 @@ public class Troop {
     @OneToMany(mappedBy = "troop", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Hero> heroes = new HashSet<>();
 
+    public Troop(String name, String mission, int gold) {
+        this.name = name;
+        this.mission = mission;
+        this.gold = gold;
+    }
+
+    public Troop(String name) {
+        this.name = name;
+    }
+
+    public Troop() {
+    }
+
+    public Troop(String name, String mission) {
+        this.name = name;
+        this.mission = mission;
+    }
 
     public Long getId() {
         return id;

@@ -1,18 +1,20 @@
-package cz.fi.muni.pa165.ddtroops.service;
-
-import org.dozer.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
+import org.dozer.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author pstanko
  */
 @Service
 public class BeanMappingServiceImpl implements BeanMappingService {
+
     @Autowired
     private Mapper dozer;
 
