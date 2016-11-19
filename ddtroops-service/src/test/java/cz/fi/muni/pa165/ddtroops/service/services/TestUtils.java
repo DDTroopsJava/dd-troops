@@ -25,11 +25,13 @@ public class TestUtils {
     }
 
     public static User createUser(String name){
-        return new User(name);
+        return createUser(name, false);
     }
 
     public static User createUser(String name, boolean admin){
-        return new User(name, admin);
+        User user = new User(name, admin);
+
+        return user;
     }
 
     public static Role createRole(String name){
