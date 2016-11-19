@@ -11,27 +11,34 @@ import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
  */
 public interface UserFacade {
     /**
-     *
+     * Gets user by id
      * @param userId
-     * @return
+     * @return null if not exists
      */
     UserDTO findById(Long userId);
 
     /**
-     *
+     * Gets user by email
      * @param email
      * @return
      */
     UserDTO findByEmail(String email);
 
     /**
-     *
+     * Updates existing user
      * @param u
      * @return
      */
     UserDTO update(UserDTO u);
 
-    UserDTO updatePassowrd(UserDTO u, String oldPassword, String newPassword);
+    /**
+     * Updates user password
+     * @param u
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    UserDTO updatePassword(UserDTO u, String oldPassword, String newPassword);
 
     /**
      * Register new user
@@ -46,10 +53,16 @@ public interface UserFacade {
      */
     Collection<UserDTO> findAll();
 
+    /**
+     * Auhentificate user
+     * @param email
+     * @param password
+     * @return
+     */
     boolean authenticate(String email, String password);
 
     /**
-     * Check if the given user is admin.
+     * Check whether the given user is admin.
      */
     boolean isAdmin(UserDTO u);
 }
