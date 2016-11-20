@@ -12,20 +12,20 @@ public interface TroopFacade {
     /**
      * Returns the troop with the given ID
      * @param troopId
-     * @return 
+     * @return null if troop doesn't exist
      */
     TroopDTO findById(Long troopId);
     
     /**
      * Returns the troop with the given name
      * @param name
-     * @return 
+     * @return null if troop doesn't exist
      */
     TroopDTO findByName(String name);
     
     /**
      * Returns a list of all troops
-     * @return 
+     * @return list of all troops
      */
     List<TroopDTO> findAll();
     
