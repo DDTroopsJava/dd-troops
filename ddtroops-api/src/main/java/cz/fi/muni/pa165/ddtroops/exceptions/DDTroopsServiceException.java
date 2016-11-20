@@ -5,7 +5,7 @@ package cz.fi.muni.pa165.ddtroops.exceptions;
  *
  * @author pstanko
  */
-public class DDTroopsServiceException extends RuntimeException {
+public class DDTroopsServiceException extends Exception {
     public DDTroopsServiceException() {
         super();
     }
