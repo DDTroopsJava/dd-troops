@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.ddtroops.service.services;
 
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
@@ -13,13 +14,11 @@ import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
-import org.dozer.Mapper;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,19 +35,14 @@ import org.testng.annotations.Test;
 @ContextConfiguration(classes = ServiceConfiguration.class)
 public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
-    public static final String PASSWORD_123 = "password123";
+    private static final String PASSWORD_123 = "password123";
+
     @Mock
     private UserDao userDao;
 
     @Autowired
     @InjectMocks
     private UserService userService;
-
-
-    @Autowired
-    @Spy
-    private Mapper mapper;
-
 
     private User testUser;
     private User testAdmin;
@@ -58,6 +52,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod
     public void prepareTestUsers(){
+        users.clear();
         testUser = TestUtils.createUser("user");
         testAdmin = TestUtils.createUser("admin");
         users = new ArrayList<>();
@@ -71,9 +66,12 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         users.add(testUser);
 
         for(long i = 3L; i <= 5L;i++){
-            users.add(TestUtils.createUser("user" + 1));
+            User user = TestUtils.createUser("user" + 1);
+            user.setId(i);
+            users.add(user);
         }
     }
+
 
 
     @BeforeClass
@@ -104,11 +102,15 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         when(userDao.findByEmail(anyString())).thenAnswer( invoke -> {
             String arg = invoke.getArgumentAt(0, String.class);
             Optional<User> optUser = users.stream().filter((user) -> user.getEmail().equals(arg)).findFirst();
-            if(!optUser.isPresent()){
-                return null;
-            }
-            return optUser.get();
+            return optUser.orElse(null);
         });
+
+        doAnswer(invoke -> {
+            User mockedUser = invoke.getArgumentAt(0, User.class);
+            users.remove(mockedUser);
+            logger.debug("Removing user: " + mockedUser);
+            return mockedUser;
+        }).when(userDao).delete(any(User.class));
 
         when(userDao.findAll()).thenAnswer( invoke -> Collections.unmodifiableList(users));
 
@@ -127,7 +129,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = {DDTroopsServiceException.class})
     public void shouldNotRegisterExistingUser() throws Exception {
-        int origSize = users.size();
         User newUser = TestUtils.createUser("new_user");
         User newUser2 = TestUtils.createUser("new_user");
         userService.register(newUser, PASSWORD_123);
@@ -178,7 +179,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldNotAuthentificateUserWithInvalidCredential() throws Exception
+    public void shouldNotAuthenticateUserWithInvalidCredential() throws Exception
     {
         User newUser = TestUtils.createUser("new_user");
         userService.register(newUser, PASSWORD_123);
@@ -198,6 +199,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertNotEquals(userService.findById(testUser.getId()), testAdmin);
     }
 
+
+    @Test
     public void shouldReturnNullWhenNonExistingId() throws Exception {
         Assert.assertNull(userService.findById(1000L));
     }
@@ -208,9 +211,16 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         assertEquals(userByEmail, testUser);
         assertNotEquals(userService.findByEmail(testUser.getEmail()), testAdmin);
     }
-
+    @Test
     public void shouldReturnNullWhenNonExistingEmail() throws Exception {
         Assert.assertNull(userService.findByEmail("nonexist@example.com"));
+    }
+
+    @Test
+    public void shouldRemoveUser() throws Exception{
+        assertTrue(users.contains(testUser));
+        userService.delete(testUser);
+        assertFalse(users.contains(testUser));
     }
 
 }
