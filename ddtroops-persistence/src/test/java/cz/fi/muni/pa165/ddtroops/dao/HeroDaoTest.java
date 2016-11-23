@@ -3,22 +3,23 @@ package cz.fi.muni.pa165.ddtroops.dao;
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import cz.fi.muni.pa165.ddtroops.entity.Role;
-
-import javax.persistence.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.orm.jpa.*;
-import org.springframework.test.context.*;
-import org.springframework.test.context.testng.*;
-import org.springframework.test.context.transaction.*;
-import org.springframework.transaction.annotation.*;
-import static org.testng.Assert.*;
+import cz.fi.muni.pa165.ddtroops.entity.Troop;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.*;
 
 /**
  * Craeted by xgono
  * Test class for HeroDAO
- * 
+ *
  * @author Richard
  */
 @ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
@@ -28,18 +29,20 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private HeroDao heroDao;
-    
+
     @Autowired
     private RoleDao roleDao;
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private TroopDao troopDao;
 
     private Hero hero1;
     private Hero hero2;
     private Role role1;
     private Role role2;
     private Role unusedRole;
+    private Troop troop;
+    private Troop troop2;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -50,25 +53,38 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         role1 = createTestRole("Healer");
         role2 = createTestRole("Mage");
         unusedRole = createTestRole("Unused Role");
-        
+
+        troop = createTestTroop("SuperTroop");
+        troop2 = createTestTroop("Hero 2 Troop");
+        troopDao.save(troop);
+        troopDao.save(troop2);
+
+        troop2.addHero(hero2);
+
         // persist roles
-        roleDao.create(role1);
-        roleDao.create(role2);
-        roleDao.create(unusedRole);
-        
+        roleDao.save(role1);
+        assertTrue(roleDao.findAll().contains(role1));
+        roleDao.save(role2);
+        assertTrue(roleDao.findAll().contains(role2));
+        roleDao.save(unusedRole);
+        assertTrue(roleDao.findAll().contains(unusedRole));
+
+
         // assing roles to Heroes
         hero1.addRole(role1);
         hero2.addRole(role2);
-        
+
         // persist them
-        heroDao.create(hero1);
-        heroDao.create(hero2);
+        heroDao.save(hero1);
+        assertTrue(heroDao.findAll().contains(hero1));
+        heroDao.save(hero2);
+        assertTrue(heroDao.findAll().contains(hero2));
     }
 
     @Test
     public void testGetHeroById() throws Exception {
         // try to find hero1 by it's ID
-        Hero hero = heroDao.findById(hero1.getId());
+        Hero hero = heroDao.findOne(hero1.getId());
         assertNotNull(hero, "Failed to find anything");
         assertEquals(hero, hero1, "Returned wrong Hero");
     }
@@ -76,7 +92,7 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetHeroByNonExistingId() throws Exception {
         // try to find some hero by a nonsensical ID
-        Hero hero = heroDao.findById(-10L);
+        Hero hero = heroDao.findOne(-10L);
         assertNull(hero, "Result should have been null, but still found something");
     }
 
@@ -97,25 +113,25 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         // create a new testing hero
         Hero newHero = createTestHero("TEST");
         // persist it
-        heroDao.create(newHero);
+        heroDao.save(newHero);
 
         // test proper insertion
-        assertEquals(heroDao.listAll().size(), 3);
-        assertTrue(heroDao.listAll().contains(newHero),
+        assertEquals(heroDao.findAll().size(), 3);
+        assertTrue(heroDao.findAll().contains(newHero),
                 "Failed to add new Hero");
-        assertTrue(heroDao.listAll().contains(hero1),
+        assertTrue(heroDao.findAll().contains(hero1),
                 "Somehow managed to delete an already existing Hero");
-        assertTrue(heroDao.listAll().contains(hero2),
+        assertTrue(heroDao.findAll().contains(hero2),
                 "Somehow managed to delete an already existing Hero");
 
     }
 
-    @org.testng.annotations.Test(expectedExceptions = JpaSystemException.class)
+    @Test(expectedExceptions = JpaSystemException.class)
     public void testCreatingAlreadyExistingHero() throws Exception {
         // create an already existing hero (same name)
         Hero alreadyExistingHero = createTestHero(hero1.getName());
         // persist it
-        heroDao.create(alreadyExistingHero);
+        heroDao.save(alreadyExistingHero);
     }
 
     @Test
@@ -123,44 +139,90 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         // delete hero2
         heroDao.delete(hero2);
 
-        assertEquals(heroDao.listAll().size(), 1, "Failed to delete anything");
-        assertTrue(heroDao.listAll().contains(hero1), "Deleted wrong hero");
-        assertFalse(heroDao.listAll().contains(hero2), "Failed to delete the right hero");
+        assertEquals(heroDao.findAll().size(), 1, "Failed to delete anything");
+        assertTrue(heroDao.findAll().contains(hero1), "Deleted wrong hero");
+        assertFalse(heroDao.findAll().contains(hero2), "Failed to delete the right hero");
     }
 
     @Test
     public void testListAllHeroes() throws Exception {
-        assertEquals(heroDao.listAll().size(), 2, "Found wrong number of results");
-        assertTrue(heroDao.listAll().contains(hero1), "One of the heroes is missing - " + hero1.getName());
-        assertTrue(heroDao.listAll().contains(hero2), "One of the heroes is missing - " + hero2.getName());
+        assertEquals(heroDao.findAll().size(), 2, "Found wrong number of results");
+        assertTrue(heroDao.findAll().contains(hero1), "One of the heroes is missing - " + hero1.getName());
+        assertTrue(heroDao.findAll().contains(hero2), "One of the heroes is missing - " + hero2.getName());
     }
-    
+
     @Test
-    public void testAddRoleToHero1() throws Exception
-    {
-        Hero hero = heroDao.findById(hero1.getId());
+    public void testAddRoleToHero1() throws Exception {
+        Hero hero = heroDao.findOne(hero1.getId());
         hero.addRole(unusedRole);
-        heroDao.update(hero);
-        Hero result = heroDao.findById(hero.getId());
+        Hero result = heroDao.findOne(hero.getId());
         assertTrue(result.getRoles().contains(unusedRole));
         assertTrue(result.getRoles().contains(role1));
         assertEquals(result.getRoles().size(), 2);
     }
-    
+
     @Test
-    public void testAddSameRoleToMultipleHeroes() throws Exception
-    {
+    public void testSetToopForHero1() throws Exception {
+        Hero hero = heroDao.findOne(hero1.getId());
+        hero.setTroop(troop);
+        heroDao.save(hero);
+        Hero resultHero = heroDao.findOne(hero.getId());
+        Troop resultTroop = troopDao.findOne(troop.getId());
+
+        assertEquals(resultTroop.getHeroes().size(), 1);
+        assertTrue(resultTroop.getHeroes().contains(hero1));
+        assertEquals(resultHero.getTroop(), (resultTroop));
+    }
+
+    @Test
+    public void testUnSetTroopFromHero2() throws Exception {
+        Hero hero = heroDao.findOne(hero2.getId());
+        assertTrue(troop2.getHeroes().contains(hero));
+        hero.setTroop(null);
+        heroDao.save(hero);
+        troopDao.save(troop2);
+
+        Hero resultHero = heroDao.findOne(hero.getId());
+        Troop resultTroop = troopDao.findOne(troop2.getId());
+
+        assertEquals(resultTroop.getHeroes().size(), 0);
+        assertNull(resultHero.getTroop());
+
+    }
+
+    @Test
+    public void testRemoveRoleFromHero() throws Exception {
+        Hero hero = heroDao.findOne(hero1.getId());
+        hero.removeRole(role1);
+
+        Hero result = heroDao.findOne(hero.getId());
+        assertFalse(result.getRoles().contains(role1));
+        assertEquals(result.getRoles().size(), 0);
+    }
+
+    @Test
+    public void testAddSameRoleToMultipleHeroes() throws Exception {
         // get hero1
-        Hero hero = heroDao.findById(hero1.getId());
+        Hero hero = heroDao.findOne(hero1.getId());
         // assign role2 to him
         hero.addRole(role2);
-        
-        heroDao.update(hero);
-        
-        Hero result = heroDao.findById(hero.getId());
-        assertTrue(result.getRoles().contains(role1));
+        hero.removeRole(role1);
+        hero.addRole(unusedRole);
+
+        Hero result = heroDao.findOne(hero.getId());
+        assertFalse(result.getRoles().contains(role1));
         assertTrue(result.getRoles().contains(role2));
+        assertTrue(result.getRoles().contains(unusedRole));
         assertEquals(result.getRoles().size(), 2);
+    }
+
+    private Troop createTestTroop(String name)
+    {
+        Troop troop = new Troop();
+        troop.setName(name);
+        troop.setGold(12345);
+        troop.setMission("Mission for "+ name);
+        return troop;
     }
 
     /**
@@ -175,7 +237,7 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         // and return it
         return hero;
     }
-    
+
     /**
      * Creates and returns an instance of the Role object for testing
      */
@@ -184,7 +246,7 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         Role role = new Role();
         role.setName(name);
         role.setDescription("Role for testing purposes");
-        
+
         // and return it
         return role;
     }

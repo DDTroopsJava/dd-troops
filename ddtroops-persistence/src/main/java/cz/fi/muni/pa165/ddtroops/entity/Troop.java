@@ -1,8 +1,18 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import java.util.*;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by xgono
@@ -25,12 +35,33 @@ public class Troop {
     @Column(nullable = false)
     private int gold;
     
-    @OneToMany
+    @OneToMany(mappedBy = "troop", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Hero> heroes = new HashSet<>();
 
+    public Troop(String name, String mission, int gold) {
+        this.name = name;
+        this.mission = mission;
+        this.gold = gold;
+    }
+
+    public Troop(String name) {
+        this.name = name;
+    }
+
+    public Troop() {
+    }
+
+    public Troop(String name, String mission) {
+        this.name = name;
+        this.mission = mission;
+    }
 
     public Long getId() {
         return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
     }
     
     public String getName() {
@@ -58,15 +89,32 @@ public class Troop {
     }
 
     public Set<Hero> getHeroes() {
-        return heroes;
+        return Collections.unmodifiableSet(heroes);
     }
     
     public void addHero(Hero hero) {
         heroes.add(hero);
+        if (hero != null) {
+            hero.setTroopWithoutUpdate(this);
+        }
     }
 
-    public void setHeroes(Set<Hero> heroes) {
-        this.heroes = heroes;
+    public void addHeroWithoutUpdate(Hero hero) {
+        heroes.add(hero);
+    }
+
+    public void removeHero(Hero hero) {
+        if(hero.getTroop().equals(this)) {
+            heroes.remove(hero);
+            hero.setTroopWithoutUpdate(null);
+        }
+    }
+
+    @PreRemove
+    private void removeHeroesFromTroop() {
+        for (Hero hero : heroes) {
+            hero.setTroopWithoutUpdate(null);
+        }
     }
 
     @Override

@@ -1,8 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.facade;
 
-import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
-
 import java.util.Collection;
+
+import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
 
 /**
  * Created by pstanko.
@@ -10,25 +10,59 @@ import java.util.Collection;
  * @author pstanko
  */
 public interface UserFacade {
+    /**
+     * Gets user by id
+     * @param userId
+     * @return null if not exists
+     */
     UserDTO findById(Long userId);
 
+    /**
+     * Gets user by email
+     * @param email
+     * @return
+     */
     UserDTO findByEmail(String email);
 
+    /**
+     * Updates existing user
+     * @param u
+     * @return
+     */
     UserDTO update(UserDTO u);
 
     /**
-     * Register the given user with the given unencrypted password.
+     * Updates user password
+     * @param u
+     * @param oldPassword
+     * @param newPassword
+     * @return
      */
-    void register(UserDTO u, String unencryptedPassword);
+    UserDTO updatePassword(UserDTO u, String oldPassword, String newPassword);
+
+    /**
+     * Register new user
+     * @param user
+     * @param unencryptedPassword
+     */
+    void register(UserDTO user, String unencryptedPassword);
 
     /**
      * Get all registered users
+     * @return Collection of users
      */
-    Collection<UserDTO> getAllUsers();
-
+    Collection<UserDTO> findAll();
 
     /**
-     * Check if the given user is admin.
+     * Auhentificate user
+     * @param email
+     * @param password
+     * @return
+     */
+    boolean authenticate(String email, String password);
+
+    /**
+     * Check whether the given user is admin.
      */
     boolean isAdmin(UserDTO u);
 }

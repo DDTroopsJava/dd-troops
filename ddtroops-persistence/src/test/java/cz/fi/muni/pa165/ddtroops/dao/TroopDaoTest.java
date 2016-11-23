@@ -10,10 +10,14 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -47,54 +51,66 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         hero3 = createHero("Chuck Norris");
         unassignedHero = createHero("The Rock");
 
-        heroDao.create(hero1);
-        heroDao.create(hero2);
-        heroDao.create(hero3);
-        heroDao.create(unassignedHero);
+        hero1 = heroDao.save(hero1);
+        Assert.assertTrue(heroDao.findAll().contains(hero1));
+
+        hero2 =heroDao.save(hero2);
+        Assert.assertTrue(heroDao.findAll().contains(hero2));
+
+        hero3 =heroDao.save(hero3);
+        Assert.assertTrue(heroDao.findAll().contains(hero3));
+        unassignedHero = heroDao.save(unassignedHero);
+        Assert.assertTrue(heroDao.findAll().contains(unassignedHero));
+
 
         troop1 = createTroop("Troop1", "Lol", 1000);
         troop2 = createTroop("Troop2", "Lol", 1500);
         troop3 = createTroop("Troop3", "Heroic", 2000);
 
+        troop1 = troopDao.save(troop1);
+        Assert.assertTrue(troopDao.findAll().contains(troop1));
+        troop2 = troopDao.save(troop2);
+        Assert.assertTrue(troopDao.findAll().contains(troop2));
+        troop3 = troopDao.save(troop3);
+        Assert.assertTrue(troopDao.findAll().contains(troop3));
+
         troop1.addHero(hero1);
         troop2.addHero(hero2);
         troop3.addHero(hero3);
 
-        troopDao.create(troop1);
-        troopDao.create(troop2);
-        troopDao.create(troop3);
+
     }
 
     @Test
     public void shouldCreateNewTroop() throws Exception {
         Troop troop = createTroop("NewTroop", "Heroic", 2500);
-        Troop created = troopDao.create(troop);
+        Troop created = troopDao.save(troop);
 
-        assertEquals(troopDao.listAll().size(), 4);
-        assertTrue(troopDao.listAll().contains(created));
-        assertEquals(troopDao.findById(created.getId()), troop);
+        assertEquals(troopDao.findAll().size(), 4);
+        assertTrue(troopDao.findAll().contains(created));
+        assertEquals(troopDao.findOne(created.getId()), troop);
     }
 
 
     @Test(expectedExceptions = JpaSystemException.class)
     public void shouldNotCreateExistingTroop() throws Exception {
         Troop troop = createTroop("Troop1", "Heroic", 2500);
-        Troop created = troopDao.create(troop);
+        Troop created = troopDao.save(troop);
 
-        assertEquals(troopDao.listAll().size(), 3);
-        assertTrue(troopDao.listAll().contains(created));
-        assertEquals(troopDao.findById(created.getId()), troop);
+        assertEquals(troopDao.findAll().size(), 3);
+        assertTrue(troopDao.findAll().contains(created));
+        assertEquals(troopDao.findOne(created.getId()), troop);
     }
 
     @Test
     public void shouldUpdateTroop2() throws Exception {
-        Troop troop = troopDao.findById(troop2.getId());
+        Troop troop = troopDao.findOne(troop2.getId());
         troop.setGold(0);
         troop.setMission("New Mission");
-        troopDao.update(troop);
+        troopDao.save(troop);
 
-        assertTrue(troopDao.listAll().contains(troop));
-        Troop updatedTroop = troopDao.findById(troop.getId());
+        assertTrue(troopDao.findAll().contains(troop));
+        Troop updatedTroop = troopDao.findOne(troop.getId());
         assertEquals(updatedTroop, troop);
         assertEquals(updatedTroop.getGold(), 0);
         assertEquals(updatedTroop.getMission(), "New Mission");
@@ -102,19 +118,25 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldDeleteTroop() throws Exception {
+        List<Troop> allBeforeDelete = troopDao.findAll();
+        assertEquals(allBeforeDelete.size(), 3);
+
         troopDao.delete(troop3);
 
-        assertEquals(troopDao.listAll().size(), 2);
-        assertTrue(troopDao.listAll().contains(troop1));
-        assertTrue(troopDao.listAll().contains(troop2));
-        assertFalse(troopDao.listAll().contains(troop3));
-    }
+        List<Troop> allAfterDelete = troopDao.findAll();
+        Hero resultHero = heroDao.findOne(hero3.getId());
 
+        assertEquals(allAfterDelete.size(), 2);
+        assertNull(resultHero.getTroop());
+        assertTrue(allAfterDelete.contains(troop1));
+        assertTrue(allAfterDelete.contains(troop2));
+        assertFalse(allAfterDelete.contains(troop3));
+    }
 
 
     @Test
     public void shouldGetByIdTroop1() throws Exception {
-        Troop troop = troopDao.findById(troop1.getId());
+        Troop troop = troopDao.findOne(troop1.getId());
         assertEquals(troop1, troop);
         assertEquals(troop.getName(), "Troop1");
         assertEquals(troop.getMission(), "Lol");
@@ -123,7 +145,7 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldGetNullForNonExistingTroopId() throws Exception {
-        Troop troop = troopDao.findById(1000);
+        Troop troop = troopDao.findOne(1000L);
         assertEquals(troop, null);
     }
 
@@ -145,13 +167,35 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldAddHeroToTroop1() throws Exception
     {
-        Troop troop = troopDao.findById(troop1.getId());
+        Troop troop = troopDao.findOne(troop1.getId());
         troop.addHero(unassignedHero);
-        troopDao.update(troop);
-        Troop result = troopDao.findById(troop.getId());
-        assertTrue(result.getHeroes().contains(unassignedHero));
-        assertTrue(result.getHeroes().contains(hero1));
-        assertEquals(result.getHeroes().size(), 2);
+        troopDao.save(troop);
+        Troop resultTroop = troopDao.findOne(troop.getId());
+        Hero resultHero = heroDao.findOne(unassignedHero.getId());
+
+        assertTrue(resultTroop.getHeroes().contains(unassignedHero));
+        assertTrue(resultTroop.getHeroes().contains(hero1));
+        assertEquals(resultHero.getTroop(), resultTroop);
+        assertEquals(hero1.getTroop(), resultTroop);
+        assertEquals(resultTroop.getHeroes().size(), 2);
+    }
+
+    @Test
+    public void shouldDeleteHeroFromTroop1() throws Exception
+    {
+        Troop troop = troopDao.findOne(troop1.getId());
+        troop.addHero(unassignedHero);
+        troop.removeHero(hero1);
+
+        Troop resultTroop = troopDao.findOne(troop.getId());
+        Hero resultHero = heroDao.findOne(unassignedHero.getId());
+        Hero resultHero1 = heroDao.findOne(hero1.getId());
+
+        assertTrue(resultTroop.getHeroes().contains(unassignedHero));
+        assertEquals(resultHero.getTroop(), resultTroop);
+        assertFalse(resultTroop.getHeroes().contains(hero1));
+        assertNull(resultHero1.getTroop());
+        assertEquals(resultTroop.getHeroes().size(), 1);
     }
 
     private static Hero createHero(String name){

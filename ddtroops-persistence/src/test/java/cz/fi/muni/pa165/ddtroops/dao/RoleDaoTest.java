@@ -1,23 +1,22 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
-import cz.fi.muni.pa165.ddtroops.entity.Role;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
-
-import javax.persistence.*;
-import org.junit.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.orm.jpa.*;
-import org.springframework.test.context.*;
-import org.springframework.test.context.testng.*;
-import org.springframework.test.context.transaction.*;
-import org.springframework.transaction.annotation.*;
-import static org.testng.Assert.*;
+import cz.fi.muni.pa165.ddtroops.entity.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.*;
 
 
 /**
- * Created by pstanko.
  *
  * @author Petr Kolacek
  */
@@ -31,9 +30,7 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     
     @Autowired
     private HeroDao heroDao;
-    
-    @PersistenceContext
-    private EntityManager em;
+
     
     private Role role1;
     private Role role2;
@@ -51,17 +48,24 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
         hero = createHero("Hero");
         
         // persist
-        roleDao.create(role1);
-        roleDao.create(role2);
-        roleDao.create(role3);
-        
-        heroDao.create(hero);
+        roleDao.save(role1);
+        assertTrue(roleDao.findAll().contains(role1));
+
+        roleDao.save(role2);
+        assertTrue(roleDao.findAll().contains(role2));
+        roleDao.save(role3);
+        assertTrue(roleDao.findAll().contains(role3));
+
+
+        heroDao.save(hero);
+        assertTrue(heroDao.findAll().contains(hero));
+
     }
     
     @Test
     public void testGetRoleById() throws Exception 
     {
-        Role role = roleDao.findById(role1.getId());
+        Role role = roleDao.findOne(role1.getId());
         assertNotNull(role, "None role exists.");
         assertEquals(role, role1, "Wrong role returned.");
     }
@@ -69,7 +73,7 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetRoleByNonExistingId() throws Exception
     {
-        Role role = roleDao.findById(-10L);
+        Role role = roleDao.findOne(-10L);
         assertNull(role, "Should be null.");
     }
     
@@ -95,38 +99,53 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     public void testCreateNewRole() throws Exception
     {
         Role role = createRole("Pikeman", "Very universal soldier.");
-        roleDao.create(role);
+        roleDao.save(role);
         
-        assertEquals(roleDao.listAll().size(), 4);
-        assertTrue(roleDao.listAll().contains(role),
+        assertEquals(roleDao.findAll().size(), 4);
+        assertTrue(roleDao.findAll().contains(role),
                 "Failed to add new Role");
-        assertTrue(roleDao.listAll().contains(role1),
+        assertTrue(roleDao.findAll().contains(role1),
                 "Somehow managed to delete an already existing Role");
         
     }
     
-    @org.testng.annotations.Test(expectedExceptions = JpaSystemException.class)
+    @Test(expectedExceptions = JpaSystemException.class)
     public void testCreatingAlreadyExistingRole() throws Exception {
         Role role = createRole(role2.getName(), role2.getDescription());
-        roleDao.create(role);
+        roleDao.save(role);
     }
     
     @Test
     public void testHeroAssignedRole() throws Exception
     {
-        hero.addRole(role1);
-        hero.addRole(role2);
-        assertTrue(hero.getRoles().contains(role1), "Failed to assign role 1.");
-        assertTrue(hero.getRoles().contains(role2), "Failed to assign role 2.");
-        assertFalse(hero.getRoles().contains(role3), "Role 3 must be unassigned.");
+        role1.addHero(hero);
+        role2.addHero(hero);
+
+        Hero resultHero = heroDao.findOne(hero.getId());
+
+        assertTrue(resultHero.getRoles().contains(role1), "Failed to assign role 1.");
+        assertTrue(role1.getHeroes().contains(resultHero));
+
+        assertTrue(resultHero.getRoles().contains(role2), "Failed to assign role 2.");
+        assertTrue(role2.getHeroes().contains(resultHero));
+        assertFalse(resultHero.getRoles().contains(role3), "Role 3 must be unassigned.");
     }
     
     @Test
     public void testDeleteExistingRole() throws Exception
     {
         roleDao.delete(role3);
-        assertEquals(roleDao.listAll().size(), 3, "Failed to delete role.");
-        assertFalse(roleDao.listAll().contains(role3), "Failed to delete the right role.");
+        assertEquals(roleDao.findAll().size(), 2, "Failed to delete role.");
+        assertFalse(roleDao.findAll().contains(role3), "Failed to delete the right role.");
+    }
+
+    @Test
+    public void testDeleteExistingRoleWithHero() throws Exception
+    {
+        role1.addHero(hero);
+        roleDao.delete(role1);
+        assertEquals(roleDao.findAll().size(), 2, "Failed to delete role.");
+        assertFalse(roleDao.findAll().contains(role1), "Failed to delete the right role.");
     }
     
     /**
