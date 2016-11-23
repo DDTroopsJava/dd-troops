@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
 import cz.fi.muni.pa165.ddtroops.entity.User;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.facade.UserFacade;
-import cz.fi.muni.pa165.ddtroops.service.exceptions.InvallidPasswordException;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.InvalidPasswordException;
 import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
 import cz.fi.muni.pa165.ddtroops.service.services.UserService;
 import org.slf4j.Logger;
@@ -74,7 +74,7 @@ public class UserFacadeImpl implements UserFacade {
         User userEntity = beanMappingService.mapTo(userDTO, User.class);
         try {
             if(!userService.updatePassword(userEntity, oldPassword, newPassword)){
-                throw new InvallidPasswordException();
+                throw new InvalidPasswordException();
             }
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);

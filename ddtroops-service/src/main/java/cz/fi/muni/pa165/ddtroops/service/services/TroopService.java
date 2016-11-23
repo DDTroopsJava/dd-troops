@@ -3,8 +3,8 @@ package cz.fi.muni.pa165.ddtroops.service.services;
 import java.util.List;
 
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
 
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.springframework.stereotype.Service;
 
 /**

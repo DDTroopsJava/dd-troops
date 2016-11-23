@@ -2,12 +2,13 @@ package cz.fi.muni.pa165.ddtroops.service.services;
 
 import cz.fi.muni.pa165.ddtroops.dao.TroopDao;
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.dozer.Mapper;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.Assert;

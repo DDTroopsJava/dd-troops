@@ -11,8 +11,8 @@ import java.util.Optional;
 
 import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.dozer.Mapper;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.Assert;
@@ -110,7 +110,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
             return optUser.get();
         });
 
-        when(userDao.findAll()).thenAnswer( invole -> Collections.unmodifiableList(users));
+        when(userDao.findAll()).thenAnswer( invoke -> Collections.unmodifiableList(users));
 
     }
 

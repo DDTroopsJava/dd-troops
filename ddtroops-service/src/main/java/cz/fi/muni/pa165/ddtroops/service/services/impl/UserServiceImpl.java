@@ -9,7 +9,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
