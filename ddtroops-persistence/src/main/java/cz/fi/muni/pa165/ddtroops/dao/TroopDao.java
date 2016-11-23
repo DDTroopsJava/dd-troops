@@ -1,10 +1,9 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
+import java.util.List;
 
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.*;
 
 /**
  * Created by xgono
@@ -19,4 +18,6 @@ public interface TroopDao extends JpaRepository<Troop, Long> {
      * @return troop with given name if it exists, null if not
      */
     Troop findByName(String name);
+
+    List<Troop> findByMission(String name);
 }

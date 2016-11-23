@@ -18,6 +18,13 @@ public interface UserFacade {
     UserDTO findById(Long userId);
 
     /**
+     *
+     * @param userDTO
+     * @return
+     */
+    boolean delete(UserDTO userDTO);
+
+    /**
      * Gets user by email
      * @param email
      * @return

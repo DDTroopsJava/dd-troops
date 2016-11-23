@@ -20,10 +20,26 @@ public interface UserService {
     /**
      * Update the given user but cannot change unencrypted password!
      * @param u User that should be updated
-     * @throws DDTroopsServiceException When any error occures - constraints are not met or something
+     * @throws DDTroopsServiceException When any error occurs - constraints are not met or something
      */
     void update(User u) throws DDTroopsServiceException;
 
+    /**
+     * Removes user
+     * @param u - user
+     * @return return true if successfully deleted
+     * @throws DDTroopsServiceException
+     */
+    boolean delete(User u) throws DDTroopsServiceException;
+
+    /**
+     * Update user password
+     * @param u - for given user
+     * @param oldPassword - old password (unencrypted)
+     * @param newPassword - new password (unencrypted)
+     * @return true if changed, false if not
+     * @throws DDTroopsServiceException When any error occurs
+     */
     boolean updatePassword(User u, String oldPassword, String newPassword) throws DDTroopsServiceException;
 
     /**
@@ -51,5 +67,11 @@ public interface UserService {
      */
     User findById(Long userId) throws DDTroopsServiceException;
 
+    /**
+     * Find user by email
+     * @param email - User email
+     * @return User or null if not found
+     * @throws DDTroopsServiceException
+     */
     User findByEmail(String email) throws DDTroopsServiceException;
 }
