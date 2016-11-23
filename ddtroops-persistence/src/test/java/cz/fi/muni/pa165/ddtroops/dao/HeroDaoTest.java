@@ -232,7 +232,7 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         // create a hero
         Hero hero = new Hero();
         hero.setName(name);
-        hero.setExperience(1);
+        hero.setLevel(1);
 
         // and return it
         return hero;

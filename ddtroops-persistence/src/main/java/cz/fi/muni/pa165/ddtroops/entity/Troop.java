@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
  * @author xgono
  */
 @Entity
-public class Troop {
+public class Troop implements Comparable<Troop> {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -110,6 +110,24 @@ public class Troop {
         }
     }
 
+    public long getAttackPower(){
+        return heroes.stream().mapToLong(Hero::getAttackPower).sum();
+    }
+
+    public long getDefensePower(){
+        return heroes.stream().mapToLong(Hero::getDefensePower).sum();
+    }
+
+    public void levelUpHeroes(){
+        heroes.forEach(Hero::levelUp);
+    }
+
+
+    public int size() {
+        return heroes.size();
+    }
+
+
     @PreRemove
     private void removeHeroesFromTroop() {
         for (Hero hero : heroes) {
@@ -143,6 +161,11 @@ public class Troop {
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         return result;
     }
-    
-    
+
+    @Override
+    public int compareTo(Troop troop) {
+        long troopSum = troop.getDefensePower() + troop.getAttackPower();
+        long thisSum = getDefensePower() + getAttackPower();
+        return  (int) (thisSum - troopSum);
+    }
 }

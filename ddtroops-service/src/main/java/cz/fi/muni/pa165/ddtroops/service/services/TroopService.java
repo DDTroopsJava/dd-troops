@@ -50,4 +50,8 @@ public interface TroopService {
      * @throws DDTroopsServiceException when an error occures
      */
     void delete(Troop t) throws DDTroopsServiceException;
+
+    Troop battle(Troop t1, Troop t2) throws DDTroopsServiceException;
+
+    List<Troop> topN(int n, String mission, Long troopSize) throws DDTroopsServiceException;
 }

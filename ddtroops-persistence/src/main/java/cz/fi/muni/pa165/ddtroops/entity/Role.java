@@ -23,6 +23,12 @@ public class Role {
     @Column(nullable = false)
     private String description;
 
+    @Column
+    private long attackPower;
+
+    @Column
+    private long defensePower;
+
     public Role(String name) {
         this.name = name;
         this.description = name + "'s sample description!";
@@ -135,5 +141,17 @@ public class Role {
         }
         removeHeroWithoutUpdate(h);
         return h;
+    }
+
+    public long getAttackPower() {
+        return attackPower;
+    }
+
+    public void setAttackPower(long attackPower) {
+        this.attackPower = attackPower;
+    }
+
+    public long getDefensePower() {
+        return defensePower;
     }
 }

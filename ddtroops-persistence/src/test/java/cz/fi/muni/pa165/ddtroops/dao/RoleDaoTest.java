@@ -166,7 +166,7 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
     {
         Hero hero = new Hero();
         hero.setName(name);
-        hero.setExperience(1);
+        hero.setLevel(1);
         return hero;
     }
        
