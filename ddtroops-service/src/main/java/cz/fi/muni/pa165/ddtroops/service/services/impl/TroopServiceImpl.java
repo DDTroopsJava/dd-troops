@@ -8,6 +8,7 @@ import cz.fi.muni.pa165.ddtroops.dao.TroopDao;
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.TroopService;
+import java.util.Comparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,20 +92,26 @@ public class TroopServiceImpl implements TroopService {
 
         Stream<Troop> stream;
 
-        if (mission != null && troopSize != null) {
-            stream = troopDao.findByMission(mission).stream().filter(t -> t.size() == troopSize);
+        try {
+            if (mission != null && troopSize != null) {
+                stream = troopDao.findByMission(mission).stream().filter(t -> t.size() == troopSize);
 
-        } else if (mission != null) {
-            stream = troopDao.findByMission(mission).stream();
-        } else if (troopSize != null) {
-            stream = troopDao.findAll().stream().filter(t -> t.size() == troopSize);
-        } else {
-            stream = troopDao.findAll().stream();
+            } else if (mission != null) {
+                stream = troopDao.findByMission(mission).stream();
+            } else if (troopSize != null) {
+                stream = troopDao.findAll().stream().filter(t -> t.size() == troopSize);
+            } else {
+                stream = troopDao.findAll().stream();
+            }
+
+            Stream<Troop> sortedStream = stream.sorted(Comparator.comparing(Troop::getAttackPower).reversed());
+            List<Troop> sortedList = sortedStream
+                .limit(n)
+                .collect(Collectors.toList());
+            return sortedList;
+        } catch (IllegalArgumentException ex) {
+            throw new DDTroopsServiceException("Can't return Top N if N is negative!");
         }
-
-        return stream.sorted()
-            .limit(n)
-            .collect(Collectors.toList());
 
     }
 }
