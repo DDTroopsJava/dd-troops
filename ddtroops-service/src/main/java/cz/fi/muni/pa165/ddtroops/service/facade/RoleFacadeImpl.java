@@ -34,7 +34,7 @@ public class RoleFacadeImpl implements RoleFacade
     public RoleDTO createRole(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
-            roleService.createRole(roleEntity);
+            roleService.create(roleEntity);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
@@ -80,7 +80,7 @@ public class RoleFacadeImpl implements RoleFacade
     public RoleDTO updateRole(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
-            roleService.updateRole(roleEntity);
+            roleService.update(roleEntity);
             role.setId(roleEntity.getId());
             return role;
         }catch (DDTroopsServiceException ex){
@@ -93,7 +93,7 @@ public class RoleFacadeImpl implements RoleFacade
     public Boolean deleteRole(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
-            roleService.deleteRole(roleEntity);
+            roleService.delete(roleEntity);
             role.setId(roleEntity.getId());
             return true;
         }catch (DDTroopsServiceException ex){
@@ -102,15 +102,5 @@ public class RoleFacadeImpl implements RoleFacade
         return false;
     }
 
-    @Override
-    public Boolean deleteAllRoles() {
-        try {
-            beanMappingService.mapTo(roleService.deleteAllRoles(), RoleDTO.class);
-            return true;
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-        }
-        return false;
-    }
     
 }
