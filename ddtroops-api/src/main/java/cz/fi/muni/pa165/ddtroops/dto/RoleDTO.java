@@ -18,6 +18,11 @@ public class RoleDTO {
     public RoleDTO(String name) {
         this.name = name;
     }
+    
+    public RoleDTO(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public void setName(String name) {
         this.name = name;
