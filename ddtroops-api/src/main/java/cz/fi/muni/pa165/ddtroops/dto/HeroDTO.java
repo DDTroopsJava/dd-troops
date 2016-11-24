@@ -18,7 +18,7 @@ public class HeroDTO {
 
     private TroopDTO troop;
 
-    private int experience;
+    private int level;
 
     HeroDTO(String name) {
         this.name = name;
@@ -26,10 +26,10 @@ public class HeroDTO {
 
     HeroDTO() {}
 
-    public HeroDTO(String name, int experience) {
+    public HeroDTO(String name, int level) {
         this.name = name;
         this.troop = troop;
-        this.experience = experience;
+        this.level = level;
     }
 
     public void setId(Long id) {
@@ -64,12 +64,12 @@ public class HeroDTO {
         this.troop = troop;
     }
 
-    public int getExperience() {
-        return experience;
+    public int getLevel() {
+        return level;
     }
 
-    public void setExperience(int experience) {
-        this.experience = experience;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class HeroDTO {
             ", name='" + name + '\'' +
             ", roles=" + roles +
             ", troop=" + troop +
-            ", experience=" + experience +
+            ", level=" + level +
             '}';
     }
 }

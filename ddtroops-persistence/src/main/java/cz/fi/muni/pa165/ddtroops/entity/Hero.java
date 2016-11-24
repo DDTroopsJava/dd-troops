@@ -30,7 +30,7 @@ public class Hero {
     @JoinColumn(name = "troopId")
     private Troop troop;
 
-    private int experience;
+    private int level;
 
     public Hero(String name) {
         this.name = name;
@@ -63,6 +63,20 @@ public class Hero {
         roles.add(role);
     }
 
+
+    public long getAttackPower(){
+        return roles.stream().mapToLong(Role::getAttackPower).sum() * level;
+    }
+
+    public long getDefensePower(){
+        return roles.stream().mapToLong(Role::getDefensePower).sum() * level;
+    }
+
+    public long levelUp(){
+        return ++level;
+    }
+
+
     public void addRole(Role role) {
         addRoleWithoutUpdate(role);
         if(role != null) {
@@ -79,12 +93,12 @@ public class Hero {
         return roles.remove(role);
     }
 
-    public int getExperience() {
-        return experience;
+    public int getLevel() {
+        return level;
     }
 
-    public void setExperience(int experience) {
-        this.experience = experience;
+    public void setLevel(int experience) {
+        this.level = experience;
     }
 
     @Override

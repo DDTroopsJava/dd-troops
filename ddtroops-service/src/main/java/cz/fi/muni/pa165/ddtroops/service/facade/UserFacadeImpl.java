@@ -45,8 +45,20 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public boolean delete(UserDTO userDTO) {
+        User userEntity = beanMappingService.mapTo(userDTO, User.class);
+        try {
+            userService.delete(userEntity);
+            return true;
+        }catch (DDTroopsServiceException ex){
+            logger.warn(ex.getMessage(), ex);
+        }
+        return false;
+    }
+
+    @Override
     public UserDTO findByEmail(String email) {
-        User user = null;
+        User user;
         try {
             user = userService.findByEmail(email);
         } catch (DDTroopsServiceException e) {
@@ -71,7 +83,9 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public UserDTO updatePassword(UserDTO userDTO, String oldPassword, String newPassword) {
+
         User userEntity = beanMappingService.mapTo(userDTO, User.class);
+
         try {
             if(!userService.updatePassword(userEntity, oldPassword, newPassword)){
                 throw new InvalidPasswordException();
@@ -79,7 +93,8 @@ public class UserFacadeImpl implements UserFacade {
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
-        return userDTO;
+
+        return findById(userDTO.getId());
     }
 
     @Override
@@ -106,7 +121,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public boolean authenticate(String email, String unencryptedPassword) {
         try {
-            return userService.authenticate(userService.findByEmail(email), unencryptedPassword);
+            User user = userService.findByEmail(email);
+            return user != null && userService.authenticate(user, unencryptedPassword);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
 

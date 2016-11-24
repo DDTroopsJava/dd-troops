@@ -37,11 +37,23 @@ public class TestUtils {
     public static Role createRole(String name){
         return new Role(name);
     }
+    
+    public static Role createRole(String name, long attackPower){
+        Role role = new Role(name);
+        role.setAttackPower(attackPower);
+        return role;
+    }
 
     public static Hero createHero(String name){
         return new Hero(name);
     }
 
+    public static Hero createHero(String name, Role role, int level){
+        Hero hero = new Hero(name);
+        hero.setLevel(level);
+        hero.addRole(role);
+        return hero;
+    }
 
     public static UserDTO createUserDto(String name){
         return new UserDTO(name);
