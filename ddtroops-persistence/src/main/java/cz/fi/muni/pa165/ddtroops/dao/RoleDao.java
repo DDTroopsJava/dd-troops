@@ -18,5 +18,4 @@ public interface RoleDao extends JpaRepository<Role, Long> {
      */
     
     public Role findByName(String name);
-
 }
