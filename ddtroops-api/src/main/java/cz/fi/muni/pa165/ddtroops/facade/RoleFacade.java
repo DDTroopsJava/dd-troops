@@ -52,10 +52,5 @@ public interface RoleFacade {
      */
     public Boolean deleteRole(RoleDTO role);
     
-    /**
-     * Delete all roles
-     * @return true if all roles were deleted, false otherwise
-     */
-    public Boolean deleteAllRoles();
 
 }
