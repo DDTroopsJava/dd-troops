@@ -345,5 +345,4 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
         // troop3 should have AP = 1000
         testTroop3.addHero(hero1FromTroop3);
     }
-    }
 }
