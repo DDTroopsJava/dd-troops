@@ -28,10 +28,10 @@ public class RoleFacadeImpl implements RoleFacade
     @Autowired
     private BeanMappingService beanMappingService;
 
-    private Logger logger = LoggerFactory.getLogger(RoleFacadeImpl.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(RoleFacadeImpl.class.getName());
 
     @Override
-    public RoleDTO createRole(RoleDTO role) {
+    public RoleDTO create(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
             roleService.create(roleEntity);
@@ -77,7 +77,7 @@ public class RoleFacadeImpl implements RoleFacade
     }
 
     @Override
-    public RoleDTO updateRole(RoleDTO role) {
+    public RoleDTO update(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
             roleService.update(roleEntity);
@@ -90,16 +90,13 @@ public class RoleFacadeImpl implements RoleFacade
     }
 
     @Override
-    public Boolean deleteRole(RoleDTO role) {
+    public void delete(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
             roleService.delete(roleEntity);
-            role.setId(roleEntity.getId());
-            return true;
         }catch (DDTroopsServiceException ex){
             logger.warn(ex.getMessage(), ex);
         }
-        return false;
     }
 
     

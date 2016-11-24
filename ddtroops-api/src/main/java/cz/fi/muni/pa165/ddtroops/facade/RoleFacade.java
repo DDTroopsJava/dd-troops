@@ -16,7 +16,7 @@ public interface RoleFacade {
      * @param role - created role
      * @return new role with id
      */
-    public RoleDTO createRole(RoleDTO role);
+    public RoleDTO create(RoleDTO role);
     
     /**
      * Find role by id
@@ -43,14 +43,13 @@ public interface RoleFacade {
      * @param role updating role
      * @return updated role
      */
-    public RoleDTO updateRole(RoleDTO role);
+    public RoleDTO update(RoleDTO role);
     
     /**
      * Deletes role
      * @param role role that will be removed
-     * @return true if role is deleted, false otherwise
      */
-    public Boolean deleteRole(RoleDTO role);
+    public void delete(RoleDTO role);
     
 
 }
