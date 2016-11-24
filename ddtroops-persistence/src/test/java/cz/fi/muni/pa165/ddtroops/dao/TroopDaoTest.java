@@ -201,7 +201,7 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
     private static Hero createHero(String name){
         Hero hero = new Hero();
         hero.setName(name);
-        hero.setExperience(1000);
+        hero.setLevel(1000);
         return hero;
     }
 

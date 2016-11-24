@@ -3,8 +3,8 @@ package cz.fi.muni.pa165.ddtroops.service.services;
 import java.util.List;
 
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
 
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,4 +50,8 @@ public interface TroopService {
      * @throws DDTroopsServiceException when an error occures
      */
     void delete(Troop t) throws DDTroopsServiceException;
+
+    Troop battle(Troop t1, Troop t2) throws DDTroopsServiceException;
+
+    List<Troop> topN(int n, String mission, Long troopSize) throws DDTroopsServiceException;
 }

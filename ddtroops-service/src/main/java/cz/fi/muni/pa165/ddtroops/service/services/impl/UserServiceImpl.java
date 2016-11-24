@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.List;
 
 import javax.crypto.SecretKeyFactory;
@@ -9,7 +10,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
         }
         try {
             u.setPasswordHash(createHash(unencryptedPassword));
+            u.setJoinedDate(new Date());
             userDao.save(u);
         } catch (Throwable ex){
                 throw new DDTroopsServiceException("Cannot create user: " + u.getEmail() , ex);
@@ -49,6 +51,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean delete(User u) throws DDTroopsServiceException {
+        if(u == null){
+            throw new IllegalArgumentException("User is null!");
+        }
+        try {
+            userDao.delete(u);
+            return true;
+        }catch (Throwable ex){
+            throw new DDTroopsServiceException("Cannot delete user: " + u.getId(),ex);
+        }
+    }
+
+    @Override
     public boolean updatePassword(User u, String oldPassword, String newPassword) throws DDTroopsServiceException {
         if(u == null){
             throw new IllegalArgumentException("User is null!");
@@ -58,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
         try{
             if (validatePassword(oldPassword, user.getPasswordHash())) {
-                user.setPasswordHash(createHash(newPassword));
+                u.setPasswordHash(createHash(newPassword));
                 userDao.save(u);
                 return true;
             }

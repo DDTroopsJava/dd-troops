@@ -2,8 +2,8 @@ package cz.fi.muni.pa165.ddtroops.service.facade;
 
 import cz.fi.muni.pa165.ddtroops.dto.TroopDTO;
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
-import cz.fi.muni.pa165.ddtroops.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.facade.TroopFacade;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
 import cz.fi.muni.pa165.ddtroops.service.services.TroopService;
 import java.util.List;
