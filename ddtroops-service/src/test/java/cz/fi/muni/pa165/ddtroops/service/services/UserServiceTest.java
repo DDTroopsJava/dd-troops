@@ -15,7 +15,6 @@ import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.hibernate.service.spi.ServiceException;
-import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -85,7 +84,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
                 return mockedUser;
             }
             if(userDao.findByEmail(mockedUser.getEmail()) != null){
-                throw new IllegalArgumentException("User alredy exists!");
+                throw new IllegalArgumentException("User already exists!");
             }
             mockedUser.setId( (long) users.size() );
             users.add(mockedUser);
@@ -170,7 +169,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldAuthentificateUserWithValidCredentials() throws Exception
+    public void shouldAuthenticateUserWithValidCredentials() throws Exception
     {
         User newUser = TestUtils.createUser("new_user");
         userService.register(newUser, PASSWORD_123);
@@ -202,7 +201,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldReturnNullWhenNonExistingId() throws Exception {
-        Assert.assertNull(userService.findById(1000L));
+        assertNull(userService.findById(1000L));
     }
 
     @Test
@@ -213,7 +212,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     }
     @Test
     public void shouldReturnNullWhenNonExistingEmail() throws Exception {
-        Assert.assertNull(userService.findByEmail("nonexist@example.com"));
+        assertNull(userService.findByEmail("nonexist@example.com"));
     }
 
     @Test
