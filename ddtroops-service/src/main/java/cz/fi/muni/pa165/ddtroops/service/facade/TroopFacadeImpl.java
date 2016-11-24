@@ -27,7 +27,7 @@ public class TroopFacadeImpl implements TroopFacade {
     @Autowired
     private BeanMappingService beanMappingService;
     
-    private final Logger logger = LoggerFactory.getLogger(UserFacadeImpl.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(TroopFacadeImpl.class.getName());
 
     @Override
     public TroopDTO findById(Long troopId) {
