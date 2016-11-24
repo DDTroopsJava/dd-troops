@@ -19,7 +19,7 @@ public class RoleServiceImpl implements RoleService
     private RoleDao roleDao;
 
     @Override
-    public void createRole(Role role) throws DDTroopsServiceException {
+    public void create(Role role) throws DDTroopsServiceException {
         if (role == null) {
             throw new IllegalArgumentException("Role is null.");
         }
@@ -65,7 +65,7 @@ public class RoleServiceImpl implements RoleService
     }
 
     @Override
-    public void updateRole(Role role) throws DDTroopsServiceException {
+    public void update(Role role) throws DDTroopsServiceException {
         if (role == null) {
             throw new IllegalArgumentException("Role is null.");
         }
@@ -79,10 +79,7 @@ public class RoleServiceImpl implements RoleService
     }
 
     @Override
-    public void deleteRole(Role role) throws DDTroopsServiceException {
-        if (role == null) {
-            throw new IllegalArgumentException("Role is null.");
-        }
+    public void delete(Role role) throws DDTroopsServiceException {
         try {
             roleDao.delete(role);
         }
@@ -92,14 +89,4 @@ public class RoleServiceImpl implements RoleService
         }
     }
 
-    @Override
-    public Boolean deleteAllRoles() throws DDTroopsServiceException {
-        try {
-            roleDao.deleteAll();
-            return true;
-        }
-        catch (Throwable e) {
-            throw new DDTroopsServiceException("Cannot delete all roles.", e);
-        }
-    }
 }

@@ -62,16 +62,17 @@ public class RoleServiceTest extends AbstractTestNGSpringContextTests
     @BeforeMethod
     public void prepareTestRoles()
     {
-        role1 = TestUtils.createRole("Role 1");
-        role2 = TestUtils.createRole("Role 2");
-        role3 = TestUtils.createRole("Role 3");
+        role1 = TestUtils.createRole("Role one");
+        role2 = TestUtils.createRole("Role two");
+        role3 = TestUtils.createRole("Role three");
         
         role1.setId(1L);
         role2.setId(2L);
         role3.setId(3L);
         
         roles = new ArrayList<>();
-        roles.add(new Role("root", "root description"));
+        
+        roles.add(new Role("root"));
         roles.add(role1);
         roles.add(role2);
         roles.add(role3);
@@ -124,6 +125,70 @@ public class RoleServiceTest extends AbstractTestNGSpringContextTests
             return null;
         }).when(roleDao).delete(any(Role.class));
         
+    }
+    
+    @Test
+    public void shouldReturnRoleById() throws Exception
+    {
+        assertEquals(roleService.findById(role2.getId()), role2);
+        assertNotEquals(roleService.findById(role2.getId()), role3);
+    }
+    
+    @Test
+    public void shouldReturnRoleByName() throws Exception
+    {
+        assertEquals(roleService.findByName(role2.getName()), role2);
+        assertNotEquals(roleService.findByName(role2.getName()), role3);
+    }
+    
+    @Test
+    public void shouldNotReturnRoleByNonExistingId() throws Exception
+    {
+        Assert.assertNull(roleService.findById(666L));
+    }
+    
+    @Test
+    public void shouldNotReturnRoleByNonExistingName() throws Exception
+    {
+        Assert.assertNull(roleService.findByName("Swordsman"));
+    }
+    
+    
+    @Test
+    public void shouldDeleteRole() throws Exception
+    {   
+        int initialSize = roles.size();
+        roleService.delete(role1);
+        assertEquals(initialSize - 1, roles.size());
+        
+        Role deletedRole1 = roleService.findByName(role1.getName());
+        Role deletedRole2 = roleService.findByName(role2.getName());
+        Assert.assertNull(deletedRole1);
+        Assert.assertNotNull(deletedRole2);
+    }
+    
+    @Test(expectedExceptions = DDTroopsServiceException.class)
+    public void shouldNotDeleteNonExistingRole() throws Exception
+    {
+        roleService.delete(new Role("Archer"));
+    }
+    
+    @Test(expectedExceptions = NullPointerException.class)
+    public void shouldNotDeleteNonExistingRoleByName() throws Exception
+    {
+        roleService.delete(roleService.findByName("Baker"));
+    }
+    
+    @Test(expectedExceptions = DDTroopsServiceException.class)
+    public void shouldNotAddDuplicateTroop() throws Exception
+    {
+        roleService.create(new Role("Role two"));
+    }
+    
+    @Test(expectedExceptions = DDTroopsServiceException.class)
+    public void shouldNotAddDuplicateTroopByEdit() throws Exception
+    {
+        roleService.update(new Role("Role three"));
     }
     
 }
