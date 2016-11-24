@@ -42,6 +42,7 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     @InjectMocks
     private HeroService heroService;
 
+
     private Hero testHero;
     private Hero testHero2;
 
@@ -134,14 +135,14 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     {
         int origSize = heroes.size();
         long origId = testHero.getId();
-        testHero.setName("New name");//set level, experience, troop, troopWithoutUpdate
+        testHero.setName("New name");
 
         heroService.updateHero(testHero);
         assertEquals((long)testHero.getId(), origId);
         assertEquals(origSize, heroes.size());
         Hero hero = heroService.findById(testHero.getId());
         assertEquals(hero, testHero);
-        assertEquals(hero.getName(), "New name");//get level, experience, troop, troopWithoutUpdate
+        assertEquals(hero.getName(), "New name");
     }
 
     @Test
@@ -168,9 +169,10 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
         assertEquals(heroByName, testHero);
         assertNotEquals(heroService.findByName(testHero.getName()), testHero2);
     }
+
     @Test
     public void shouldReturnNullWhenNonExistingUserName() throws Exception {
-        assertNull(heroService.findByName("nonexist"));
+        assertNull(heroService.findByName("non-existing"));
     }
 
     @Test

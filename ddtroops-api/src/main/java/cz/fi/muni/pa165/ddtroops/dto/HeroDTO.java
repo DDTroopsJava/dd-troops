@@ -20,11 +20,11 @@ public class HeroDTO {
 
     private int level;
 
-    HeroDTO(String name) {
+    public HeroDTO(String name) {
         this.name = name;
     }
 
-    HeroDTO() {}
+    public HeroDTO() {}
 
     public HeroDTO(String name, int level) {
         this.name = name;
