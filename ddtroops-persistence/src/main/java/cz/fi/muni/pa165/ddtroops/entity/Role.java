@@ -33,6 +33,11 @@ public class Role {
         this.name = name;
         this.description = name + "'s sample description!";
     }
+   
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public Role() {
 
