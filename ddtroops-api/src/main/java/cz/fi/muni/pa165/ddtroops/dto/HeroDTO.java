@@ -24,7 +24,8 @@ public class HeroDTO {
         this.name = name;
     }
 
-    public HeroDTO() {}
+    public HeroDTO() {
+    }
 
     public HeroDTO(String name, int level) {
         this.name = name;
@@ -32,12 +33,12 @@ public class HeroDTO {
         this.level = level;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -93,11 +94,11 @@ public class HeroDTO {
     @Override
     public String toString() {
         return "HeroDTO{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", roles=" + roles +
-            ", troop=" + troop +
-            ", level=" + level +
-            '}';
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", roles=" + roles +
+                ", troop=" + troop +
+                ", level=" + level +
+                '}';
     }
 }

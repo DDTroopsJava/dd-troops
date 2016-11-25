@@ -16,11 +16,9 @@ public class UserDTO {
     private Date joinedDate;
     private boolean admin;
 
-    public UserDTO(){
+    public UserDTO() {
 
     }
-
-
 
 
     public UserDTO(String name) {
@@ -68,7 +66,6 @@ public class UserDTO {
     }
 
 
-
     public String getPhone() {
         return phone;
     }
@@ -85,14 +82,13 @@ public class UserDTO {
         this.joinedDate = joinedDate;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
-
     public boolean isAdmin() {
         return admin;
     }
 
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 
     @Override
     public int hashCode() {
@@ -108,7 +104,7 @@ public class UserDTO {
             return true;
         if (obj == null)
             return false;
-        if (! (obj instanceof UserDTO) )
+        if (!(obj instanceof UserDTO))
             return false;
         UserDTO other = (UserDTO) obj;
         if (email == null) {

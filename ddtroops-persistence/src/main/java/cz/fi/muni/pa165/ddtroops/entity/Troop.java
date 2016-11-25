@@ -1,40 +1,32 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
-import javax.validation.constraints.NotNull;
-
 /**
  * Created by xgono
- * 
+ *
  * @author xgono
  */
 @Entity
 public class Troop implements Comparable<Troop> {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotNull
     @Column(nullable = false, unique = true)
     private String name;
-    
+
     @Column(nullable = false)
     private String mission;
-    
+
     @Column(nullable = false)
     private int gold;
-    
+
     @OneToMany(mappedBy = "troop", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Hero> heroes = new HashSet<>();
 
@@ -59,11 +51,11 @@ public class Troop implements Comparable<Troop> {
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -91,7 +83,7 @@ public class Troop implements Comparable<Troop> {
     public Set<Hero> getHeroes() {
         return Collections.unmodifiableSet(heroes);
     }
-    
+
     public void addHero(Hero hero) {
         heroes.add(hero);
         if (hero != null) {
@@ -104,21 +96,21 @@ public class Troop implements Comparable<Troop> {
     }
 
     public void removeHero(Hero hero) {
-        if(hero.getTroop().equals(this)) {
+        if (hero.getTroop().equals(this)) {
             heroes.remove(hero);
             hero.setTroopWithoutUpdate(null);
         }
     }
 
-    public long getAttackPower(){
+    public long getAttackPower() {
         return heroes.stream().mapToLong(Hero::getAttackPower).sum();
     }
 
-    public long getDefensePower(){
+    public long getDefensePower() {
         return heroes.stream().mapToLong(Hero::getDefensePower).sum();
     }
 
-    public void levelUpHeroes(){
+    public void levelUpHeroes() {
         heroes.forEach(Hero::levelUp);
     }
 
@@ -137,14 +129,14 @@ public class Troop implements Comparable<Troop> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) 
+        if (this == obj)
             return true;
         if (obj == null)
             return false;
         if (!(obj instanceof Troop))
             return false;
-        
-        Troop troop = (Troop)obj;
+
+        Troop troop = (Troop) obj;
         if (getName() == null) {
             if (troop.getName() != null)
                 return false;
@@ -153,7 +145,7 @@ public class Troop implements Comparable<Troop> {
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 37;
@@ -166,6 +158,6 @@ public class Troop implements Comparable<Troop> {
     public int compareTo(Troop troop) {
         long troopSum = troop.getDefensePower() + troop.getAttackPower();
         long thisSum = getDefensePower() + getAttackPower();
-        return  (int) (thisSum - troopSum);
+        return (int) (thisSum - troopSum);
     }
 }

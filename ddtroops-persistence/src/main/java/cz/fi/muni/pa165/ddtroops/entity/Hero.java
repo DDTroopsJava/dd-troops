@@ -7,17 +7,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author P. Zaoral
  */
 @Entity
 public class Hero {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false,unique=true)
+    @Column(nullable = false, unique = true)
     @NotNull
     private String name;
 
@@ -64,22 +63,22 @@ public class Hero {
     }
 
 
-    public long getAttackPower(){
+    public long getAttackPower() {
         return roles.stream().mapToLong(Role::getAttackPower).sum() * level;
     }
 
-    public long getDefensePower(){
+    public long getDefensePower() {
         return roles.stream().mapToLong(Role::getDefensePower).sum() * level;
     }
 
-    public long levelUp(){
+    public long levelUp() {
         return ++level;
     }
 
 
     public void addRole(Role role) {
         addRoleWithoutUpdate(role);
-        if(role != null) {
+        if (role != null) {
             role.addHeroWithoutUpdate(this);
         }
     }
@@ -122,11 +121,11 @@ public class Hero {
         return troop;
     }
 
-    public void setTroop(Troop troop){
+    public void setTroop(Troop troop) {
 
-        if(troop != null) {
+        if (troop != null) {
             troop.addHeroWithoutUpdate(this);
-        }else if(this.troop != null) {
+        } else if (this.troop != null) {
             this.troop.removeHero(this);
         }
         setTroopWithoutUpdate(troop);
@@ -137,11 +136,11 @@ public class Hero {
     }
 
     @PreRemove
-    public void removeRolesAndTroop(){
+    public void removeRolesAndTroop() {
         for (Role role : roles) {
             role.removeHero(this);
         }
-        if(troop != null) {
+        if (troop != null) {
             troop.removeHero(this);
         }
     }

@@ -216,12 +216,11 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
         assertEquals(result.getRoles().size(), 2);
     }
 
-    private Troop createTestTroop(String name)
-    {
+    private Troop createTestTroop(String name) {
         Troop troop = new Troop();
         troop.setName(name);
         troop.setGold(12345);
-        troop.setMission("Mission for "+ name);
+        troop.setMission("Mission for " + name);
         return troop;
     }
 

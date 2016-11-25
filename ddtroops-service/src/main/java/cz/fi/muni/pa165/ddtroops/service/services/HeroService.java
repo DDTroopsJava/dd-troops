@@ -20,48 +20,53 @@ public interface HeroService {
     /**
      * Creates hero
      *
-     * @param hero  hero that will be created
-     * @return  created hero with id
+     * @param hero hero that will be created
+     * @return created hero with id
      */
-    void createHero (Hero hero) throws DDTroopsServiceException;
+    void createHero(Hero hero) throws DDTroopsServiceException;
 
     /**
      * Gets hero with unique id
-     * @param id    hero id
-     * @return  hero wuth particular unique id
+     *
+     * @param id hero id
+     * @return hero wuth particular unique id
      */
     Hero findById(Long id) throws DDTroopsServiceException;
 
     /**
      * Gets hero with unique name.
-     * @param name  hero name
-     * @return  hero with particular unique name
+     *
+     * @param name hero name
+     * @return hero with particular unique name
      */
-   Hero findByName(String name) throws DDTroopsServiceException;
+    Hero findByName(String name) throws DDTroopsServiceException;
 
     /**
      * Gets all heroes
-     * @return  collection of heroes
+     *
+     * @return collection of heroes
      */
     List<Hero> findAll() throws DDTroopsServiceException;
 
     /**
      * Updates existing hero
-     * @param hero  hero that will be updated
+     *
+     * @param hero hero that will be updated
      */
-    void updateHero (Hero hero) throws DDTroopsServiceException;
+    void updateHero(Hero hero) throws DDTroopsServiceException;
 
     /**
      * Removes particular hero
+     *
      * @param hero hero that will be deleted
      */
-    void deleteHero (Hero hero)  throws DDTroopsServiceException;
+    void deleteHero(Hero hero) throws DDTroopsServiceException;
 
     /**
      * Delete all heroes
      *
      * @return list of deleted heroes
      */
-    Boolean deleteAllHeroes()  throws DDTroopsServiceException;
+    Boolean deleteAllHeroes() throws DDTroopsServiceException;
 }
 

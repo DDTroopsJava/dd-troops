@@ -49,7 +49,7 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     private List<Hero> heroes = new ArrayList<>();
 
     @BeforeMethod
-    public void prepareTestHeroes(){
+    public void prepareTestHeroes() {
         heroes.clear();
         testHero = TestUtils.createHero("Chuck");
         testHero2 = TestUtils.createHero("Donald");
@@ -62,7 +62,7 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
         heroes.add(testHero);
         heroes.add(testHero2);
 
-        for(long i = 3L; i <= 5L;i++){
+        for (long i = 3L; i <= 5L; i++) {
             Hero hero = TestUtils.createHero("user" + 1);
             hero.setId(i);
             heroes.add(hero);
@@ -70,31 +70,30 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @BeforeClass
-    public void setupMocks() throws ServiceException
-    {
+    public void setupMocks() throws ServiceException {
         MockitoAnnotations.initMocks(this);
         when(heroDao.save(any(Hero.class))).thenAnswer(invoke -> {
             Hero mockedHero = invoke.getArgumentAt(0, Hero.class);
-            if(mockedHero.getId() != null){
+            if (mockedHero.getId() != null) {
                 heroes.set(mockedHero.getId().intValue(), mockedHero);
                 return mockedHero;
             }
-            if(heroDao.findByName(mockedHero.getName()) != null){
+            if (heroDao.findByName(mockedHero.getName()) != null) {
                 throw new IllegalArgumentException("Hero already exists!");
             }
-            mockedHero.setId( (long) heroes.size() );
+            mockedHero.setId((long) heroes.size());
             heroes.add(mockedHero);
             return mockedHero;
         });
 
-        when(heroDao.findOne(anyLong())).thenAnswer(invoke  -> {
+        when(heroDao.findOne(anyLong())).thenAnswer(invoke -> {
 
             int argumentAt = invoke.getArgumentAt(0, Long.class).intValue();
             if (argumentAt >= heroes.size()) return null;
             return heroes.get(argumentAt);
         });
 
-        when(heroDao.findByName(anyString())).thenAnswer( invoke -> {
+        when(heroDao.findByName(anyString())).thenAnswer(invoke -> {
             String arg = invoke.getArgumentAt(0, String.class);
             Optional<Hero> optHero = heroes.stream().filter((user) -> user.getName().equals(arg)).findFirst();
             return optHero.orElse(null);
@@ -107,9 +106,12 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
             return mockedHero;
         }).when(heroDao).delete(any(Hero.class));
 
-        when(heroDao.findAll()).thenAnswer( invoke -> Collections.unmodifiableList(heroes));
+        when(heroDao.findAll()).thenAnswer(invoke -> Collections.unmodifiableList(heroes));
 
-        doAnswer(invoke -> {heroes.clear(); return heroes;}).when(heroDao).deleteAll();
+        doAnswer(invoke -> {
+            heroes.clear();
+            return heroes;
+        }).when(heroDao).deleteAll();
     }
 
     @Test
@@ -118,7 +120,7 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
         Hero newHero = TestUtils.createHero("new_hero");
         heroService.createHero(newHero);
         assertEquals(heroes.size(), origSize + 1);
-        assertEquals(newHero.getId().intValue(),  heroes.size() - 1); // should have next id
+        assertEquals(newHero.getId().intValue(), heroes.size() - 1); // should have next id
         assertTrue(heroes.contains(newHero));
     }
 
@@ -131,14 +133,13 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldUpdateExistingHero() throws Exception
-    {
+    public void shouldUpdateExistingHero() throws Exception {
         int origSize = heroes.size();
         long origId = testHero.getId();
         testHero.setName("New name");
 
         heroService.updateHero(testHero);
-        assertEquals((long)testHero.getId(), origId);
+        assertEquals((long) testHero.getId(), origId);
         assertEquals(origSize, heroes.size());
         Hero hero = heroService.findById(testHero.getId());
         assertEquals(hero, testHero);
@@ -146,8 +147,7 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldFindAllHeroes() throws Exception
-    {
+    public void shouldFindAllHeroes() throws Exception {
         assertEquals(heroService.findAll().size(), 6);
     }
 
@@ -176,14 +176,14 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldRemoveHero() throws Exception{
+    public void shouldRemoveHero() throws Exception {
         assertTrue(heroes.contains(testHero));
         heroService.deleteHero(testHero);
         assertFalse(heroes.contains(testHero));
     }
 
     @Test
-    public void shouldRemoveAllHeroes() throws Exception{
+    public void shouldRemoveAllHeroes() throws Exception {
         assertTrue(heroService.deleteAllHeroes());
         assertEquals(heroService.findAll().size(), 0);
     }

@@ -1,29 +1,24 @@
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
 
-import static org.testng.Assert.*;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
 import cz.fi.muni.pa165.ddtroops.facade.UserFacade;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
-import cz.fi.muni.pa165.ddtroops.service.services.UserService;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.toSet;
+import static org.testng.Assert.*;
+
 
 /**
  * Created by pstanko.
+ *
  * @author pstanko
  */
 @DirtiesContext
@@ -37,15 +32,6 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
     private UserDTO user1;
     private UserDTO user2;
     private UserDTO newUser;
-
-    private static Set<UserDTO> toSet(Iterable<UserDTO> iterUsers)
-    {
-        Set<UserDTO> result = new HashSet<>();
-        for(UserDTO item : iterUsers) {
-            result.add(item);
-        }
-        return result;
-    }
 
 
     @BeforeMethod
@@ -66,18 +52,18 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
 
 
     @AfterMethod
-    public void deleteUsers(){
-        if(userFacade.findAll().contains(user1)) {
+    public void deleteUsers() {
+        if (userFacade.findAll().contains(user1)) {
             userFacade.delete(user1);
             assertFalse(toSet(userFacade.findAll()).contains(user1));
         }
 
-        if(userFacade.findAll().contains(user2)) {
+        if (userFacade.findAll().contains(user2)) {
             userFacade.delete(user2);
             assertFalse(toSet(userFacade.findAll()).contains(user2));
         }
 
-        if(userFacade.findAll().contains(newUser)) {
+        if (userFacade.findAll().contains(newUser)) {
             userFacade.delete(newUser);
             assertFalse(toSet(userFacade.findAll()).contains(newUser));
         }
@@ -89,7 +75,6 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
         assertEquals(userFacade.findById(user2.getId()), user2);
         assertNull(userFacade.findById(1000L));
     }
-
 
 
     @Test
@@ -158,6 +143,4 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
         userDTO.setAdmin(admin);
         return userDTO;
     }
-
-
 }

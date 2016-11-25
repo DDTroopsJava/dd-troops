@@ -1,8 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.dao;
 
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
-import cz.fi.muni.pa165.ddtroops.entity.Troop;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
+import cz.fi.muni.pa165.ddtroops.entity.Troop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,9 +16,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.testng.AssertJUnit.assertEquals;
 
 /**
@@ -44,6 +42,21 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
     private Hero hero3;
     private Hero unassignedHero;
 
+    private static Hero createHero(String name) {
+        Hero hero = new Hero();
+        hero.setName(name);
+        hero.setLevel(1000);
+        return hero;
+    }
+
+    private static Troop createTroop(String name, String mission, int gold) {
+        Troop troop = new Troop();
+        troop.setName(name);
+        troop.setMission(mission);
+        troop.setGold(gold);
+        return troop;
+    }
+
     @BeforeMethod
     public void createToops() throws Exception {
         hero1 = createHero("Kunigunda");
@@ -54,10 +67,10 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         hero1 = heroDao.save(hero1);
         Assert.assertTrue(heroDao.findAll().contains(hero1));
 
-        hero2 =heroDao.save(hero2);
+        hero2 = heroDao.save(hero2);
         Assert.assertTrue(heroDao.findAll().contains(hero2));
 
-        hero3 =heroDao.save(hero3);
+        hero3 = heroDao.save(hero3);
         Assert.assertTrue(heroDao.findAll().contains(hero3));
         unassignedHero = heroDao.save(unassignedHero);
         Assert.assertTrue(heroDao.findAll().contains(unassignedHero));
@@ -90,7 +103,6 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         assertTrue(troopDao.findAll().contains(created));
         assertEquals(troopDao.findOne(created.getId()), troop);
     }
-
 
     @Test(expectedExceptions = JpaSystemException.class)
     public void shouldNotCreateExistingTroop() throws Exception {
@@ -133,7 +145,6 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         assertFalse(allAfterDelete.contains(troop3));
     }
 
-
     @Test
     public void shouldGetByIdTroop1() throws Exception {
         Troop troop = troopDao.findOne(troop1.getId());
@@ -165,8 +176,7 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldAddHeroToTroop1() throws Exception
-    {
+    public void shouldAddHeroToTroop1() throws Exception {
         Troop troop = troopDao.findOne(troop1.getId());
         troop.addHero(unassignedHero);
         troopDao.save(troop);
@@ -181,8 +191,7 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldDeleteHeroFromTroop1() throws Exception
-    {
+    public void shouldDeleteHeroFromTroop1() throws Exception {
         Troop troop = troopDao.findOne(troop1.getId());
         troop.addHero(unassignedHero);
         troop.removeHero(hero1);
@@ -196,21 +205,6 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
         assertFalse(resultTroop.getHeroes().contains(hero1));
         assertNull(resultHero1.getTroop());
         assertEquals(resultTroop.getHeroes().size(), 1);
-    }
-
-    private static Hero createHero(String name){
-        Hero hero = new Hero();
-        hero.setName(name);
-        hero.setLevel(1000);
-        return hero;
-    }
-
-    private static Troop createTroop(String name, String mission, int gold){
-        Troop troop = new Troop();
-        troop.setName(name);
-        troop.setMission(mission);
-        troop.setGold(gold);
-        return troop;
     }
 
 }

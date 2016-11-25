@@ -6,28 +6,26 @@ import cz.fi.muni.pa165.ddtroops.facade.TroopFacade;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
 import cz.fi.muni.pa165.ddtroops.service.services.TroopService;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
- *
  * @author xgono
  */
 @Service
 @Transactional
 public class TroopFacadeImpl implements TroopFacade {
-    
+
+    private final Logger logger = LoggerFactory.getLogger(TroopFacadeImpl.class.getName());
     @Autowired
     private TroopService troopService;
-    
     @Autowired
     private BeanMappingService beanMappingService;
-    
-    private final Logger logger = LoggerFactory.getLogger(TroopFacadeImpl.class.getName());
 
     @Override
     public TroopDTO findById(Long troopId) {
@@ -85,6 +83,6 @@ public class TroopFacadeImpl implements TroopFacade {
             logger.warn(e.getMessage(), e);
         }
     }
-    
-    
+
+
 }

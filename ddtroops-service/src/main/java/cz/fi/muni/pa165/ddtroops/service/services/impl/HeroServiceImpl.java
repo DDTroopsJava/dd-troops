@@ -26,8 +26,7 @@ public class HeroServiceImpl implements HeroService {
         }
         try {
             heroDao.save(hero);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create hero named " + hero.getName() + " with id" + hero.getId(), e);
         }
     }
@@ -39,8 +38,8 @@ public class HeroServiceImpl implements HeroService {
         }
         try {
             return heroDao.findOne(id);
-        }catch(Throwable e) {
-            throw new DDTroopsServiceException("Cannot find hero with id  "+ id, e);
+        } catch (Throwable e) {
+            throw new DDTroopsServiceException("Cannot find hero with id  " + id, e);
         }
     }
 
@@ -51,8 +50,8 @@ public class HeroServiceImpl implements HeroService {
         }
         try {
             return heroDao.findByName(name);
-        }catch(Throwable e) {
-            throw new DDTroopsServiceException("Cannot find hero named  "+ name, e);
+        } catch (Throwable e) {
+            throw new DDTroopsServiceException("Cannot find hero named  " + name, e);
         }
     }
 
@@ -72,8 +71,7 @@ public class HeroServiceImpl implements HeroService {
         }
         try {
             heroDao.save(hero);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot update hero named " + hero.getName()
                     + " with id" + hero.getId(), e);
         }
@@ -86,8 +84,7 @@ public class HeroServiceImpl implements HeroService {
         }
         try {
             heroDao.delete(hero);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot delete hero named " + hero.getName()
                     + " with id" + hero.getId(), e);
         }
@@ -98,8 +95,7 @@ public class HeroServiceImpl implements HeroService {
         try {
             heroDao.deleteAll();
             return true;
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot delete all heroes.", e);
         }
     }

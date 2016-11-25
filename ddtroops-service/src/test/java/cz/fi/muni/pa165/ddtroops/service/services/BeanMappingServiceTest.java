@@ -1,8 +1,5 @@
 package cz.fi.muni.pa165.ddtroops.service.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cz.fi.muni.pa165.ddtroops.dto.HeroDTO;
 import cz.fi.muni.pa165.ddtroops.dto.TroopDTO;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
@@ -15,14 +12,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by pstanko.
+ *
  * @author pstanko
  */
 @ContextConfiguration(classes = ServiceConfiguration.class)
 
-public class BeanMappingServiceTest extends AbstractTestNGSpringContextTests
-{
+public class BeanMappingServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private BeanMappingService beanMappingService;
@@ -31,15 +31,13 @@ public class BeanMappingServiceTest extends AbstractTestNGSpringContextTests
     private List<Hero> heroes = new ArrayList<>();
 
 
-
     @BeforeMethod
-    public void createTroops(){
+    public void createTroops() {
 
         Troop troopScala = TestUtils.createTroop("Scala");
         Troop troopJava = TestUtils.createTroop("Java");
         Troop troopKotlin = TestUtils.createTroop("Kotlin");
         Troop troopClojure = TestUtils.createTroop("Clojure");
-
 
 
         Hero heroSandokan = TestUtils.createHero("Sandokan");
@@ -49,7 +47,6 @@ public class BeanMappingServiceTest extends AbstractTestNGSpringContextTests
         Hero heroJesus = TestUtils.createHero("Jesus");
         troopScala.addHero(heroJesus);
         heroes.add(heroJesus);
-
 
 
         Hero heroLinus = TestUtils.createHero("Linus");
@@ -73,12 +70,13 @@ public class BeanMappingServiceTest extends AbstractTestNGSpringContextTests
     }
 
     @Test
-    public void shouldMapInnerHeroes(){
+    public void shouldMapInnerHeroes() {
         List<HeroDTO> cdtos = beanMappingService.mapTo(heroes, HeroDTO.class);
         Assert.assertEquals(cdtos.get(0).getTroop().getName(), "Scala");
     }
 
-    @Test void shouldMapTroops() {
+    @Test
+    void shouldMapTroops() {
         List<TroopDTO> cdtos = beanMappingService.mapTo(troops, TroopDTO.class);
         Assert.assertEquals(cdtos.get(0).getHeroes().size(), 2);
     }

@@ -1,7 +1,5 @@
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
-import java.util.Collection;
-
 import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.facade.UserFacade;
@@ -15,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 
 /**
  * Created by pstanko.
+ *
  * @author pstanko
  */
 @Service
@@ -50,7 +51,7 @@ public class UserFacadeImpl implements UserFacade {
         try {
             userService.delete(userEntity);
             return true;
-        }catch (DDTroopsServiceException ex){
+        } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
         return false;
@@ -75,7 +76,7 @@ public class UserFacadeImpl implements UserFacade {
             userService.update(userEntity);
             userDTO.setId(userEntity.getId());
             return userDTO;
-        }catch (DDTroopsServiceException ex){
+        } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
         return null;
@@ -87,7 +88,7 @@ public class UserFacadeImpl implements UserFacade {
         User userEntity = beanMappingService.mapTo(userDTO, User.class);
 
         try {
-            if(!userService.updatePassword(userEntity, oldPassword, newPassword)){
+            if (!userService.updatePassword(userEntity, oldPassword, newPassword)) {
                 throw new InvalidPasswordException();
             }
         } catch (DDTroopsServiceException e) {

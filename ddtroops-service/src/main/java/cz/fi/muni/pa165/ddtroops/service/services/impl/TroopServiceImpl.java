@@ -1,19 +1,18 @@
 package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import cz.fi.muni.pa165.ddtroops.dao.TroopDao;
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.TroopService;
-import java.util.Comparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
- *
  * @author xgono
  */
 @Service
@@ -55,7 +54,7 @@ public class TroopServiceImpl implements TroopService {
             troopDao.save(t);
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
-                "Cannot update troop with id: " + t.getId() + " and name: " + t.getName(), ex);
+                    "Cannot update troop with id: " + t.getId() + " and name: " + t.getName(), ex);
         }
     }
 
@@ -65,7 +64,7 @@ public class TroopServiceImpl implements TroopService {
             troopDao.delete(t);
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
-                "Cannot delete troop with id: " + t.getId() + " and name: " + t.getName(), ex);
+                    "Cannot delete troop with id: " + t.getId() + " and name: " + t.getName(), ex);
         }
     }
 
@@ -96,10 +95,10 @@ public class TroopServiceImpl implements TroopService {
             if (mission != null) {
                 stream = troopDao.findByMission(mission).stream();
 
-            }else {
+            } else {
                 stream = troopDao.findAll().stream();
             }
-            if(troopSize != null){
+            if (troopSize != null) {
                 stream = stream.filter(t -> t.size() == troopSize);
             }
 
@@ -112,8 +111,8 @@ public class TroopServiceImpl implements TroopService {
                             .reversed()
             );
             return sortedStream
-                .limit(n)
-                .collect(Collectors.toList());
+                    .limit(n)
+                    .collect(Collectors.toList());
         } catch (IllegalArgumentException ex) {
             throw new DDTroopsServiceException("Can't return Top N if N is negative!");
         }

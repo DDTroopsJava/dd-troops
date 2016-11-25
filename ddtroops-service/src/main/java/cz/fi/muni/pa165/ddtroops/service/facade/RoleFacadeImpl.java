@@ -2,8 +2,8 @@ package cz.fi.muni.pa165.ddtroops.service.facade;
 
 import cz.fi.muni.pa165.ddtroops.dto.RoleDTO;
 import cz.fi.muni.pa165.ddtroops.entity.Role;
-import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.facade.RoleFacade;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
 import cz.fi.muni.pa165.ddtroops.service.services.RoleService;
 import org.slf4j.Logger;
@@ -11,24 +11,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 
 /**
  * Created by Petr Koláček
- * 
+ *
  * @author Petr Koláček
  */
 @Service
 @Transactional
-public class RoleFacadeImpl implements RoleFacade
-{
+public class RoleFacadeImpl implements RoleFacade {
+    private final Logger logger = LoggerFactory.getLogger(RoleFacadeImpl.class.getName());
     @Autowired
     private RoleService roleService;
-
     @Autowired
     private BeanMappingService beanMappingService;
-
-    private final Logger logger = LoggerFactory.getLogger(RoleFacadeImpl.class.getName());
 
     @Override
     public RoleDTO create(RoleDTO role) {
@@ -83,7 +81,7 @@ public class RoleFacadeImpl implements RoleFacade
             roleService.update(roleEntity);
             role.setId(roleEntity.getId());
             return role;
-        }catch (DDTroopsServiceException ex){
+        } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
         return null;
@@ -94,10 +92,10 @@ public class RoleFacadeImpl implements RoleFacade
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
             roleService.delete(roleEntity);
-        }catch (DDTroopsServiceException ex){
+        } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
     }
 
-    
+
 }

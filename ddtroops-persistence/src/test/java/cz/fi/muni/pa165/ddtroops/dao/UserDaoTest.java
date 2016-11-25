@@ -1,10 +1,7 @@
-
 package cz.fi.muni.pa165.ddtroops.dao;
 
-import com.beust.jcommander.internal.Sets;
 import cz.fi.muni.pa165.ddtroops.PersistenceSampleApplicationContext;
 import cz.fi.muni.pa165.ddtroops.entity.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,7 +13,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Peter Zaoral.
@@ -34,15 +33,21 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
     private User user1;
     private User user2;
 
-    private static Set<User> toSet(Iterable<User> iterUsers)
-    {
+    private static Set<User> toSet(Iterable<User> iterUsers) {
         Set<User> result = new HashSet<>();
-        for(User item : iterUsers) {
+        for (User item : iterUsers) {
             result.add(item);
         }
         return result;
     }
 
+    private static User getUser(String name) {
+        User user = new User();
+        user.setEmail(name + "@example.com");
+        user.setName(name);
+        user.setJoinedDate(new Date());
+        return user;
+    }
 
     @BeforeMethod
     public void createUsers() {
@@ -67,7 +72,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertNull(userDao.findByEmail("BADMAIL"));
     }
 
-
     @Test
     public void createUserNewUser() {
         User user = new User();
@@ -84,13 +88,11 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
 
     }
 
-
     @Test(expectedExceptions = JpaSystemException.class)
     public void createAlreadyCreatedUser() {
         User u_new = getUser(user1.getName());
         userDao.save(u_new);
     }
-
 
     @Test
     public void listUsers() {
@@ -109,7 +111,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertFalse(toSet(userDao.findAll()).contains(user1));
     }
 
-
     @Test
     public void deleteNonExistingUser() {
         User u = getUser("Hancock");
@@ -119,7 +120,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertTrue(toSet(userDao.findAll()).contains(user2));
         Assert.assertTrue(toSet(userDao.findAll()).contains(user1));
     }
-
 
     @Test
     public void updateUser() {
@@ -135,13 +135,5 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(my_user.getPhone(), "123456789");
         Assert.assertEquals(my_user.getName(), "Updated name");
         Assert.assertTrue(my_user.isAdmin());
-    }
-
-    private static User getUser(String name) {
-        User user = new User();
-        user.setEmail(name + "@example.com");
-        user.setName(name);
-        user.setJoinedDate(new Date());
-        return user;
     }
 }

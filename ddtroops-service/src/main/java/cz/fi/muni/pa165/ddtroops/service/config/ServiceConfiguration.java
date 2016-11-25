@@ -15,16 +15,17 @@ import org.springframework.context.annotation.Import;
 
 /**
  * Created by pstanko.
+ *
  * @author pstanko
  */
 @Configuration
 @Import(PersistenceSampleApplicationContext.class)
-@ComponentScan(basePackageClasses={UserServiceImpl.class, UserFacadeImpl.class})
+@ComponentScan(basePackageClasses = {UserServiceImpl.class, UserFacadeImpl.class})
 public class ServiceConfiguration {
 
 
     @Bean
-    public Mapper dozer(){
+    public Mapper dozer() {
         DozerBeanMapper dozer = new DozerBeanMapper();
         dozer.addMapping(new DozerCustomConfig());
         return dozer;
@@ -32,8 +33,8 @@ public class ServiceConfiguration {
 
     /**
      * Custom config for Dozer if needed
-     * @author nguyen
      *
+     * @author nguyen
      */
     public class DozerCustomConfig extends BeanMappingBuilder {
         @Override

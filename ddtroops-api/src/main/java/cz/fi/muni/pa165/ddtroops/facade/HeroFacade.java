@@ -13,44 +13,49 @@ public interface HeroFacade {
     /**
      * Creates hero
      *
-     * @param hero  hero that will be created
-     * @return  created hero with id
+     * @param hero hero that will be created
+     * @return created hero with id
      */
-    public HeroDTO createHero (HeroDTO hero);
+    public HeroDTO createHero(HeroDTO hero);
 
     /**
      * Gets hero with unique id
-     * @param id    hero id
-     * @return  hero wuth particular unique id
+     *
+     * @param id hero id
+     * @return hero wuth particular unique id
      */
     public HeroDTO findById(long id);
 
     /**
      * Gets hero with unique name.
-     * @param name  hero name
-     * @return  hero with particular unique name
+     *
+     * @param name hero name
+     * @return hero with particular unique name
      */
     public HeroDTO findByName(String name);
 
     /**
      * Gets all heroes
-     * @return  collection of heroes
+     *
+     * @return collection of heroes
      */
-    public Collection<HeroDTO> findAll ();
+    public Collection<HeroDTO> findAll();
 
     /**
      * Updates existing hero
-     * @param hero  hero that will be updated
-     * @return  updated hero
+     *
+     * @param hero hero that will be updated
+     * @return updated hero
      */
-    public HeroDTO updateHero (HeroDTO hero);
+    public HeroDTO updateHero(HeroDTO hero);
 
     /**
      * Removes particular hero
+     *
      * @param hero hero that will be deleted
-     * @return  true if hero is deleted, false otherwise
+     * @return true if hero is deleted, false otherwise
      */
-    public Boolean deleteHero (HeroDTO hero);
+    public Boolean deleteHero(HeroDTO hero);
 
     /**
      * Delete all heroes
