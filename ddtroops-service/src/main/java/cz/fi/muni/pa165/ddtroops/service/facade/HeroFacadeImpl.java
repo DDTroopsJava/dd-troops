@@ -82,9 +82,10 @@ public class HeroFacadeImpl implements HeroFacade {
     public HeroDTO update(HeroDTO hero) {
         Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
         try {
-            heroService.updateHero(heroEntity);
+
+            Hero u = heroService.updateHero(heroEntity);
             hero.setId(heroEntity.getId());
-            return hero;
+            return beanMappingService.mapTo(u, HeroDTO.class);
         } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }

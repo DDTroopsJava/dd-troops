@@ -20,12 +20,13 @@ public class HeroServiceImpl implements HeroService {
     private HeroDao heroDao;
 
     @Override
-    public void createHero(Hero hero) throws DDTroopsServiceException {
+    public Hero createHero(Hero hero) throws DDTroopsServiceException {
         if (hero == null) {
             throw new IllegalArgumentException("Hero is null.");
         }
         try {
-            heroDao.save(hero);
+            hero.getRoles().forEach(r -> r.addHero(hero));
+            return heroDao.save(hero);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create hero named " + hero.getName() + " with id" + hero.getId(), e);
         }
@@ -65,12 +66,13 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Override
-    public void updateHero(Hero hero) throws DDTroopsServiceException {
+    public Hero updateHero(Hero hero) throws DDTroopsServiceException {
         if (hero == null) {
             throw new IllegalArgumentException("Hero is null.");
         }
         try {
-            heroDao.save(hero);
+            hero.getRoles().forEach(r -> r.addHero(hero));
+            return heroDao.save(hero);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot update hero named " + hero.getName()
                     + " with id" + hero.getId(), e);

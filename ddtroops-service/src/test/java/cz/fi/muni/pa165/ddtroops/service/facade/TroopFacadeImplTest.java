@@ -6,8 +6,10 @@
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
 import cz.fi.muni.pa165.ddtroops.dto.HeroDTO;
+import cz.fi.muni.pa165.ddtroops.dto.RoleDTO;
 import cz.fi.muni.pa165.ddtroops.dto.TroopDTO;
 import cz.fi.muni.pa165.ddtroops.facade.HeroFacade;
+import cz.fi.muni.pa165.ddtroops.facade.RoleFacade;
 import cz.fi.muni.pa165.ddtroops.facade.TroopFacade;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.toSet;
+import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.*;
 import static org.testng.Assert.*;
 
 /**
@@ -34,105 +36,170 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private HeroFacade heroFacade;
 
-    private TroopDTO testTroop1;
-    private TroopDTO testTroop2;
+    @Autowired
+    private RoleFacade roleFacade;
+
+    private TroopDTO troop1;
+    private TroopDTO troop2;
 
     private HeroDTO hero1;
     private HeroDTO hero2;
+    private RoleDTO role1;
+    private RoleDTO role2;
+    private RoleDTO role3;
+    private HeroDTO hero3;
 
 
     @BeforeMethod
-    public void createTestTroops() {
-        testTroop1 = new TroopDTO("Test 1", "Mission Test", 10);
-        testTroop2 = new TroopDTO("Test 2", "Mission Test", 20);
+    public void setupTest(){
+        setupRoles();
+        setupHeroes();
+        setupTroops();
+    }
 
-        troopFacade.update(testTroop1);
-        assertTrue(toSet(troopFacade.findAll()).contains(testTroop1));
+    private HeroDTO setupHero(String name, int level)
+    {
+        HeroDTO hero = createHero(name, level);
+        heroFacade.create(hero);
+        assertTrue(heroFacade.findAll().contains(hero));
+        return heroFacade.findById(hero.getId());
+    }
 
-        troopFacade.update(testTroop2);
-        assertTrue(toSet(troopFacade.findAll()).contains(testTroop2));
+    private RoleDTO setupRole(String name, int att, int def)
+    {
+        RoleDTO role = createRole(name, att, def);
+        roleFacade.create(role);
+        assertTrue(roleFacade.findAll().contains(role));
+        return roleFacade.findById(role.getId());
+    }
 
-        testTroop1 = troopFacade.findById(testTroop1.getId());
-        testTroop2 = troopFacade.findById(testTroop2.getId());
+    private TroopDTO setupTroop(String name)
+    {
+        TroopDTO troop = createTroop(name);
+        troopFacade.update(troop);
+        assertTrue(troopFacade.findAll().contains(troop));
+        return troopFacade.findById(troop.getId());
+    }
+
+
+    private void setupRoles() {
+        role1 = setupRole("Magician", 10, 20);
+        role2 = setupRole("Guard", 5, 50);
+        role3 = setupRole("Elf", 15, 10);
+    }
+
+    private void setupHeroes(){
+        hero1 = setupHero("Chuck", 100);
+        hero2 = setupHero("Superman", 1);
+        hero3 = setupHero("Batman", 5);
+    }
+
+    private void setupTroops() {
+        troop1 = setupTroop("Test 1");
+        troop2 = setupTroop("Test 2");
+    }
+
+    private void deleteRoles()
+    {
+        roleFacade.delete(role1.getId());
+        roleFacade.delete(role2.getId());
+        roleFacade.delete(role3.getId());
+    }
+
+    private void deleteHeroes()
+    {
+        heroFacade.delete(hero1.getId());
+        heroFacade.delete(hero2.getId());
+        heroFacade.delete(hero3.getId());
+    }
+
+    private void deleteTroops()
+    {
+        if (troopFacade.findAll().contains(troop1)) {
+            troopFacade.delete(troop1.getId());
+            assertFalse(troopFacade.findAll().contains(troop1));
+        }
+
+        if (troopFacade.findAll().contains(troop2)) {
+            troopFacade.delete(troop2.getId());
+            assertFalse(troopFacade.findAll().contains(troop2));
+        }
     }
 
     @AfterMethod
     public void deleteTestTroops() {
-        if (troopFacade.findAll().contains(testTroop1)) {
-            troopFacade.delete(testTroop1.getId());
-            assertFalse(toSet(troopFacade.findAll()).contains(testTroop1));
-        }
-
-        if (troopFacade.findAll().contains(testTroop2)) {
-            troopFacade.delete(testTroop2.getId());
-            assertFalse(toSet(troopFacade.findAll()).contains(testTroop2));
-        }
+        deleteRoles();
+        deleteHeroes();
+        deleteTroops();
     }
 
     @Test
     public void testFindById() throws Exception {
-        assertEquals(troopFacade.findById(testTroop1.getId()), testTroop1);
-        assertEquals(troopFacade.findById(testTroop2.getId()), testTroop2);
+        assertEquals(troopFacade.findById(troop1.getId()), troop1);
+        assertEquals(troopFacade.findById(troop2.getId()), troop2);
         assertNull(troopFacade.findById(666L));
     }
 
     @Test
     public void testFindByName() throws Exception {
-        assertEquals(troopFacade.findByName(testTroop1.getName()), testTroop1);
-        assertEquals(troopFacade.findByName(testTroop2.getName()), testTroop2);
+        assertEquals(troopFacade.findByName(troop1.getName()), troop1);
+        assertEquals(troopFacade.findByName(troop2.getName()), troop2);
         assertNull(troopFacade.findByName("THIS NAME DOES NOT EXIST"));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        testTroop1.setGold(999);
-        logger.info("Troop id: " + testTroop1);
-        troopFacade.update(testTroop1);
+        troop1.setGold(999);
+        logger.info("Troop id: " + troop1);
+        troopFacade.update(troop1);
         assertEquals(troopFacade.findAll().size(), 2);
-        assertEquals(troopFacade.findById(testTroop1.getId()), testTroop1);
-        assertEquals(troopFacade.findById(testTroop1.getId()).getGold(), 999);
+        assertEquals(troopFacade.findById(troop1.getId()), troop1);
+        assertEquals(troopFacade.findById(troop1.getId()).getGold(), 999);
     }
 
     @Test
     public void testFindAll() throws Exception {
-        assertTrue(troopFacade.findAll().contains(testTroop1));
-        assertTrue(troopFacade.findAll().contains(testTroop2));
+        assertTrue(troopFacade.findAll().contains(troop1));
+        assertTrue(troopFacade.findAll().contains(troop2));
     }
 
     @Test
     public void testDelete() throws Exception {
-        assertNotNull(troopFacade.findById(testTroop1.getId()));
-        troopFacade.delete(testTroop1.getId());
-        assertNull(troopFacade.findById(testTroop1.getId()));
-        assertFalse(troopFacade.findAll().contains(testTroop1));
+        assertNotNull(troopFacade.findById(troop1.getId()));
+        troopFacade.delete(troop1.getId());
+        assertNull(troopFacade.findById(troop1.getId()));
+        assertFalse(troopFacade.findAll().contains(troop1));
+    }
+
+    private void setupBattle()
+    {
+        hero1.getRoles().add(role1);
+        hero2.getRoles().add(role2);
+        hero3.getRoles().add(role3);
+
+        hero1 = heroFacade.update(hero1);
+        hero2 = heroFacade.update(hero2);
+        hero3 = heroFacade.update(hero3);
+
+        troop1.getHeroes().add(hero1);
+        troop1.getHeroes().add(hero2);
+        troop2.getHeroes().add(hero3);
+
+        troop1 = troopFacade.update(troop1);
+        troop2 = troopFacade.update(troop2);
     }
 
     @Test
-    public void testAbortBattle() throws Exception {
-        //troopFacade.findByName("Test 1").setHeroes();
-        assertNull(troopFacade.battle(testTroop1,testTroop2));
+    public void testBattle() throws Exception
+    {
+        setupBattle();
+        assertEquals(troopFacade.battle(troop1, troop2), troop1);
     }
 
-    private void setUpHelper(){
-        hero1 = getHeroHelper("Batman");
-        hero2 = getHeroHelper("Superman");
-
-        heroFacade.create(hero1);
-        assertTrue(toSet(heroFacade.findAll()).contains(hero1));
-
-        heroFacade.create(hero2);
-        assertTrue(toSet(heroFacade.findAll()).contains(hero2));
-
-        hero1 = heroFacade.findById(hero1.getId());
-        hero2 = heroFacade.findById(hero2.getId());
-
-
-    }
-
-    private HeroDTO getHeroHelper(String name) {
-        HeroDTO heroDTO = new HeroDTO();
-        heroDTO.setName(name);
-        heroDTO.setLevel(999);
-        return heroDTO;
+    @Test
+    public void testTopN() throws Exception
+    {
+        setupBattle();
+        assertEquals(troopFacade.topN(1, null, null).get(0), troop1);
     }
 }

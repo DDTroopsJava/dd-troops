@@ -7,6 +7,9 @@ public class RoleDTO {
     private Long id;
     private String name;
     private String description;
+    private int attackPower;
+    private int defensePower;
+
     public RoleDTO() {
     }
 
@@ -67,6 +70,25 @@ public class RoleDTO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", attackPower=" + attackPower +
+                ", defensePower=" + defensePower +
                 '}';
     }
+
+    public void setAttackPower(int attackPower) {
+        this.attackPower = attackPower;
+    }
+
+    public void setDefensePower(int defensePower) {
+        this.defensePower = defensePower;
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+
+    public int getDefensePower() {
+        return defensePower;
+    }
+
 }

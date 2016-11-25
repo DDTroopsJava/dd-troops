@@ -73,6 +73,16 @@ public class HeroDTO {
         this.level = level;
     }
 
+    public void addRole(RoleDTO role)
+    {
+        roles.add(role);
+    }
+
+    public void removeRole(RoleDTO role)
+    {
+        roles.remove(role);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

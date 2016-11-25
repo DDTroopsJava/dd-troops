@@ -65,9 +65,9 @@ public class TroopFacadeImpl implements TroopFacade {
     public TroopDTO update(TroopDTO troopDTO) {
         Troop troopEntity = beanMappingService.mapTo(troopDTO, Troop.class);
         try {
-            troopService.update(troopEntity);
+            Troop t = troopService.update(troopEntity);
             troopDTO.setId(troopEntity.getId());
-            return troopDTO;
+            return beanMappingService.mapTo(t, TroopDTO.class);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
@@ -105,8 +105,8 @@ public class TroopFacadeImpl implements TroopFacade {
     @Override
     public List<TroopDTO> topN(int n, String mission, Long troopSize) {
         try {
-            List<Troop> topNtroops = troopService.topN(n,mission,troopSize);
-            return beanMappingService.mapTo(topNtroops,TroopDTO.class);
+            List<Troop> topNTroops = troopService.topN(n,mission,troopSize);
+            return beanMappingService.mapTo(topNTroops,TroopDTO.class);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
