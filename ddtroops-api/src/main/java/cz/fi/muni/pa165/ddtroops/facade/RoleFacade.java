@@ -17,7 +17,7 @@ public interface RoleFacade {
      * @param role - created role
      * @return new role with id
      */
-    public RoleDTO create(RoleDTO role);
+    RoleDTO create(RoleDTO role);
 
     /**
      * Find role by id
@@ -25,7 +25,7 @@ public interface RoleFacade {
      * @param id role id
      * @return role by id
      */
-    public RoleDTO findById(long id);
+    RoleDTO findById(long id);
 
     /**
      * Find role by name
@@ -33,14 +33,14 @@ public interface RoleFacade {
      * @param name role name
      * @return role by name
      */
-    public RoleDTO findByName(String name);
+    RoleDTO findByName(String name);
 
     /**
      * Returns all roles
      *
      * @return collection of roles
      */
-    public Collection<RoleDTO> findAll();
+    Collection<RoleDTO> findAll();
 
     /**
      * Updates role
@@ -48,14 +48,14 @@ public interface RoleFacade {
      * @param role updating role
      * @return updated role
      */
-    public RoleDTO update(RoleDTO role);
+    RoleDTO update(RoleDTO role);
 
     /**
      * Deletes role
      *
-     * @param role role that will be removed
+     * @param id role that will be removed
      */
-    public void delete(RoleDTO role);
+    void delete(Long id);
 
 
 }

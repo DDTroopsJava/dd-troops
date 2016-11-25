@@ -46,8 +46,11 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public boolean delete(UserDTO userDTO) {
-        User userEntity = beanMappingService.mapTo(userDTO, User.class);
+    public boolean delete(Long id) {
+        if(id == null){
+            throw new IllegalArgumentException("id");
+        }
+        User userEntity = beanMappingService.mapTo(findById(id), User.class);
         try {
             userService.delete(userEntity);
             return true;

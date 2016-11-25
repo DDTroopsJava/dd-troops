@@ -43,7 +43,7 @@ public interface TroopFacade {
     /**
      * Deletes the given troop
      *
-     * @param troopDTO
+     * @param id
      */
-    void delete(TroopDTO troopDTO);
+    void delete(Long id);
 }
