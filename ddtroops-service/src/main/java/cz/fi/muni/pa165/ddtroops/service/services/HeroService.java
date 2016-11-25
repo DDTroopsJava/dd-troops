@@ -23,7 +23,7 @@ public interface HeroService {
      * @param hero hero that will be created
      * @return created hero with id
      */
-    void createHero(Hero hero) throws DDTroopsServiceException;
+    Hero createHero(Hero hero) throws DDTroopsServiceException;
 
     /**
      * Gets hero with unique id
@@ -53,7 +53,7 @@ public interface HeroService {
      *
      * @param hero hero that will be updated
      */
-    void updateHero(Hero hero) throws DDTroopsServiceException;
+    Hero updateHero(Hero hero) throws DDTroopsServiceException;
 
     /**
      * Removes particular hero

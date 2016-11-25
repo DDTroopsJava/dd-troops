@@ -72,6 +72,17 @@ public class TroopDTO {
         this.heroes = heroes;
     }
 
+    public void addHero(HeroDTO hero)
+    {
+        heroes.add(hero);
+    }
+
+    public void removeHero(HeroDTO hero)
+    {
+        heroes.remove(hero);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

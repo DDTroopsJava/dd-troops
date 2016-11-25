@@ -44,7 +44,7 @@ public interface TroopService {
      * @param t troop that will be updated
      * @throws DDTroopsServiceException when an error occures
      */
-    void update(Troop t) throws DDTroopsServiceException;
+    Troop update(Troop t) throws DDTroopsServiceException;
 
     /**
      * Deletes the given troop
