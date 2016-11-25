@@ -31,8 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -291,6 +290,46 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
         List<Troop> topNTroops = troopService.topN(3, null, 1L);
         assertEquals(topNTroops.size(), 1);
         assert(topNTroops.contains(testTroop3));
+    }
+
+    @Test
+    public void shouldAbortBattle() throws Exception{
+        setUpDataForTopNTesting();
+        assertEquals(troopService.findByName("First Troop").getAttackPower()
+                - troopService.findByName("First Troop").getAttackPower(),0L);
+        assertNull(troopService.battle(testTroop1,testTroop1));
+        for(Hero hero : troopService.findByName("First Troop").getHeroes()){
+            assertEquals(hero.getLevel(),1);
+        }
+    }
+
+    @Test
+    public void shouldSecondTroopWinBattle() throws Exception{
+        setUpDataForTopNTesting();
+        assertEquals(troopService.findByName("First Troop").getAttackPower(),15L);
+        assertEquals(troopService.findByName("Second Troop").getAttackPower(),105L);
+        assertEquals(troopService.battle(testTroop1,testTroop2),testTroop2);
+
+        for(Hero hero : troopService.findByName("Second Troop").getHeroes()){
+            assertEquals(hero.getLevel(),2);
+        }
+        for(Hero hero : troopService.findByName("First Troop").getHeroes()){
+            assertEquals(hero.getLevel(),1);
+        }
+    }
+
+    @Test
+    public void shouldThirdTroopWinBattle() throws Exception{
+        setUpDataForTopNTesting();
+        assertEquals(troopService.findByName("Third Troop").getAttackPower(),1000L);
+        assertEquals(troopService.findByName("Second Troop").getAttackPower(),105L);
+        assertEquals(troopService.battle(testTroop3,testTroop2),testTroop3);
+        for(Hero hero : troopService.findByName("Second Troop").getHeroes()){
+            assertEquals(hero.getLevel(),1);
+        }
+        for(Hero hero : troopService.findByName("Third Troop").getHeroes()){
+            assertEquals(hero.getLevel(),11);
+        }
     }
     
     private void setUpDataForTopNTesting() {
