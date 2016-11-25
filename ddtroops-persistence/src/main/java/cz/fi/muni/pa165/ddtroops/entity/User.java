@@ -1,39 +1,31 @@
 package cz.fi.muni.pa165.ddtroops.entity;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Date;
 
 /**
- *
  * @author pstanko
  */
-@Entity(name="Users")
+@Entity(name = "Users")
 //In Derby, its forbiden to 'USER' is reserved keyword, we need to rename table
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String passwordHash;
 
-    @Column(nullable=false,unique=true)
-    @Pattern(regexp=".+@.+\\....?")
+    @Column(nullable = false, unique = true)
+    @Pattern(regexp = ".+@.+\\....?")
     @NotNull
     private String email;
     @NotNull
     private String name;
 
-    @Pattern(regexp="\\+?\\d+")
+    @Pattern(regexp = "\\+?\\d+")
     private String phone;
 
 

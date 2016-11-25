@@ -14,10 +14,6 @@ public class TroopDTO {
     private int gold;
     private Set<HeroDTO> heroes = new HashSet<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public TroopDTO(String name, String mission, int gold) {
         this.name = name;
         this.mission = mission;
@@ -38,6 +34,10 @@ public class TroopDTO {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

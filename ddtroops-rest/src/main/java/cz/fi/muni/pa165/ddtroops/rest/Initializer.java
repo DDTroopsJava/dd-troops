@@ -1,14 +1,16 @@
 package cz.fi.muni.pa165.ddtroops.rest;
 
-import javax.servlet.Filter;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.Filter;
+
 
 /**
  * Created by pstanko.
+ *
  * @author pstanko
  */
 

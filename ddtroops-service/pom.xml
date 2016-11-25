@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ddtroops-parent</artifactId>
@@ -51,11 +51,11 @@
             <artifactId>logback-classic</artifactId>
             <scope>test</scope><!-- logging implementation should not be part of a library, but is needed for tests -->
         </dependency>
-      <dependency>
-        <groupId>cz.fi.muni.pa165.ddtroops</groupId>
-        <artifactId>ddtroops-api</artifactId>
-        <version>1.0</version>
-      </dependency>
+        <dependency>
+            <groupId>cz.fi.muni.pa165.ddtroops</groupId>
+            <artifactId>ddtroops-api</artifactId>
+            <version>1.0</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

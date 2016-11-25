@@ -12,10 +12,10 @@ import javax.sql.DataSource;
 @Configuration
 public class InMemoryDatabaseSpring {
 
-	@Bean
-	public DataSource db(){
-		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-		EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.DERBY).build();
-		return db;
-	}
+    @Bean
+    public DataSource db() {
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.DERBY).build();
+        return db;
+    }
 }

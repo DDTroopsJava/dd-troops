@@ -4,31 +4,18 @@ package cz.fi.muni.pa165.ddtroops.dto;
  * @author pstanko
  */
 public class RoleDTO {
-    public RoleDTO() {
-    }
-
     private Long id;
     private String name;
     private String description;
-
-    public void setId(Long id) {
-        this.id = id;
+    public RoleDTO() {
     }
 
     public RoleDTO(String name) {
         this.name = name;
     }
-    
+
     public RoleDTO(String name, String description) {
         this.name = name;
-        this.description = description;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -36,12 +23,24 @@ public class RoleDTO {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -65,9 +64,9 @@ public class RoleDTO {
     @Override
     public String toString() {
         return "RoleDTO{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            '}';
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

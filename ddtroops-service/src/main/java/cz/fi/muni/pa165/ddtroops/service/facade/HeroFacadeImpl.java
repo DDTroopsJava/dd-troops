@@ -2,8 +2,8 @@ package cz.fi.muni.pa165.ddtroops.service.facade;
 
 import cz.fi.muni.pa165.ddtroops.dto.HeroDTO;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
-import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.facade.HeroFacade;
+import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
 import cz.fi.muni.pa165.ddtroops.service.services.HeroService;
 import org.slf4j.Logger;
@@ -16,6 +16,7 @@ import java.util.Collection;
 
 /**
  * Created by Peter Zaoral.
+ *
  * @author Peter Zaoral.
  */
 @Service
@@ -83,7 +84,7 @@ public class HeroFacadeImpl implements HeroFacade {
             heroService.updateHero(heroEntity);
             hero.setId(heroEntity.getId());
             return hero;
-        }catch (DDTroopsServiceException ex){
+        } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
         return null;
@@ -96,7 +97,7 @@ public class HeroFacadeImpl implements HeroFacade {
             heroService.deleteHero(heroEntity);
             hero.setId(heroEntity.getId());
             return true;
-        }catch (DDTroopsServiceException ex){
+        } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
         return false;

@@ -1,19 +1,18 @@
 package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Date;
-import java.util.List;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
 import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author pstanko
@@ -22,119 +21,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
-
-    @Override
-    public void register(User u, String unencryptedPassword) throws DDTroopsServiceException {
-        if(u == null){
-            throw new IllegalArgumentException("User is null!");
-        }
-        try {
-            u.setPasswordHash(createHash(unencryptedPassword));
-            u.setJoinedDate(new Date());
-            userDao.save(u);
-        } catch (Throwable ex){
-                throw new DDTroopsServiceException("Cannot create user: " + u.getEmail() , ex);
-        }
-    }
-
-    @Override
-    public void update(User u) throws DDTroopsServiceException {
-        if(u == null){
-            throw new IllegalArgumentException("User is null!");
-        }
-        try {
-            userDao.save(u);
-        }catch (Throwable ex){
-            throw new DDTroopsServiceException("Cannot update user: " + u.getId(),ex);
-        }
-
-    }
-
-    @Override
-    public boolean delete(User u) throws DDTroopsServiceException {
-        if(u == null){
-            throw new IllegalArgumentException("User is null!");
-        }
-        try {
-            userDao.delete(u);
-            return true;
-        }catch (Throwable ex){
-            throw new DDTroopsServiceException("Cannot delete user: " + u.getId(),ex);
-        }
-    }
-
-    @Override
-    public boolean updatePassword(User u, String oldPassword, String newPassword) throws DDTroopsServiceException {
-        if(u == null){
-            throw new IllegalArgumentException("User is null!");
-        }
-
-        User user = userDao.findOne(u.getId()); // fresh
-
-        try{
-            if (validatePassword(oldPassword, user.getPasswordHash())) {
-                u.setPasswordHash(createHash(newPassword));
-                userDao.save(u);
-                return true;
-            }
-            return false;
-        }catch (Throwable ex){
-            throw new DDTroopsServiceException("Cannot update user: " + u.getId() + " password",ex);
-        }
-    }
-
-    @Override
-    public List<User> findAll() throws DDTroopsServiceException {
-        try {
-            return userDao.findAll();
-        } catch(Throwable ex) {
-            throw new DDTroopsServiceException("Could not receive list of users!",ex);
-        }
-    }
-
-    @Override
-    public boolean authenticate(User u, String password) throws DDTroopsServiceException {
-        if(u == null){
-            throw new IllegalArgumentException("User is null!");
-        }
-        // Fresh data
-
-        User user = findById(u.getId());
-
-        return validatePassword(password, user.getPasswordHash());
-    }
-
-    @Override
-    public boolean isAdmin(User u) throws DDTroopsServiceException {
-        if(u == null){
-            throw new IllegalArgumentException("User is null!");
-        }
-
-        //must get a fresh copy from database
-        try {
-            return findById(u.getId()).isAdmin();
-        } catch(Throwable ex) {
-        throw new DDTroopsServiceException("Could not decide whether user: " + u + "is admin or not!" ,ex);
-        }
-    }
-
-    @Override
-    public User findById(Long userId) throws DDTroopsServiceException {
-        try {
-            return userDao.findOne(userId);
-        }catch(Throwable ex) {
-            throw new DDTroopsServiceException("Cannot find user with " + userId + " id." ,ex);
-        }
-    }
-
-    @Override
-    public User findByEmail(String email) throws DDTroopsServiceException {
-        try {
-            return userDao.findByEmail(email);
-        }catch(Throwable ex) {
-            throw new DDTroopsServiceException("Cannot find user with \"" + email + "\" email." ,ex);
-        }
-    }
 
     //see  https://crackstation.net/hashing-security.htm#javasourcecode
     private static String createHash(String password) {
@@ -161,8 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public static boolean validatePassword(String password, String correctHash) {
-        if(password==null) return false;
-        if(correctHash==null) throw new IllegalArgumentException("password hash is null");
+        if (password == null) return false;
+        if (correctHash == null) throw new IllegalArgumentException("password hash is null");
         String[] params = correctHash.split(":");
         int iterations = Integer.parseInt(params[0]);
         byte[] salt = fromHex(params[1]);
@@ -200,5 +86,118 @@ public class UserServiceImpl implements UserService {
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
         return paddingLength > 0 ? String.format("%0" + paddingLength + "d", 0) + hex : hex;
+    }
+
+    @Override
+    public void register(User u, String unencryptedPassword) throws DDTroopsServiceException {
+        if (u == null) {
+            throw new IllegalArgumentException("User is null!");
+        }
+        try {
+            u.setPasswordHash(createHash(unencryptedPassword));
+            u.setJoinedDate(new Date());
+            userDao.save(u);
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Cannot create user: " + u.getEmail(), ex);
+        }
+    }
+
+    @Override
+    public void update(User u) throws DDTroopsServiceException {
+        if (u == null) {
+            throw new IllegalArgumentException("User is null!");
+        }
+        try {
+            userDao.save(u);
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Cannot update user: " + u.getId(), ex);
+        }
+
+    }
+
+    @Override
+    public boolean delete(User u) throws DDTroopsServiceException {
+        if (u == null) {
+            throw new IllegalArgumentException("User is null!");
+        }
+        try {
+            userDao.delete(u);
+            return true;
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Cannot delete user: " + u.getId(), ex);
+        }
+    }
+
+    @Override
+    public boolean updatePassword(User u, String oldPassword, String newPassword) throws DDTroopsServiceException {
+        if (u == null) {
+            throw new IllegalArgumentException("User is null!");
+        }
+
+        User user = userDao.findOne(u.getId()); // fresh
+
+        try {
+            if (validatePassword(oldPassword, user.getPasswordHash())) {
+                u.setPasswordHash(createHash(newPassword));
+                userDao.save(u);
+                return true;
+            }
+            return false;
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Cannot update user: " + u.getId() + " password", ex);
+        }
+    }
+
+    @Override
+    public List<User> findAll() throws DDTroopsServiceException {
+        try {
+            return userDao.findAll();
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Could not receive list of users!", ex);
+        }
+    }
+
+    @Override
+    public boolean authenticate(User u, String password) throws DDTroopsServiceException {
+        if (u == null) {
+            throw new IllegalArgumentException("User is null!");
+        }
+        // Fresh data
+
+        User user = findById(u.getId());
+
+        return validatePassword(password, user.getPasswordHash());
+    }
+
+    @Override
+    public boolean isAdmin(User u) throws DDTroopsServiceException {
+        if (u == null) {
+            throw new IllegalArgumentException("User is null!");
+        }
+
+        //must get a fresh copy from database
+        try {
+            return findById(u.getId()).isAdmin();
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Could not decide whether user: " + u + "is admin or not!", ex);
+        }
+    }
+
+    @Override
+    public User findById(Long userId) throws DDTroopsServiceException {
+        try {
+            return userDao.findOne(userId);
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Cannot find user with " + userId + " id.", ex);
+        }
+    }
+
+    @Override
+    public User findByEmail(String email) throws DDTroopsServiceException {
+        try {
+            return userDao.findByEmail(email);
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException("Cannot find user with \"" + email + "\" email.", ex);
+        }
     }
 }

@@ -13,13 +13,13 @@ import java.util.Set;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotNull
-    @Column(nullable=false,unique=true)
+    @Column(nullable = false, unique = true)
     private String name;
-    
+
     @Column(nullable = false)
     private String description;
 
@@ -28,21 +28,6 @@ public class Role {
 
     @Column
     private long defensePower;
-
-    public Role(String name) {
-        this.name = name;
-        this.description = name + "'s sample description!";
-    }
-   
-    public Role(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    public Role() {
-
-    }
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "Role_Hero",
             joinColumns = {
@@ -60,7 +45,21 @@ public class Role {
     )
 
     private Set<Hero> heroes = new HashSet<>();
-    
+
+    public Role(String name) {
+        this.name = name;
+        this.description = name + "'s sample description!";
+    }
+
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Role() {
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,7 +67,7 @@ public class Role {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -76,7 +75,7 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getDescription() {
         return description;
     }
@@ -84,7 +83,7 @@ public class Role {
     public void setDescription(String name) {
         this.description = name;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -101,7 +100,7 @@ public class Role {
             return false;
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 37;
@@ -111,7 +110,7 @@ public class Role {
     }
 
     @PreRemove
-    public void removeHeroes(){
+    public void removeHeroes() {
         for (Hero hero : heroes) {
             hero.removeRole(this);
         }
@@ -121,26 +120,26 @@ public class Role {
         return Collections.unmodifiableSet(heroes);
     }
 
-    public Hero addHeroWithoutUpdate(Hero h){
+    public Hero addHeroWithoutUpdate(Hero h) {
         heroes.add(h);
         return h;
     }
 
-    public Hero addHero(Hero h){
+    public Hero addHero(Hero h) {
         addHeroWithoutUpdate(h);
-        if(h != null) {
+        if (h != null) {
             h.addRoleWithoutUpdate(this);
         }
         return h;
     }
 
-    public Hero removeHeroWithoutUpdate(Hero h){
+    public Hero removeHeroWithoutUpdate(Hero h) {
         heroes.remove(h);
         return h;
 
     }
 
-    public Hero removeHero(Hero h){
+    public Hero removeHero(Hero h) {
         if (h != null) {
             h.removeRoleWithoutUpdate(this);
         }
@@ -158,5 +157,9 @@ public class Role {
 
     public long getDefensePower() {
         return defensePower;
+    }
+
+    public void setDefensePower(long defensePower) {
+        this.defensePower = defensePower;
     }
 }

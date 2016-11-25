@@ -1,8 +1,8 @@
 package cz.fi.muni.pa165.ddtroops.facade;
 
-import java.util.Collection;
-
 import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
+
+import java.util.Collection;
 
 /**
  * Created by pstanko.
@@ -12,13 +12,13 @@ import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
 public interface UserFacade {
     /**
      * Gets user by id
+     *
      * @param userId
      * @return null if not exists
      */
     UserDTO findById(Long userId);
 
     /**
-     *
      * @param userDTO
      * @return
      */
@@ -26,6 +26,7 @@ public interface UserFacade {
 
     /**
      * Gets user by email
+     *
      * @param email
      * @return
      */
@@ -33,6 +34,7 @@ public interface UserFacade {
 
     /**
      * Updates existing user
+     *
      * @param u
      * @return
      */
@@ -40,6 +42,7 @@ public interface UserFacade {
 
     /**
      * Updates user password
+     *
      * @param u
      * @param oldPassword
      * @param newPassword
@@ -49,6 +52,7 @@ public interface UserFacade {
 
     /**
      * Register new user
+     *
      * @param user
      * @param unencryptedPassword
      */
@@ -56,12 +60,14 @@ public interface UserFacade {
 
     /**
      * Get all registered users
+     *
      * @return Collection of users
      */
     Collection<UserDTO> findAll();
 
     /**
      * Auhentificate user
+     *
      * @param email
      * @param password
      * @return

@@ -2,6 +2,7 @@ package cz.fi.muni.pa165.ddtroops.service.exceptions;
 
 /**
  * Created by pstanko.
+ *
  * @author pstanko
  */
 public class InvalidPasswordException extends RuntimeException {

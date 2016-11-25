@@ -5,54 +5,34 @@
  */
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
-import static org.testng.Assert.*;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import cz.fi.muni.pa165.ddtroops.dto.TroopDTO;
 import cz.fi.muni.pa165.ddtroops.facade.TroopFacade;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
-import cz.fi.muni.pa165.ddtroops.service.services.TroopService;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.toSet;
+import static org.testng.Assert.*;
+
 /**
- *
  * @author xgono
  */
 @DirtiesContext
 @ContextConfiguration(classes = ServiceConfiguration.class)
-@TransactionConfiguration(defaultRollback = true)
 public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
-    
+
     @Autowired
-    @InjectMocks
     private TroopFacade troopFacade;
-    
-    @Mock
-    private TroopService troopService;
-    
+
     private TroopDTO testTroop1;
     private TroopDTO testTroop2;
-    
-    private static Set<TroopDTO> toSet(Iterable<TroopDTO> iterTroops)
-    {
-        Set<TroopDTO> result = new HashSet<>();
-        for(TroopDTO item : iterTroops) {
-            result.add(item);
-        }
-        return result;
-    }
-    
+
+
     @BeforeMethod
     public void createTestTroops() {
         testTroop1 = new TroopDTO("Test 1", "Mission Test", 10);
@@ -67,9 +47,9 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         testTroop1 = troopFacade.findById(testTroop1.getId());
         testTroop2 = troopFacade.findById(testTroop2.getId());
     }
-    
+
     @AfterMethod
-    public void deleteTestTroops(){
+    public void deleteTestTroops() {
         if (troopFacade.findAll().contains(testTroop1)) {
             troopFacade.delete(testTroop1);
             assertFalse(toSet(troopFacade.findAll()).contains(testTroop1));
@@ -80,21 +60,21 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
             assertFalse(toSet(troopFacade.findAll()).contains(testTroop2));
         }
     }
-    
+
     @Test
     public void testFindById() throws Exception {
         assertEquals(troopFacade.findById(testTroop1.getId()), testTroop1);
         assertEquals(troopFacade.findById(testTroop2.getId()), testTroop2);
         assertNull(troopFacade.findById(666L));
     }
-    
+
     @Test
     public void testFindByName() throws Exception {
         assertEquals(troopFacade.findByName(testTroop1.getName()), testTroop1);
         assertEquals(troopFacade.findByName(testTroop2.getName()), testTroop2);
         assertNull(troopFacade.findByName("THIS NAME DOES NOT EXIST"));
     }
-    
+
     @Test
     public void testUpdate() throws Exception {
         testTroop1.setGold(999);
@@ -104,13 +84,13 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         assertEquals(troopFacade.findById(testTroop1.getId()), testTroop1);
         assertEquals(troopFacade.findById(testTroop1.getId()).getGold(), 999);
     }
-    
+
     @Test
     public void testFindAll() throws Exception {
         assertTrue(troopFacade.findAll().contains(testTroop1));
         assertTrue(troopFacade.findAll().contains(testTroop2));
     }
-    
+
     @Test
     public void testDelete() throws Exception {
         assertNotNull(troopFacade.findById(testTroop1.getId()));

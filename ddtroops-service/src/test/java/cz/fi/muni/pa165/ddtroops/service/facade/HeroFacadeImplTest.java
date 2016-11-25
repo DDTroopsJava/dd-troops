@@ -1,7 +1,5 @@
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
-import static org.testng.Assert.*;
-
 import cz.fi.muni.pa165.ddtroops.dto.HeroDTO;
 import cz.fi.muni.pa165.ddtroops.facade.HeroFacade;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
@@ -10,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.toSet;
+import static org.testng.Assert.*;
 
 /**
  * Created by Peter Zaoral.
@@ -25,7 +22,6 @@ import java.util.Set;
  */
 @DirtiesContext
 @ContextConfiguration(classes = ServiceConfiguration.class)
-@TransactionConfiguration(defaultRollback = true)
 public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     @InjectMocks
@@ -35,14 +31,6 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     private HeroDTO hero2;
     private HeroDTO newHero;
 
-    private static Set<HeroDTO> toSet(Iterable<HeroDTO> iterHeroes)
-    {
-        Set<HeroDTO> result = new HashSet<>();
-        for(HeroDTO item : iterHeroes) {
-            result.add(item);
-        }
-        return result;
-    }
 
     @BeforeMethod
     public void createHeroes() {
@@ -62,18 +50,18 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
 
 
     @AfterMethod
-    public void deleteHeroes(){
-        if(heroFacade.findAll().contains(hero1)) {
+    public void deleteHeroes() {
+        if (heroFacade.findAll().contains(hero1)) {
             heroFacade.deleteHero(hero1);
             assertFalse(toSet(heroFacade.findAll()).contains(hero1));
         }
 
-        if(heroFacade.findAll().contains(hero2)) {
+        if (heroFacade.findAll().contains(hero2)) {
             heroFacade.deleteHero(hero2);
             assertFalse(toSet(heroFacade.findAll()).contains(hero2));
         }
 
-        if(heroFacade.findAll().contains(newHero)) {
+        if (heroFacade.findAll().contains(newHero)) {
             heroFacade.deleteHero(newHero);
             assertFalse(toSet(heroFacade.findAll()).contains(newHero));
         }
@@ -131,10 +119,10 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void shouldUpdateHeroLevel(){
-        assertEquals(hero1.getLevel(),999);
-        hero1.setLevel(hero1.getLevel()+1);
-        assertEquals(hero1.getLevel(),1000);
+    public void shouldUpdateHeroLevel() {
+        assertEquals(hero1.getLevel(), 999);
+        hero1.setLevel(hero1.getLevel() + 1);
+        assertEquals(hero1.getLevel(), 1000);
     }
 
     private HeroDTO getHeroHelper(String name) {

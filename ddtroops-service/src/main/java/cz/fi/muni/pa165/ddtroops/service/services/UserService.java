@@ -1,10 +1,10 @@
 package cz.fi.muni.pa165.ddtroops.service.services;
 
-import java.util.List;
-
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author pstanko
@@ -19,6 +19,7 @@ public interface UserService {
 
     /**
      * Update the given user but cannot change unencrypted password!
+     *
      * @param u User that should be updated
      * @throws DDTroopsServiceException When any error occurs - constraints are not met or something
      */
@@ -26,6 +27,7 @@ public interface UserService {
 
     /**
      * Removes user
+     *
      * @param u - user
      * @return return true if successfully deleted
      * @throws DDTroopsServiceException
@@ -34,7 +36,8 @@ public interface UserService {
 
     /**
      * Update user password
-     * @param u - for given user
+     *
+     * @param u           - for given user
      * @param oldPassword - old password (unencrypted)
      * @param newPassword - new password (unencrypted)
      * @return true if changed, false if not
@@ -44,6 +47,7 @@ public interface UserService {
 
     /**
      * Get all reg. users
+     *
      * @return List of registred users
      * @throws DDTroopsServiceException
      */
@@ -61,6 +65,7 @@ public interface UserService {
 
     /**
      * Find user by userId
+     *
      * @param userId User id
      * @return null if not exits
      * @throws DDTroopsServiceException when something went wrong
@@ -69,6 +74,7 @@ public interface UserService {
 
     /**
      * Find user by email
+     *
      * @param email - User email
      * @return User or null if not found
      * @throws DDTroopsServiceException
