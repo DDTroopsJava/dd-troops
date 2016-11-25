@@ -51,12 +51,12 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     @AfterMethod
     public void deleteTestTroops() {
         if (troopFacade.findAll().contains(testTroop1)) {
-            troopFacade.delete(testTroop1);
+            troopFacade.delete(testTroop1.getId());
             assertFalse(toSet(troopFacade.findAll()).contains(testTroop1));
         }
 
         if (troopFacade.findAll().contains(testTroop2)) {
-            troopFacade.delete(testTroop2);
+            troopFacade.delete(testTroop2.getId());
             assertFalse(toSet(troopFacade.findAll()).contains(testTroop2));
         }
     }
@@ -94,7 +94,7 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testDelete() throws Exception {
         assertNotNull(troopFacade.findById(testTroop1.getId()));
-        troopFacade.delete(testTroop1);
+        troopFacade.delete(testTroop1.getId());
         assertNull(troopFacade.findById(testTroop1.getId()));
         assertFalse(troopFacade.findAll().contains(testTroop1));
     }

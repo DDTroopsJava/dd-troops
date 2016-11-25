@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
             userDao.delete(u);
             return true;
         } catch (Throwable ex) {
-            throw new DDTroopsServiceException("Cannot delete user: " + u.getId(), ex);
+            throw new DDTroopsServiceException("Cannot deleteAll user: " + u.getId(), ex);
         }
     }
 

@@ -32,7 +32,7 @@ public class HeroFacadeImpl implements HeroFacade {
     private Logger logger = LoggerFactory.getLogger(HeroFacadeImpl.class.getName());
 
     @Override
-    public HeroDTO createHero(HeroDTO hero) {
+    public HeroDTO create(HeroDTO hero) {
         Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
         try {
             heroService.createHero(heroEntity);
@@ -45,7 +45,8 @@ public class HeroFacadeImpl implements HeroFacade {
 
     @Override
     public HeroDTO findById(long id) {
-        Hero hero = null;
+
+        Hero hero;
         try {
             hero = heroService.findById(id);
         } catch (DDTroopsServiceException e) {
@@ -57,7 +58,7 @@ public class HeroFacadeImpl implements HeroFacade {
 
     @Override
     public HeroDTO findByName(String name) {
-        Hero hero = null;
+        Hero hero;
         try {
             hero = heroService.findByName(name);
         } catch (DDTroopsServiceException e) {
@@ -78,7 +79,7 @@ public class HeroFacadeImpl implements HeroFacade {
     }
 
     @Override
-    public HeroDTO updateHero(HeroDTO hero) {
+    public HeroDTO update(HeroDTO hero) {
         Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
         try {
             heroService.updateHero(heroEntity);
@@ -91,11 +92,13 @@ public class HeroFacadeImpl implements HeroFacade {
     }
 
     @Override
-    public Boolean deleteHero(HeroDTO hero) {
-        Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
+    public Boolean delete(Long id) {
+        if(id == null){
+            throw new IllegalArgumentException("id");
+        }
+        Hero heroEntity = beanMappingService.mapTo(findById(id), Hero.class);
         try {
             heroService.deleteHero(heroEntity);
-            hero.setId(heroEntity.getId());
             return true;
         } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
@@ -104,7 +107,7 @@ public class HeroFacadeImpl implements HeroFacade {
     }
 
     @Override
-    public Boolean deleteAllHeroes() {
+    public Boolean deleteAll() {
         try {
             beanMappingService.mapTo(heroService.deleteAllHeroes(), HeroDTO.class);
             return true;

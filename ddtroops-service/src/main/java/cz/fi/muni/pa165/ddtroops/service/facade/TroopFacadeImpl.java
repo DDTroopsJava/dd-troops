@@ -75,8 +75,13 @@ public class TroopFacadeImpl implements TroopFacade {
     }
 
     @Override
-    public void delete(TroopDTO troopDTO) {
-        Troop troopEntity = beanMappingService.mapTo(troopDTO, Troop.class);
+    public void delete(Long id) {
+        if(id == null){
+            throw new IllegalArgumentException("id");
+        }
+
+        Troop troopEntity = beanMappingService.mapTo(findById(id), Troop.class);
+
         try {
             troopService.delete(troopEntity);
         } catch (DDTroopsServiceException e) {

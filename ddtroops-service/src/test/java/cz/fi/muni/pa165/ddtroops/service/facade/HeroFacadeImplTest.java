@@ -38,10 +38,10 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
         hero2 = getHeroHelper("Superman");
         newHero = getHeroHelper("new-hero");
 
-        heroFacade.createHero(hero1);
+        heroFacade.create(hero1);
         assertTrue(toSet(heroFacade.findAll()).contains(hero1));
 
-        heroFacade.createHero(hero2);
+        heroFacade.create(hero2);
         assertTrue(toSet(heroFacade.findAll()).contains(hero2));
 
         hero1 = heroFacade.findById(hero1.getId());
@@ -52,24 +52,24 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     @AfterMethod
     public void deleteHeroes() {
         if (heroFacade.findAll().contains(hero1)) {
-            heroFacade.deleteHero(hero1);
+            heroFacade.delete(hero1.getId());
             assertFalse(toSet(heroFacade.findAll()).contains(hero1));
         }
 
         if (heroFacade.findAll().contains(hero2)) {
-            heroFacade.deleteHero(hero2);
+            heroFacade.delete(hero2.getId());
             assertFalse(toSet(heroFacade.findAll()).contains(hero2));
         }
 
         if (heroFacade.findAll().contains(newHero)) {
-            heroFacade.deleteHero(newHero);
+            heroFacade.delete(newHero.getId());
             assertFalse(toSet(heroFacade.findAll()).contains(newHero));
         }
     }
 
     @Test
     public void shouldCreateHero() throws Exception {
-        heroFacade.createHero(newHero);
+        heroFacade.create(newHero);
         assertEquals(heroFacade.findById(newHero.getId()), newHero);
         assertTrue(heroFacade.findAll().contains(newHero));
     }
@@ -99,7 +99,7 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     public void shouldUpdateHero() throws Exception {
         hero1.setName("Rambo");
         logger.info("Hero id: " + hero1.getId());
-        heroFacade.updateHero(hero1);
+        heroFacade.update(hero1);
         assertEquals(heroFacade.findAll().size(), 2);
         assertEquals(heroFacade.findById(hero1.getId()), hero1);
     }
@@ -107,14 +107,14 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldDeleteHero() throws Exception {
         assertNotNull(heroFacade.findById(hero1.getId()));
-        heroFacade.deleteHero(hero1);
+        heroFacade.delete(hero1.getId());
         assertNull(heroFacade.findById(hero1.getId()));
         assertFalse(heroFacade.findAll().contains(hero1));
     }
 
     @Test
     public void shouldDeleteAllHeroes() throws Exception {
-        assertTrue(heroFacade.deleteAllHeroes());
+        assertTrue(heroFacade.deleteAll());
         assertEquals(heroFacade.findAll().size(), 0);
     }
 

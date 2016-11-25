@@ -88,8 +88,11 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     @Override
-    public void delete(RoleDTO role) {
-        Role roleEntity = beanMappingService.mapTo(role, Role.class);
+    public void delete(Long id) {
+        if(id == null){
+            throw new IllegalArgumentException("id");
+        }
+        Role roleEntity = beanMappingService.mapTo(findById(id), Role.class);
         try {
             roleService.delete(roleEntity);
         } catch (DDTroopsServiceException ex) {

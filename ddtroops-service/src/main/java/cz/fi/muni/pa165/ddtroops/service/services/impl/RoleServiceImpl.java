@@ -82,7 +82,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             roleDao.delete(role);
         } catch (Throwable e) {
-            throw new DDTroopsServiceException("Cannot delete role named " + role.getName()
+            throw new DDTroopsServiceException("Cannot deleteAll role named " + role.getName()
                     + " with id" + role.getId(), e);
         }
     }

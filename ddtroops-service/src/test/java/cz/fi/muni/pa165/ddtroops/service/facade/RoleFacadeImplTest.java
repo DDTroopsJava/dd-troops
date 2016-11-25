@@ -52,17 +52,17 @@ public class RoleFacadeImplTest extends AbstractTestNGSpringContextTests {
     @AfterMethod
     public void deleteRoles() {
         if (roleFacade.findAll().contains(role1)) {
-            roleFacade.delete(role1);
+            roleFacade.delete(role1.getId());
             assertFalse(toSet(roleFacade.findAll()).contains(role1));
         }
 
         if (roleFacade.findAll().contains(role2)) {
-            roleFacade.delete(role2);
+            roleFacade.delete(role2.getId());
             assertFalse(toSet(roleFacade.findAll()).contains(role2));
         }
 
         if (roleFacade.findAll().contains(role3)) {
-            roleFacade.delete(role3);
+            roleFacade.delete(role3.getId());
             assertFalse(toSet(roleFacade.findAll()).contains(role3));
         }
     }
@@ -103,7 +103,7 @@ public class RoleFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testDelete() throws Exception {
         assertNotNull(roleFacade.findById(role1.getId()));
-        roleFacade.delete(role1);
+        roleFacade.delete(role1.getId());
         assertNull(roleFacade.findById(role1.getId()));
         assertFalse(roleFacade.findAll().contains(role1));
     }

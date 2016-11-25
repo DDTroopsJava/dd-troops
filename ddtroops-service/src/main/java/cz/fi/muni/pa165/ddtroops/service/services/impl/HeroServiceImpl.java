@@ -85,7 +85,7 @@ public class HeroServiceImpl implements HeroService {
         try {
             heroDao.delete(hero);
         } catch (Throwable e) {
-            throw new DDTroopsServiceException("Cannot delete hero named " + hero.getName()
+            throw new DDTroopsServiceException("Cannot deleteAll hero named " + hero.getName()
                     + " with id" + hero.getId(), e);
         }
     }
@@ -96,7 +96,7 @@ public class HeroServiceImpl implements HeroService {
             heroDao.deleteAll();
             return true;
         } catch (Throwable e) {
-            throw new DDTroopsServiceException("Cannot delete all heroes.", e);
+            throw new DDTroopsServiceException("Cannot deleteAll all heroes.", e);
         }
     }
 }

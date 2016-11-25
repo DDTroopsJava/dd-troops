@@ -64,7 +64,7 @@ public class TroopServiceImpl implements TroopService {
             troopDao.delete(t);
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
-                    "Cannot delete troop with id: " + t.getId() + " and name: " + t.getName(), ex);
+                    "Cannot deleteAll troop with id: " + t.getId() + " and name: " + t.getName(), ex);
         }
     }
 

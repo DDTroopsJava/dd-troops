@@ -54,17 +54,17 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
     @AfterMethod
     public void deleteUsers() {
         if (userFacade.findAll().contains(user1)) {
-            userFacade.delete(user1);
+            userFacade.delete(user1.getId());
             assertFalse(toSet(userFacade.findAll()).contains(user1));
         }
 
         if (userFacade.findAll().contains(user2)) {
-            userFacade.delete(user2);
+            userFacade.delete(user2.getId());
             assertFalse(toSet(userFacade.findAll()).contains(user2));
         }
 
         if (userFacade.findAll().contains(newUser)) {
-            userFacade.delete(newUser);
+            userFacade.delete(newUser.getId());
             assertFalse(toSet(userFacade.findAll()).contains(newUser));
         }
     }
@@ -130,7 +130,7 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testDelete() throws Exception {
         assertNotNull(userFacade.findById(user1.getId()));
-        userFacade.delete(user1);
+        userFacade.delete(user1.getId());
         assertNull(userFacade.findById(user1.getId()));
         assertFalse(userFacade.findAll().contains(user1));
     }

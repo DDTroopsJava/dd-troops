@@ -19,10 +19,11 @@ public interface UserFacade {
     UserDTO findById(Long userId);
 
     /**
-     * @param userDTO
+     * Delete hero
+     * @param id
      * @return
      */
-    boolean delete(UserDTO userDTO);
+    boolean delete(Long id);
 
     /**
      * Gets user by email
