@@ -93,22 +93,27 @@ public class TroopServiceImpl implements TroopService {
         Stream<Troop> stream;
 
         try {
-            if (mission != null && troopSize != null) {
-                stream = troopDao.findByMission(mission).stream().filter(t -> t.size() == troopSize);
-
-            } else if (mission != null) {
+            if (mission != null) {
                 stream = troopDao.findByMission(mission).stream();
-            } else if (troopSize != null) {
-                stream = troopDao.findAll().stream().filter(t -> t.size() == troopSize);
-            } else {
+
+            }else {
                 stream = troopDao.findAll().stream();
             }
+            if(troopSize != null){
+                stream = stream.filter(t -> t.size() == troopSize);
+            }
 
-            Stream<Troop> sortedStream = stream.sorted(Comparator.comparing(Troop::getAttackPower).reversed());
-            List<Troop> sortedList = sortedStream
+            /*
+             * First compare attackPower - if is the same, use the defense power
+             */
+            Stream<Troop> sortedStream = stream.sorted(
+                    Comparator.comparing(Troop::getAttackPower)
+                            .thenComparing(Troop::getDefensePower)
+                            .reversed()
+            );
+            return sortedStream
                 .limit(n)
                 .collect(Collectors.toList());
-            return sortedList;
         } catch (IllegalArgumentException ex) {
             throw new DDTroopsServiceException("Can't return Top N if N is negative!");
         }

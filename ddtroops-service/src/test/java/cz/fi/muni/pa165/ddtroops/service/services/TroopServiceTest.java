@@ -108,7 +108,6 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
         });
        
         when(troopDao.findOne(anyLong())).thenAnswer(invoke -> {
-
             int argumentAt = invoke.getArgumentAt(0, Long.class).intValue();
             if (argumentAt >= troops.size()) return null;
             return troops.get(argumentAt);
@@ -117,10 +116,7 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
         when(troopDao.findByName(anyString())).thenAnswer(invoke -> {
             String arg = invoke.getArgumentAt(0, String.class);
             Optional<Troop> optTroop = troops.stream().filter((troop) -> troop.getName().equals(arg)).findFirst();
-            if (!optTroop.isPresent()){
-                return null;
-            }
-            return optTroop.get();
+            return optTroop.orElse(null);
         });
 
         when(troopDao.findAll()).thenAnswer(invoke -> Collections.unmodifiableList(troops));
@@ -132,7 +128,7 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
             return stream.collect(Collectors.toList());
             });
         
-        doAnswer((Answer<Void>) (InvocationOnMock invoke) -> {
+        doAnswer((InvocationOnMock invoke) -> {
             Troop mockedTroop = invoke.getArgumentAt(0, Troop.class);
             if (mockedTroop.getId() == null) {
                 throw new IllegalArgumentException("The troop doesn't exists!");
@@ -322,7 +318,9 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
     public void shouldThirdTroopWinBattle() throws Exception{
         setUpDataForTopNTesting();
         assertEquals(troopService.findByName("Third Troop").getAttackPower(),1000L);
+        assertEquals(troopService.findByName("Third Troop").getDefensePower(),2000L);
         assertEquals(troopService.findByName("Second Troop").getAttackPower(),105L);
+        assertEquals(troopService.findByName("Second Troop").getDefensePower(),210L);
         assertEquals(troopService.battle(testTroop3,testTroop2),testTroop3);
         for(Hero hero : troopService.findByName("Second Troop").getHeroes()){
             assertEquals(hero.getLevel(),1);
@@ -353,9 +351,9 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
     }
     
     private void assignRoles() {
-        role1 = TestUtils.createRole("Test role1", 10L);
-        role2 = TestUtils.createRole("Test role2", 5L);
-        role3 = TestUtils.createRole("Test role3", 100L);
+        role1 = TestUtils.createRole("Test role1", 10L, 20);
+        role2 = TestUtils.createRole("Test role2", 5L, 10);
+        role3 = TestUtils.createRole("Test role3", 100L, 200);
     }
     
     private void addHeroes() {

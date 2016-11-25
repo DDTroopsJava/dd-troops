@@ -159,4 +159,8 @@ public class Role {
     public long getDefensePower() {
         return defensePower;
     }
+
+    public void setDefensePower(long defensePower) {
+        this.defensePower = defensePower;
+    }
 }

@@ -28,16 +28,11 @@ import org.testng.annotations.Test;
  */
 @DirtiesContext
 @ContextConfiguration(classes = ServiceConfiguration.class)
-@TransactionConfiguration(defaultRollback = true)
 public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
 
     private static final String PASSWORD_1 = "Password1";
     @Autowired
-    @InjectMocks
     private UserFacade userFacade;
-
-    @Mock
-    private UserService userService;
 
     private UserDTO user1;
     private UserDTO user2;
@@ -115,7 +110,6 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testUpdatePassword() throws Exception {
-        String oldHash = user1.getPasswordHash();
         user1 = userFacade.updatePassword(user1, PASSWORD_1, "new_pass");
         assertFalse(userFacade.authenticate(user1.getEmail(), PASSWORD_1));
         assertTrue(userFacade.authenticate(user1.getEmail(), "new_pass"));
