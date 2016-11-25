@@ -46,4 +46,23 @@ public interface TroopFacade {
      * @param id
      */
     void delete(Long id);
+
+    /**
+     * Battle between troops
+     *
+     * @param troop1DTO
+     * @param troop2DTO
+     * @return TroopDTO that won
+     */
+    TroopDTO battle(TroopDTO troop1DTO, TroopDTO troop2DTO);
+
+    /**
+     * Get topN troops
+     *
+     * @param n first troops
+     * @param mission name
+     * @param troopSize
+     * @return List of first n troops
+     */
+    List<TroopDTO> topN(int n, String mission, Long troopSize);
 }

@@ -5,7 +5,9 @@
  */
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
+import cz.fi.muni.pa165.ddtroops.dto.HeroDTO;
 import cz.fi.muni.pa165.ddtroops.dto.TroopDTO;
+import cz.fi.muni.pa165.ddtroops.facade.HeroFacade;
 import cz.fi.muni.pa165.ddtroops.facade.TroopFacade;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,14 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private TroopFacade troopFacade;
 
+    @Autowired
+    private HeroFacade heroFacade;
+
     private TroopDTO testTroop1;
     private TroopDTO testTroop2;
+
+    private HeroDTO hero1;
+    private HeroDTO hero2;
 
 
     @BeforeMethod
@@ -97,5 +105,34 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         troopFacade.delete(testTroop1.getId());
         assertNull(troopFacade.findById(testTroop1.getId()));
         assertFalse(troopFacade.findAll().contains(testTroop1));
+    }
+
+    @Test
+    public void testAbortBattle() throws Exception {
+        //troopFacade.findByName("Test 1").setHeroes();
+        assertNull(troopFacade.battle(testTroop1,testTroop2));
+    }
+
+    private void setUpHelper(){
+        hero1 = getHeroHelper("Batman");
+        hero2 = getHeroHelper("Superman");
+
+        heroFacade.create(hero1);
+        assertTrue(toSet(heroFacade.findAll()).contains(hero1));
+
+        heroFacade.create(hero2);
+        assertTrue(toSet(heroFacade.findAll()).contains(hero2));
+
+        hero1 = heroFacade.findById(hero1.getId());
+        hero2 = heroFacade.findById(hero2.getId());
+
+
+    }
+
+    private HeroDTO getHeroHelper(String name) {
+        HeroDTO heroDTO = new HeroDTO();
+        heroDTO.setName(name);
+        heroDTO.setLevel(999);
+        return heroDTO;
     }
 }
