@@ -7,7 +7,7 @@ install:
   - mvn clean install -DskipTests=true -B -V
 
 script:
-  mvn test -q
+  mvn test -Phib-no-debug
 
 cache:
   directories:
