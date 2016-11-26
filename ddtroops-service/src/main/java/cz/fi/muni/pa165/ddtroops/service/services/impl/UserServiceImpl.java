@@ -89,26 +89,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void register(User u, String unencryptedPassword) throws DDTroopsServiceException {
+    public User register(User u, String unencryptedPassword) throws DDTroopsServiceException {
         if (u == null) {
             throw new IllegalArgumentException("User is null!");
         }
         try {
             u.setPasswordHash(createHash(unencryptedPassword));
             u.setJoinedDate(new Date());
-            userDao.save(u);
+            return userDao.save(u);
         } catch (Throwable ex) {
             throw new DDTroopsServiceException("Cannot create user: " + u.getEmail(), ex);
         }
     }
 
     @Override
-    public void update(User u) throws DDTroopsServiceException {
+    public User update(User u) throws DDTroopsServiceException {
         if (u == null) {
             throw new IllegalArgumentException("User is null!");
         }
         try {
-            userDao.save(u);
+            return userDao.save(u);
         } catch (Throwable ex) {
             throw new DDTroopsServiceException("Cannot update user: " + u.getId(), ex);
         }

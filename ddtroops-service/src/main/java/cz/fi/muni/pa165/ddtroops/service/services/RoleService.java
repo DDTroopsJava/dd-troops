@@ -17,7 +17,7 @@ public interface RoleService {
      *
      * @param role role that will be created
      */
-    void create(Role role) throws DDTroopsServiceException;
+    Role create(Role role) throws DDTroopsServiceException;
 
     /**
      * Gets role with unique id
@@ -47,7 +47,7 @@ public interface RoleService {
      *
      * @param role role that will be updated
      */
-    void update(Role role) throws DDTroopsServiceException;
+    Role update(Role role) throws DDTroopsServiceException;
 
     /**
      * Removes particular role

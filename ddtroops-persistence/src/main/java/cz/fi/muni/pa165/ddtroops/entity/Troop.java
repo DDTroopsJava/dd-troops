@@ -127,6 +127,14 @@ public class Troop implements Comparable<Troop> {
         }
     }
 
+    @PreUpdate
+    @PrePersist
+    private void updateHeroesFromTroop() {
+        for (Hero hero : heroes) {
+            hero.setTroopWithoutUpdate(this);
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

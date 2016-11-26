@@ -109,6 +109,15 @@ public class Role {
         return result;
     }
 
+    @PreUpdate
+    @PrePersist
+    public void updateHeroes()
+    {
+        for (Hero hero : heroes) {
+            hero.addRole(this);
+        }
+    }
+
     @PreRemove
     public void removeHeroes() {
         for (Hero hero : heroes) {

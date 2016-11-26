@@ -15,7 +15,7 @@ public interface UserService {
     /**
      * Register the given user with the given unencrypted password.
      */
-    void register(User u, String unencryptedPassword) throws DDTroopsServiceException;
+    User register(User u, String unencryptedPassword) throws DDTroopsServiceException;
 
     /**
      * Update the given user but cannot change unencrypted password!
@@ -23,7 +23,7 @@ public interface UserService {
      * @param u User that should be updated
      * @throws DDTroopsServiceException When any error occurs - constraints are not met or something
      */
-    void update(User u) throws DDTroopsServiceException;
+    User update(User u) throws DDTroopsServiceException;
 
     /**
      * Removes user

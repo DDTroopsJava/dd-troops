@@ -1,5 +1,7 @@
 package cz.fi.muni.pa165.ddtroops.service.services;
 
+import cz.fi.muni.pa165.ddtroops.dao.HeroDao;
+import cz.fi.muni.pa165.ddtroops.dao.RoleDao;
 import cz.fi.muni.pa165.ddtroops.dao.TroopDao;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import cz.fi.muni.pa165.ddtroops.entity.Role;
@@ -41,6 +43,12 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
 
     @Mock
     private TroopDao troopDao;
+
+    @Mock
+    private HeroDao heroDao;
+
+    @Mock
+    private RoleDao roleDao;
 
     @Autowired
     @InjectMocks
@@ -342,6 +350,8 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     private void assignRoles() {
+        when(roleDao.save(any(Role.class))).thenAnswer( invoke -> invoke.getArgumentAt(0, Role.class));
+
         role1 = TestUtils.createRole("Test role1", 10L, 20L);
         role2 = TestUtils.createRole("Test role2", 5L, 10L);
         role3 = TestUtils.createRole("Test role3", 100L, 200L);
@@ -361,6 +371,8 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
 
         // should have AP = 1000;
         hero1FromTroop3 = TestUtils.createHero("Hero nr. 1 from Troop nr. 3 with role4", role3, 10);
+
+        when(heroDao.save(any(Hero.class))).thenAnswer( invoke -> invoke.getArgumentAt(0, Hero.class));
 
         // troop1 should have AP = 15
         testTroop1.addHero(hero1FromTroop1);

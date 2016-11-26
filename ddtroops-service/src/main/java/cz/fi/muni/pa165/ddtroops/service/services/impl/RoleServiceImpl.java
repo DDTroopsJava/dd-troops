@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
+import cz.fi.muni.pa165.ddtroops.dao.HeroDao;
 import cz.fi.muni.pa165.ddtroops.dao.RoleDao;
 import cz.fi.muni.pa165.ddtroops.entity.Role;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -19,13 +20,17 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    private HeroDao heroDao;
+
     @Override
-    public void create(Role role) throws DDTroopsServiceException {
+    public Role create(Role role) throws DDTroopsServiceException {
         if (role == null) {
             throw new IllegalArgumentException("Role is null.");
         }
         try {
-            roleDao.save(role);
+            role.getHeroes().forEach(h -> heroDao.save(h));
+            return roleDao.save(role);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create role named " + role.getName() + " with id" + role.getId(), e);
         }
@@ -65,12 +70,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void update(Role role) throws DDTroopsServiceException {
+    public Role update(Role role) throws DDTroopsServiceException {
         if (role == null) {
             throw new IllegalArgumentException("Role is null.");
         }
         try {
-            roleDao.save(role);
+            role.getHeroes().forEach(h -> heroDao.save(h));
+            return roleDao.save(role);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot update role named " + role.getName()
                     + " with id" + role.getId(), e);
@@ -81,6 +87,7 @@ public class RoleServiceImpl implements RoleService {
     public void delete(Role role) throws DDTroopsServiceException {
         try {
             roleDao.delete(role);
+            role.getHeroes().forEach(h -> heroDao.save(h));
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot deleteAll role named " + role.getName()
                     + " with id" + role.getId(), e);
