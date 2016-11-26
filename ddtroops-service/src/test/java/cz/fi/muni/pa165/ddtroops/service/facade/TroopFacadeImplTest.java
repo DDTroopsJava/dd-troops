@@ -194,6 +194,7 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     {
         setupBattle();
         assertEquals(troopFacade.battle(troop1, troop2), troop1);
+        assertEquals(heroFacade.findById(hero1.getId()).getLevel(), 101);
     }
 
     @Test

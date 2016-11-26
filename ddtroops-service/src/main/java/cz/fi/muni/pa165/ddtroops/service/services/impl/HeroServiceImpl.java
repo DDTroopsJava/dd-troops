@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
 import cz.fi.muni.pa165.ddtroops.dao.HeroDao;
+import cz.fi.muni.pa165.ddtroops.dao.RoleDao;
 import cz.fi.muni.pa165.ddtroops.entity.Hero;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.HeroService;
@@ -19,13 +20,16 @@ public class HeroServiceImpl implements HeroService {
     @Autowired
     private HeroDao heroDao;
 
+    @Autowired
+    private RoleDao roleDao;
+
     @Override
     public Hero createHero(Hero hero) throws DDTroopsServiceException {
         if (hero == null) {
             throw new IllegalArgumentException("Hero is null.");
         }
         try {
-            hero.getRoles().forEach(r -> r.addHero(hero));
+            hero.getRoles().forEach(r -> {r.addHero(hero); roleDao.save(r);});
             return heroDao.save(hero);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create hero named " + hero.getName() + " with id" + hero.getId(), e);
@@ -71,7 +75,7 @@ public class HeroServiceImpl implements HeroService {
             throw new IllegalArgumentException("Hero is null.");
         }
         try {
-            hero.getRoles().forEach(r -> r.addHero(hero));
+            hero.getRoles().forEach(r -> {r.addHero(hero); roleDao.save(r);});
             return heroDao.save(hero);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot update hero named " + hero.getName()

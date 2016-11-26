@@ -67,9 +67,15 @@ public class TroopServiceImpl implements TroopService {
     }
 
     @Override
+    public Troop create(Troop t) throws DDTroopsServiceException {
+        return update(t);
+    }
+
+    @Override
     public void delete(Troop t) throws DDTroopsServiceException {
         try {
             troopDao.delete(t);
+            t.getHeroes().forEach(h -> heroDao.save(h));
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
                     "Cannot deleteAll troop with id: " + t.getId() + " and name: " + t.getName(), ex);
@@ -90,6 +96,7 @@ public class TroopServiceImpl implements TroopService {
         }
 
         win.levelUpHeroes();
+        update(win);
         return win;
 
     }
