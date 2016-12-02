@@ -1,18 +1,19 @@
 package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Date;
+import java.util.List;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author pstanko

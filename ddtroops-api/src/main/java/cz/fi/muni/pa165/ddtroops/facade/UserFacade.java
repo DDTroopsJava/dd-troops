@@ -1,8 +1,11 @@
 package cz.fi.muni.pa165.ddtroops.facade;
 
-import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
-
 import java.util.Collection;
+
+import cz.fi.muni.pa165.ddtroops.dto.UserCreateDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserUpdateDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserUpdatePassDTO;
 
 /**
  * Created by pstanko.
@@ -36,28 +39,34 @@ public interface UserFacade {
     /**
      * Updates existing user
      *
-     * @param u
+     * @param u Updated user
      * @return
      */
-    UserDTO update(UserDTO u);
+    UserDTO update(UserUpdateDTO u);
 
     /**
      * Updates user password
      *
-     * @param u
-     * @param oldPassword
-     * @param newPassword
-     * @return
+     * @param u Updated user
+     * @return UserDTO
      */
-    UserDTO updatePassword(UserDTO u, String oldPassword, String newPassword);
+    UserDTO updatePassword(UserUpdatePassDTO u);
 
     /**
      * Register new user
      *
-     * @param user
-     * @param unencryptedPassword
+     * @param user User create DTO
+     * @param unencryptedPassword Unencrypted password
+     * @return UserDTO
      */
-    void register(UserDTO user, String unencryptedPassword);
+    UserDTO register(UserCreateDTO user, String unencryptedPassword);
+
+    /**
+     * Register new user
+     * @param user User Create DTO
+     * @return UserDTO
+     */
+    UserDTO register(UserCreateDTO user);
 
     /**
      * Get all registered users
