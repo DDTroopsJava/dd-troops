@@ -39,6 +39,7 @@
         <module>ddtroops-persistence</module>
         <module>ddtroops-api</module>
         <module>ddtroops-service</module>
+        <module>ddtroops-sample-data</module>
         <module>ddtroops-mvc</module>
         <module>ddtroops-rest</module>
     </modules>

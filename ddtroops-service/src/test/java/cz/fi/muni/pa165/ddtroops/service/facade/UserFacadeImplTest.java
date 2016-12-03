@@ -1,7 +1,13 @@
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
 
+import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.toSet;
+import static org.testng.Assert.*;
+
+import cz.fi.muni.pa165.ddtroops.dto.UserCreateDTO;
 import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserUpdateDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserUpdatePassDTO;
 import cz.fi.muni.pa165.ddtroops.facade.UserFacade;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +17,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static cz.fi.muni.pa165.ddtroops.service.facade.TestUtils.toSet;
-import static org.testng.Assert.*;
 
 
 /**
@@ -40,14 +43,12 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
         user2 = getUser("Boogie", false);
         newUser = getUser("new-user", false);
 
-        userFacade.register(user1, PASSWORD_1);
+        user1 =userFacade.register(getCreateUser(user1), PASSWORD_1);
         assertTrue(toSet(userFacade.findAll()).contains(user1));
 
-        userFacade.register(user2, PASSWORD_1);
+        user2 =userFacade.register(getCreateUser(user2), PASSWORD_1);
         assertTrue(toSet(userFacade.findAll()).contains(user2));
 
-        user1 = userFacade.findById(user1.getId());
-        user2 = userFacade.findById(user2.getId());
     }
 
 
@@ -88,21 +89,22 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
     public void testUpdate() throws Exception {
         user1.setPhone("12345");
         logger.info("User id: " + user1);
-        userFacade.update(user1);
+        user1 = userFacade.update(getUpdateUser(user1));
         assertEquals(userFacade.findAll().size(), 2);
         assertEquals(userFacade.findById(user1.getId()), user1);
+        assertEquals(user1.getPhone(), "12345");
     }
 
     @Test
     public void testUpdatePassword() throws Exception {
-        user1 = userFacade.updatePassword(user1, PASSWORD_1, "new_pass");
+        user1 = userFacade.updatePassword(updatePass(user1.getId(), PASSWORD_1, "new_pass"));
         assertFalse(userFacade.authenticate(user1.getEmail(), PASSWORD_1));
         assertTrue(userFacade.authenticate(user1.getEmail(), "new_pass"));
     }
 
     @Test
     public void testRegister() throws Exception {
-        userFacade.register(newUser, PASSWORD_1);
+        newUser = userFacade.register(getCreateUser(newUser), PASSWORD_1);
         assertEquals(userFacade.findById(newUser.getId()), newUser);
         assertTrue(userFacade.findAll().contains(newUser));
     }
@@ -142,5 +144,38 @@ public class UserFacadeImplTest extends AbstractTestNGSpringContextTests {
         userDTO.setName(name);
         userDTO.setAdmin(admin);
         return userDTO;
+    }
+
+    private UserCreateDTO getCreateUser(String name, boolean admin)
+    {
+        UserCreateDTO userDTO = new UserCreateDTO();
+        userDTO.setEmail(name + "@example.com");
+        userDTO.setName(name);
+        userDTO.setAdmin(admin);
+        return userDTO;
+    }
+
+    private UserCreateDTO getCreateUser(UserDTO user)
+    {
+        UserCreateDTO userDTO = new UserCreateDTO();
+        userDTO.setEmail(user.getEmail());
+        userDTO.setName(user.getName());
+        userDTO.setAdmin(user.isAdmin());
+        return userDTO;
+    }
+
+    private UserUpdateDTO getUpdateUser(UserDTO user){
+        UserUpdateDTO userDTO = new UserUpdateDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setName(user.getName());
+        userDTO.setAdmin(user.isAdmin());
+        userDTO.setPhone(user.getPhone());
+        return userDTO;
+    }
+
+    private UserUpdatePassDTO updatePass(Long id, String curr, String n)
+    {
+        return new UserUpdatePassDTO(id, curr, n);
     }
 }

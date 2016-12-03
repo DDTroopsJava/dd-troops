@@ -1,9 +1,13 @@
 package cz.fi.muni.pa165.ddtroops.service.facade;
 
+import java.util.Collection;
+
+import cz.fi.muni.pa165.ddtroops.dto.UserCreateDTO;
 import cz.fi.muni.pa165.ddtroops.dto.UserDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserUpdateDTO;
+import cz.fi.muni.pa165.ddtroops.dto.UserUpdatePassDTO;
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.facade.UserFacade;
-import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.exceptions.InvalidPasswordException;
 import cz.fi.muni.pa165.ddtroops.service.services.BeanMappingService;
 import cz.fi.muni.pa165.ddtroops.service.services.UserService;
@@ -12,9 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-
 
 /**
  * Created by pstanko.
@@ -35,113 +36,76 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public UserDTO findById(Long userId) {
-        User user = null;
-        try {
-            user = userService.findById(userId);
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-            return null;
-        }
+        User user = userService.findById(userId);
         return (user == null) ? null : beanMappingService.mapTo(user, UserDTO.class);
     }
 
     @Override
     public boolean delete(Long id) {
-        if(id == null){
+        if (id == null) {
             throw new IllegalArgumentException("id");
         }
         User userEntity = beanMappingService.mapTo(findById(id), User.class);
-        try {
-            userService.delete(userEntity);
-            return true;
-        } catch (DDTroopsServiceException ex) {
-            logger.warn(ex.getMessage(), ex);
-        }
-        return false;
+        userService.delete(userEntity);
+        return true;
+
     }
 
     @Override
     public UserDTO findByEmail(String email) {
-        User user;
-        try {
-            user = userService.findByEmail(email);
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-            return null;
-        }
+        User user = userService.findByEmail(email);
         return (user == null) ? null : beanMappingService.mapTo(user, UserDTO.class);
     }
 
     @Override
-    public UserDTO update(UserDTO userDTO) {
+    public UserDTO update(UserUpdateDTO userDTO) {
         User userEntity = beanMappingService.mapTo(userDTO, User.class);
-        try {
-            userService.update(userEntity);
-            userDTO.setId(userEntity.getId());
-            return userDTO;
-        } catch (DDTroopsServiceException ex) {
-            logger.warn(ex.getMessage(), ex);
-        }
-        return null;
+        UserDTO orig = findById(userDTO.getId());
+        userEntity.setJoinedDate(orig.getJoinedDate());
+        userService.update(userEntity);
+        return findById(userDTO.getId());
     }
 
     @Override
-    public UserDTO updatePassword(UserDTO userDTO, String oldPassword, String newPassword) {
+    public UserDTO updatePassword(UserUpdatePassDTO userDTO) {
 
-        User userEntity = beanMappingService.mapTo(userDTO, User.class);
+        User userEntity = beanMappingService.mapTo(findById(userDTO.getId()), User.class);
 
-        try {
-            if (!userService.updatePassword(userEntity, oldPassword, newPassword)) {
-                throw new InvalidPasswordException();
-            }
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
+        if (!userService.updatePassword(userEntity, userDTO.getCurrentPassword(), userDTO.getNewPassword())) {
+            throw new InvalidPasswordException();
         }
 
         return findById(userDTO.getId());
     }
 
     @Override
-    public void register(UserDTO userDTO, String unencryptedPassword) {
+    public UserDTO register(UserCreateDTO userDTO, String unencryptedPassword) {
         User userEntity = beanMappingService.mapTo(userDTO, User.class);
-        try {
-            userService.register(userEntity, unencryptedPassword);
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-        }
-        userDTO.setId(userEntity.getId());
+        userEntity = userService.register(userEntity, unencryptedPassword);
+        return findById(userEntity.getId());
+    }
+
+    @Override
+    public UserDTO register(UserCreateDTO userDTO) {
+        User userEntity = beanMappingService.mapTo(userDTO, User.class);
+        userEntity = userService.register(userEntity, userDTO.getPassword());
+        return findById(userEntity.getId());
     }
 
     @Override
     public Collection<UserDTO> findAll() {
-        try {
-            return beanMappingService.mapTo(userService.findAll(), UserDTO.class);
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-        }
-        return null;
+        return beanMappingService.mapTo(userService.findAll(), UserDTO.class);
     }
 
     @Override
     public boolean authenticate(String email, String unencryptedPassword) {
-        try {
-            User user = userService.findByEmail(email);
-            return user != null && userService.authenticate(user, unencryptedPassword);
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-
-        }
-        return false;
+        User user = userService.findByEmail(email);
+        return user != null && userService.authenticate(user, unencryptedPassword);
     }
 
     @Override
     public boolean isAdmin(UserDTO u) {
-        try {
-            return userService.isAdmin(beanMappingService.mapTo(u, User.class));
-        } catch (DDTroopsServiceException e) {
-            logger.warn(e.getMessage(), e);
-        }
-        return false;
+        return userService.isAdmin(beanMappingService.mapTo(u, User.class));
     }
 
 }

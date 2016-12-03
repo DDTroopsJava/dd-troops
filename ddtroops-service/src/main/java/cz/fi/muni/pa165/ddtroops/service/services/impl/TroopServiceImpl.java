@@ -1,5 +1,11 @@
 package cz.fi.muni.pa165.ddtroops.service.services.impl;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import cz.fi.muni.pa165.ddtroops.dao.HeroDao;
 import cz.fi.muni.pa165.ddtroops.dao.TroopDao;
 import cz.fi.muni.pa165.ddtroops.entity.Troop;
@@ -7,12 +13,6 @@ import cz.fi.muni.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.fi.muni.pa165.ddtroops.service.services.TroopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author xgono

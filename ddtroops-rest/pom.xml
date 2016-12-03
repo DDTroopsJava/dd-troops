@@ -40,6 +40,12 @@
             <artifactId>ddtroops-service</artifactId>
             <version>1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>cz.fi.muni.pa165.ddtroops</groupId>
+            <artifactId>ddtroops-sample-data</artifactId>
+            <version>1.0</version>
+        </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>

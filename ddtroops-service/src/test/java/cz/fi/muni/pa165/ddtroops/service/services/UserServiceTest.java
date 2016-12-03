@@ -1,5 +1,15 @@
 package cz.fi.muni.pa165.ddtroops.service.services;
 
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import cz.fi.muni.pa165.ddtroops.dao.UserDao;
 import cz.fi.muni.pa165.ddtroops.entity.User;
 import cz.fi.muni.pa165.ddtroops.service.config.ServiceConfiguration;
@@ -15,16 +25,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
 
 /**
  * Created by pstanko.
@@ -139,7 +139,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         long origId = testUser.getId();
         testUser.setName("New name");
         testUser.setPhone("0123456789");
-        userService.update(testUser);
+        testUser = userService.update(testUser);
         assertEquals((long) testUser.getId(), origId);
         assertEquals(origSize, users.size());
         User user = userService.findById(testUser.getId());
