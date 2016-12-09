@@ -39,5 +39,3 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-/ddtroops-mvc/src/main/webapp/resources/default/out/
-/ddtroops-mvc/src/main/webapp/resources/default/node_modules/

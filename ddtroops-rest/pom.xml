@@ -18,9 +18,9 @@
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <version>${tomcat.version}</version>
                 <configuration>
-                    <path>/api/</path>
+                    <path>/pa165/rest</path>
                 </configuration>
             </plugin>
         </plugins>
@@ -51,13 +51,13 @@
         <dependency>
             <groupId>cz.muni.fi.pa165.ddtroops</groupId>
             <artifactId>ddtroops-service</artifactId>
-            <version>1.0</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cz.muni.fi.pa165.ddtroops</groupId>
             <artifactId>ddtroops-sample-data</artifactId>
-            <version>1.0</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
