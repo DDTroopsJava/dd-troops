@@ -7,8 +7,9 @@
 
 <my:pagetemplate title="New product">
 <jsp:attribute name="body">
+  <c:set var="end" value="users"/>
 
-    <form:form method="post" action="${pageContext.request.contextPath}/user/edit/${userEdit.id}"
+    <form:form method="post" action="${pageContext.request.contextPath}/${end}/edit/${userEdit.id}"
                modelAttribute="userEdit" cssClass="form-horizontal">
 
         <div class="form-group ${name_error?'has-error':''}">

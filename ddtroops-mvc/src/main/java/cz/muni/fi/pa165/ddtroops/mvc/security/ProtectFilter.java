@@ -11,7 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.DatatypeConverter;
 
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * Created by pstanko.
  * @author pstanko
  */
-@WebFilter(urlPatterns = {"/order/*", "/user/*", "/product/*", "/category/*"})
+@WebFilter(urlPatterns = {"/heroes/*", "/users/*", "/roles/*", "/troops/*"})
 public class ProtectFilter implements Filter {
 
     private final static Logger log = LoggerFactory.getLogger(ProtectFilter.class);
@@ -33,23 +32,16 @@ public class ProtectFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) s;
 
         UserDTO  user = (UserDTO) request.getSession().getAttribute("user");
+
         if(user == null){
             log.debug("User not authorized!");
             response.sendRedirect(request.getContextPath() + "/auth");
+            return;
         }
 
         chain.doFilter(request, response);
     }
 
-
-    private String[] parseAuthHeader(String auth) {
-        return new String(DatatypeConverter.parseBase64Binary(auth.split(" ")[1])).split(":", 2);
-    }
-
-    private void response401(HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().println("<html><body><h1>401 Unauthorized</h1> Go away ...</body></html>");
-    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

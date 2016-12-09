@@ -30,6 +30,6 @@
   <logger name="org.springframework" level="error"/>
   <logger name="org.dozer" level="error"/>
   <logger name="cz.muni.fi.pa165.ddtroops.mvc" level="debug" />
-  <logger name="cz.muni.fi.pa165.ddtroops.mvc.controllers.UserController" level="debug" />
+  <logger name="cz.muni.fi.pa165.ddtroops.mvc.controllers.UsersController" level="debug" />
 
 </configuration>

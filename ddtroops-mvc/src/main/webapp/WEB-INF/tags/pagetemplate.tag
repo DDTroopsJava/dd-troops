@@ -38,11 +38,11 @@
 
                 <c:if test="${not empty sessionScope.user}">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><f:message key="navigation.admin"/><b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><f:message key="navigation.entities"/><b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
                             <c:if test="${sessionScope.user.admin}">
-                                <li><my:a href="/user/"><f:message key="navigation.admin.users"/></my:a></li>
+                                <li><my:a href="/users/"><f:message key="navigation.admin.users"/></my:a></li>
                             </c:if>
 
                             <li><my:a href="/heroes/"><f:message key="navigation.admin.heroes"/></my:a></li>
@@ -50,7 +50,7 @@
                             <li><my:a href="/roles/"><f:message key="navigation.admin.roles"/></my:a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" style="float: right">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><c:out value="${sessionScope.user.name}"/><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><my:a href="/auth/logout"><f:message key="navigation.user.logout"/></my:a></li>
@@ -77,22 +77,6 @@
         </div>
     </c:if>
 
-    <!-- authenticated user info -->
-    <c:if test="${not empty sessionScope.user}">
-        <div class="row">
-            <div class="col-xs-6 col-sm-8 col-md-9 col-lg-10"></div>
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="panel panel-default">
-                    <div class="panel-body" style="text-align: center">
-                        <my:a href="user/read/${sessionScope.user.id}">
-                        <c:out value="${sessionScope.user.name}"/>
-                        </my:a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-
     <!-- alerts -->
     <c:if test="${not empty alert_danger}">
         <div class="alert alert-danger" role="alert">
@@ -113,12 +97,11 @@
     <jsp:invoke fragment="body"/>
 
     <!-- footer -->
-    <footer class="footer">
+    <footer class="footer" style="position:absolute; bottom:1px">
         <p>&copy;&nbsp;<%=java.time.Year.now().toString()%>&nbsp;Masaryk University</p>
     </footer>
     <script src="${pageContext.request.contextPath}/resources/default/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/default/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/resources/default/out/app.out.js"></script>
 </div>
 </body>
 </html>

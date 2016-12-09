@@ -7,6 +7,8 @@
 
 <my:pagetemplate title="Users">
     <jsp:attribute name="body">
+      <c:set var="end" value="users"/>
+
         <script>
             function openModal(suffix) {
                 var modal = $("#modal_" + suffix);
@@ -38,10 +40,10 @@
           <c:forEach items="${users}" var="user">
                 <tr>
                   <td>
-                    <my:a href="/user/read/${user.id}"><c:out value="${user.name}"/> </my:a>
+                    <my:a href="/${end}/read/${user.id}"><c:out value="${user.name}"/> </my:a>
                   </td>
                   <td>
-                    <my:a href="/user/read/${user.id}"><c:out value="${user.email}"/></my:a>
+                    <my:a href="/${end}/read/${user.id}"><c:out value="${user.email}"/></my:a>
                   </td>
                   <td>
                     <c:out value="${user.phone}"/>
@@ -66,7 +68,7 @@
                                   onclick="closeModal(${user.id})">Close
                           </button>
                         <form style="float: right; margin-left: 10px" method="post"
-                              action="${pageContext.request.contextPath}/user/delete/${user.id}">
+                              action="${pageContext.request.contextPath}/${end}/delete/${user.id}">
                           <input type="submit" class="btn btn-primary" value="Delete"/>
                         </form>
                       </jsp:attribute>
@@ -74,7 +76,7 @@
 
                   </td>
                   <td>
-                    <button class="glyphicon glyphicon-edit btn" onclick="location.href='${pageContext.request.contextPath}/user/edit/${user.id}'">
+                    <button class="glyphicon glyphicon-edit btn" onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${user.id}'">
                     </button>
                   </td>
                 </tr>

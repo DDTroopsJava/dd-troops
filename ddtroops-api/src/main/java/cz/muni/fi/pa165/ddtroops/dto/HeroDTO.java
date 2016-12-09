@@ -10,9 +10,7 @@ public class HeroDTO {
 
     private Long id;
 
-
     private String name;
-
 
     private Set<RoleDTO> roles = new HashSet<>();
 

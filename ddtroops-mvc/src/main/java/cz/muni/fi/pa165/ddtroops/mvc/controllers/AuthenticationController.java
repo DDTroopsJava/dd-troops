@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
+    private final static Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
     private UserFacade userFacade;
@@ -61,11 +61,7 @@ public class AuthenticationController {
         return "auth/register";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@Valid @ModelAttribute("userRegister") UserCreateDTO formBean, BindingResult bindingResult,
-        Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
-        log.debug("register(userRegister={})", formBean);
-
+    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.debug("ObjectError: {}", ge);
@@ -76,6 +72,16 @@ public class AuthenticationController {
             }
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
+        return null;
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(@Valid @ModelAttribute("userRegister") UserCreateDTO formBean, BindingResult bindingResult,
+        Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        log.debug("register(userRegister={})", formBean);
+
+        String res = check(bindingResult,model, uriBuilder);
+        if(res!=null) return res;
 
         UserDTO user = userFacade.register(formBean);
         request.getSession().setAttribute("user", user);
@@ -90,35 +96,25 @@ public class AuthenticationController {
         Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
         log.debug("login(userLogin={})", formBean);
 
-        if (bindingResult.hasErrors()) {
-            for (ObjectError ge : bindingResult.getGlobalErrors()) {
-                log.debug("ObjectError: {}", ge);
-            }
-            for (FieldError fe : bindingResult.getFieldErrors()) {
-                model.addAttribute(fe.getField() + "_error", true);
-                log.debug("FieldError: {}", fe);
-            }
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = check(bindingResult,model, uriBuilder);
+        if(res!=null) return res;
 
         UserDTO matchingUser = userFacade.findByEmail(formBean.getEmail());
         if(matchingUser==null) {
             log.warn("no user with email {}", formBean.getEmail());
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
+            redirectAttributes.addFlashAttribute("alert_warning", "No user with email: " + formBean.getEmail());
+            return "redirect:" + uriBuilder.path("/auth").build().toUriString();
         }
 
-        if (!userFacade.isAdmin(matchingUser)) {
-            log.warn("user not admin {}", matchingUser);
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-
-        }
         if (!userFacade.authenticate(formBean.getEmail(), formBean.getPassword())) {
             log.warn("wrong credentials: user={} password={}", formBean.getEmail(), formBean.getPassword());
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
+            redirectAttributes.addFlashAttribute("alert_warning", "Login " + formBean.getEmail() + " failed ");
+
+            return "redirect:" + uriBuilder.path("/auth").build().toUriString();
         }
         request.getSession().setAttribute("user", matchingUser);
         //report success
         redirectAttributes.addFlashAttribute("alert_success", "Login " + formBean.getEmail() + " succeeded ");
-        return "redirect:" + uriBuilder.path("/user").build().toUriString();
+        return "redirect:" + uriBuilder.path("/users").build().toUriString();
     }
 }

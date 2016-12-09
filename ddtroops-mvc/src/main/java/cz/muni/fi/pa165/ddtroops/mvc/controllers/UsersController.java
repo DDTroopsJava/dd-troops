@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
@@ -25,46 +26,68 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @author pstanko
  */
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/users")
+public class UsersController {
 
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
+    private final static Logger log = LoggerFactory.getLogger(UsersController.class);
 
     @Autowired
     private UserFacade userFacade;
 
     @RequestMapping(value="", method = RequestMethod.GET)
-    public String list(Model model) {
+    public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
         log.debug("[USERS] List all");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+        if(user == null || !user.isAdmin()){
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
         model.addAttribute("users", userFacade.findAll());
-        return "user/list";
+        return "users/list";
     }
 
     @RequestMapping(value = "/read/{id}", method = RequestMethod.GET)
-    public String read(@PathVariable long id, Model model) {
+    public String read(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+
+        if(!user.isAdmin() && user.getId() != id){
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
+
         log.debug("[USERS] Read ({})", id);
+
         model.addAttribute("user", userFacade.findById(id));
-        return "user/read";
+        return "users/read";
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-    public String delete(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
-        log.info("[USERS] Delete for {}", id);
+    public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
+        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
+
+        if(!logUser.isAdmin()){
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
+
         UserDTO user = userFacade.findById(id);
-        log.info("[USERS] Delete found user {}", user.getName());
         userFacade.delete(id);
         log.debug("delete user({})", id);
         redirectAttributes.addFlashAttribute("alert_success", "User \"" + user.getName() + "\" was deleted.");
-        return "redirect:" + uriBuilder.path("/user/").build().toUriString();
+        return "redirect:" + uriBuilder.path("/users").build().toUriString();
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editUser(@PathVariable long id, Model model) {
+    public String editUser(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
+
+        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
+
+        if(!logUser.isAdmin() && logUser.getId() != id){
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
+
         log.debug("[USER] Edit {}", id);
         UserDTO userDTO = userFacade.findById(id);
 
         model.addAttribute("userEdit", userDTO);
-        return "/user/edit";
+        return "/users/edit";
     }
 
     @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
@@ -73,7 +96,15 @@ public class UserController {
         BindingResult bindingResult,
         Model model,
         UriComponentsBuilder uriBuilder,
-        RedirectAttributes redirectAttributes) {
+        RedirectAttributes redirectAttributes,
+        HttpServletRequest request) {
+
+        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
+
+        if(!logUser.isAdmin() && logUser.getId() != id){
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
+
 
         formBean.setId(id);
         log.debug("[USER] Update: {}", formBean);
@@ -87,11 +118,11 @@ public class UserController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.trace("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/user/edit/{id}").buildAndExpand(id).encode().toUriString();
+            return "redirect:" + uriBuilder.path("/users/edit/{id}").buildAndExpand(id).encode().toUriString();
         }
 
         redirectAttributes.addFlashAttribute("alert_success", "User " + result.getEmail() + " was updated");
-        return "redirect:" + uriBuilder.path("/user/read/{id}").buildAndExpand(id).encode().toUriString();
+        return "redirect:" + uriBuilder.path("/users/read/{id}").buildAndExpand(id).encode().toUriString();
     }
 
 }
