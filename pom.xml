@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tomcat.version>2.2</tomcat.version>
+    <mvc.url.path>/pa165</mvc.url.path>
+    <rest.url.path>/pa165/rest/</rest.url.path>
+  </properties>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>cz.muni.fi.pa165.ddtroops</groupId>
   <artifactId>ddtroops-parent</artifactId>
   <packaging>pom</packaging>
+
   <version>1.0</version>
+
   <name>DDTroops Parent</name>
   <dependencyManagement>
     <dependencies>
@@ -55,10 +65,7 @@
     <module>ddtroops-rest</module>
   </modules>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomcat.version>2.2</tomcat.version>
-  </properties>
+
 
   <dependencies>
   </dependencies>

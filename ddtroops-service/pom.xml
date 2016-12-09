@@ -54,7 +54,7 @@
         <dependency>
             <groupId>cz.muni.fi.pa165.ddtroops</groupId>
             <artifactId>ddtroops-api</artifactId>
-            <version>1.0</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
