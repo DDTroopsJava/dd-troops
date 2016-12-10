@@ -41,7 +41,6 @@ public class UsersController {
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public final Collection<UserDTO> getUsers() throws JsonProcessingException {
-
         logger.debug("rest getUsers()");
         return userFacade.findAll();
     }

@@ -21,7 +21,7 @@
         <dependency>
             <groupId>cz.muni.fi.pa165.ddtroops</groupId>
             <artifactId>ddtroops-persistence</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>cz.muni.fi.pa165.ddtroops</groupId>
             <artifactId>ddtroops-api</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
