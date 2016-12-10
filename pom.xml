@@ -5,8 +5,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>2.2</tomcat.version>
-    <mvc.url.path>/pa165</mvc.url.path>
-    <rest.url.path>/pa165/rest/</rest.url.path>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
