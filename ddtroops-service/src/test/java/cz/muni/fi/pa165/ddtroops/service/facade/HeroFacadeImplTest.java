@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
@@ -98,7 +99,7 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     public void shouldUpdateHero() throws Exception {
         hero1.setName("Rambo");
         logger.info("Hero id: " + hero1.getId());
-        heroFacade.update(hero1);
+        heroFacade.update(getUpdateHeroHelper(hero1));
         assertEquals(heroFacade.findAll().size(), 2);
         assertEquals(heroFacade.findById(hero1.getId()), hero1);
     }
@@ -128,6 +129,16 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
         HeroDTO heroDTO = new HeroDTO();
         heroDTO.setName(name);
         heroDTO.setLevel(999);
+        return heroDTO;
+    }
+
+    private HeroUpdateDTO getUpdateHeroHelper(HeroDTO hero) {
+        HeroUpdateDTO heroDTO = new HeroUpdateDTO();
+        heroDTO.setId(hero.getId());
+        heroDTO.setName(hero.getName());
+        heroDTO.setLevel(hero.getLevel());
+        heroDTO.setRoles(hero.getRoles());
+
         return heroDTO;
     }
 }

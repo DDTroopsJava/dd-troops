@@ -78,16 +78,8 @@ public class HeroController {
         log.debug("[HERO] Update: {}", formBean);
         HeroDTO result = heroFacade.update(formBean);
 
-        if (bindingResult.hasErrors()) {
-            for (ObjectError ge : bindingResult.getGlobalErrors()) {
-                log.trace("ObjectError: {}", ge);
-            }
-            for (FieldError fe : bindingResult.getFieldErrors()) {
-                model.addAttribute(fe.getField() + "_error", true);
-                log.trace("FieldError: {}", fe);
-            }
-            return "redirect:" + uriBuilder.path("/heroes/edit/{id}").buildAndExpand(id).encode().toUriString();
-        }
+        String res = check(bindingResult,model, uriBuilder);
+        if(res!=null) return res;
 
         redirectAttributes.addFlashAttribute("alert_success", "Hero " + result.getName() + " was updated");
         return "redirect:" + uriBuilder.path("/heroes/read/{id}").buildAndExpand(id).encode().toUriString();
@@ -98,20 +90,6 @@ public class HeroController {
         log.debug("[Hero] Create");
         model.addAttribute("heroCreate", new HeroDTO());
         return "heroes/create";
-    }
-
-    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
-        if (bindingResult.hasErrors()) {
-            for (ObjectError ge : bindingResult.getGlobalErrors()) {
-                log.debug("ObjectError: {}", ge);
-            }
-            for (FieldError fe : bindingResult.getFieldErrors()) {
-                model.addAttribute(fe.getField() + "_error", true);
-                log.debug("FieldError: {}", fe);
-            }
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
-        return null;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -126,6 +104,20 @@ public class HeroController {
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
 
         return "redirect:" + uriBuilder.path("/").build().toUriString();
+    }
+
+    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
+        if (bindingResult.hasErrors()) {
+            for (ObjectError ge : bindingResult.getGlobalErrors()) {
+                log.debug("ObjectError: {}", ge);
+            }
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+                log.debug("FieldError: {}", fe);
+            }
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
+        return null;
     }
 
 }

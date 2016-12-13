@@ -6,6 +6,7 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
@@ -176,9 +177,9 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         hero2.getRoles().add(role2);
         hero3.getRoles().add(role3);
 
-        hero1 = heroFacade.update(hero1);
-        hero2 = heroFacade.update(hero2);
-        hero3 = heroFacade.update(hero3);
+        hero1 = heroFacade.update(getUpdateHeroHelper(hero1));
+        hero2 = heroFacade.update(getUpdateHeroHelper(hero2));
+        hero3 = heroFacade.update(getUpdateHeroHelper(hero3));
 
         troop1.getHeroes().add(hero1);
         troop1.getHeroes().add(hero2);
@@ -201,5 +202,15 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     {
         setupBattle();
         assertEquals(troopFacade.topN(1, null, null).get(0), troop1);
+    }
+
+    private HeroUpdateDTO getUpdateHeroHelper(HeroDTO hero) {
+        HeroUpdateDTO heroDTO = new HeroUpdateDTO();
+        heroDTO.setId(hero.getId());
+        heroDTO.setName(hero.getName());
+        heroDTO.setLevel(hero.getLevel());
+        heroDTO.setRoles(hero.getRoles());
+
+        return heroDTO;
     }
 }

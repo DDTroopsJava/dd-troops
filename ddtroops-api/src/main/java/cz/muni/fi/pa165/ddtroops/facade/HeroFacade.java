@@ -48,7 +48,7 @@ public interface HeroFacade {
      * @param hero hero that will be updated
      * @return updated hero
      */
-    HeroDTO update(HeroUpdateDTO hero); // POZOR pri testoch
+    HeroDTO update(HeroUpdateDTO hero);
 
     /**
      * Removes particular hero
