@@ -1,15 +1,20 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
-import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
+import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,17 +46,86 @@ public class HeroController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
 
         HeroDTO hero = heroFacade.findById(id);
         heroFacade.delete(id);
         log.debug("delete hero({})", id);
         redirectAttributes.addFlashAttribute("alert_success", "Hero \"" + hero.getName() + "\" was deleted.");
         return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
+    }
+
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String editHero(@PathVariable long id, Model model) {
+
+        log.debug("[HERO] Edit {}", id);
+        HeroDTO heroDTO = heroFacade.findById(id);
+
+        model.addAttribute("heroEdit", heroDTO);
+        return "/heroes/edit";
+    }
+
+    @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
+    public String update(@PathVariable long id,
+                         @Valid @ModelAttribute("heroEdit")HeroUpdateDTO formBean,
+                         BindingResult bindingResult,
+                         Model model,
+                         UriComponentsBuilder uriBuilder,
+                         RedirectAttributes redirectAttributes,
+                         HttpServletRequest request) {
+
+
+        formBean.setId(id);
+        log.debug("[HERO] Update: {}", formBean);
+        HeroDTO result = heroFacade.update(formBean);
+
+        if (bindingResult.hasErrors()) {
+            for (ObjectError ge : bindingResult.getGlobalErrors()) {
+                log.trace("ObjectError: {}", ge);
+            }
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+                log.trace("FieldError: {}", fe);
+            }
+            return "redirect:" + uriBuilder.path("/heroes/edit/{id}").buildAndExpand(id).encode().toUriString();
+        }
+
+        redirectAttributes.addFlashAttribute("alert_success", "Hero " + result.getName() + " was updated");
+        return "redirect:" + uriBuilder.path("/heroes/read/{id}").buildAndExpand(id).encode().toUriString();
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public String createHero(Model model, HttpServletRequest request) {
+        log.debug("[Hero] Create");
+        model.addAttribute("heroCreate", new HeroDTO());
+        return "heroes/create";
+    }
+
+    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
+        if (bindingResult.hasErrors()) {
+            for (ObjectError ge : bindingResult.getGlobalErrors()) {
+                log.debug("ObjectError: {}", ge);
+            }
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+                log.debug("FieldError: {}", fe);
+            }
+            return "redirect:" + uriBuilder.path("/").build().toUriString();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String create(@Valid @ModelAttribute("heroCreate") HeroDTO formBean, BindingResult bindingResult,
+                           Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        log.debug("Create Hero {})", formBean);
+
+        String res = check(bindingResult,model, uriBuilder);
+        if(res!=null) return res;
+
+        HeroDTO hero = heroFacade.create(formBean);
+        redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
+
+        return "redirect:" + uriBuilder.path("/").build().toUriString();
     }
 
 }
