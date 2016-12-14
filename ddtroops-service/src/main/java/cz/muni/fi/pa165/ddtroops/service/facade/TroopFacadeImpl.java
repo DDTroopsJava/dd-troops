@@ -1,6 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
+import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
+import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -62,7 +64,7 @@ public class TroopFacadeImpl implements TroopFacade {
     }
 
     @Override
-    public TroopDTO update(TroopDTO troopDTO) {
+    public TroopDTO update(TroopUpdateDTO troopDTO) {
         Troop troopEntity = beanMappingService.mapTo(troopDTO, Troop.class);
         try {
             Troop t = troopService.update(troopEntity);
@@ -74,6 +76,18 @@ public class TroopFacadeImpl implements TroopFacade {
         return null;
     }
 
+    @Override
+    public TroopDTO create(TroopCreateDTO troopCreateDTO) {
+        Troop troopEntity = beanMappingService.mapTo(troopCreateDTO, Troop.class);
+        try {
+            troopEntity = troopService.create(troopEntity);
+            return findById(troopEntity.getId());
+        } catch (DDTroopsServiceException e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return null;
+    }
+    
     @Override
     public void delete(Long id) {
         if(id == null){
@@ -95,6 +109,8 @@ public class TroopFacadeImpl implements TroopFacade {
         Troop t2 = beanMappingService.mapTo(troop2DTO, Troop.class);
         try {
             Troop troopWinner = troopService.battle(t1,t2);
+            if (troopWinner == null)
+                return null;
             return beanMappingService.mapTo(troopWinner,TroopDTO.class);
         }  catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);

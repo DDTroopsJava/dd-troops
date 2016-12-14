@@ -8,7 +8,9 @@ package cz.muni.fi.pa165.ddtroops.service.facade;
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
+import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
+import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
@@ -76,9 +78,9 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
     private TroopDTO setupTroop(String name)
     {
         TroopDTO troop = TestUtils.createTroop(name);
-        troopFacade.update(troop);
+        TroopDTO createdTroop = troopFacade.create(getCreateTroop(troop));
         assertTrue(troopFacade.findAll().contains(troop));
-        return troopFacade.findById(troop.getId());
+        return troopFacade.findById(createdTroop.getId());
     }
 
 
@@ -149,12 +151,21 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testUpdate() throws Exception {
+        int sizeBefore = troopFacade.findAll().size();
         troop1.setGold(999);
         logger.info("Troop id: " + troop1);
-        troopFacade.update(troop1);
-        assertEquals(troopFacade.findAll().size(), 2);
+        troopFacade.update(getUpdateTroop(troop1));
+        assertEquals(troopFacade.findAll().size(), sizeBefore);
         assertEquals(troopFacade.findById(troop1.getId()), troop1);
         assertEquals(troopFacade.findById(troop1.getId()).getGold(), 999);
+    }
+    
+    @Test
+    public void testCreate() throws Exception {
+        TroopDTO troop = TestUtils.createTroop("CREATE TEST");
+        
+        troopFacade.create(getCreateTroop(troop));
+        assertTrue(troopFacade.findAll().contains(troop));
     }
 
     @Test
@@ -185,8 +196,8 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         troop1.getHeroes().add(hero2);
         troop2.getHeroes().add(hero3);
 
-        troop1 = troopFacade.update(troop1);
-        troop2 = troopFacade.update(troop2);
+        troop1 = troopFacade.update(getUpdateTroop(troop1));
+        troop2 = troopFacade.update(getUpdateTroop(troop2));
     }
 
     @Test
@@ -203,7 +214,27 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         setupBattle();
         assertEquals(troopFacade.topN(1, null, null).get(0), troop1);
     }
+    
+    private TroopCreateDTO getCreateTroop(TroopDTO troop)
+    {
+        TroopCreateDTO troopDTO = new TroopCreateDTO();
+        troopDTO.setName(troop.getName());
+        troopDTO.setMission(troop.getMission());
+        troopDTO.setGold(troop.getGold());
+        troopDTO.setHeroes(troop.getHeroes());
+        return troopDTO;
+    }
 
+    private TroopUpdateDTO getUpdateTroop(TroopDTO troop){
+        TroopUpdateDTO troopDTO = new TroopUpdateDTO();
+        troopDTO.setId(troop.getId());
+        troopDTO.setName(troop.getName());
+        troopDTO.setMission(troop.getMission());
+        troopDTO.setGold(troop.getGold());
+        troopDTO.setHeroes(troop.getHeroes());
+        return troopDTO;
+    }
+    
     private HeroUpdateDTO getUpdateHeroHelper(HeroDTO hero) {
         HeroUpdateDTO heroDTO = new HeroUpdateDTO();
         heroDTO.setId(hero.getId());
