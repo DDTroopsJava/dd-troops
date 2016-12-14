@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.ddtroops.service.services;
 
+import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,15 @@ public interface TroopService {
      * @throws DDTroopsServiceException when an error occurs
      */
     void delete(Troop t) throws DDTroopsServiceException;
+    
+    /**
+     * Removes the hero from the given troop
+     *
+     * @param t troop that will be updated
+     * @param h hero that will be deleted from troop t
+     * @throws DDTroopsServiceException when an error occurs
+     */
+    Troop removeHero(Troop t, Hero h) throws DDTroopsServiceException;
 
     /**
      * Battle between troops
