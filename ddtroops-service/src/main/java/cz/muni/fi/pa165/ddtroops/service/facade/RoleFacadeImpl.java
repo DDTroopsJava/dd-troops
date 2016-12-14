@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
+import cz.muni.fi.pa165.ddtroops.dto.RoleUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.entity.Role;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -75,12 +76,12 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     @Override
-    public RoleDTO update(RoleDTO role) {
+    public RoleDTO update(RoleUpdateDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
-            roleService.update(roleEntity);
-            role.setId(roleEntity.getId());
-            return role;
+            Role r = roleService.update(roleEntity);
+            r.setId(roleEntity.getId());
+            return beanMappingService.mapTo(r, RoleDTO.class);
         } catch (DDTroopsServiceException ex) {
             logger.warn(ex.getMessage(), ex);
         }
