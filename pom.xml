@@ -1,53 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>cz.fi.muni.pa165.ddtroops</groupId>
-    <artifactId>ddtroops-parent</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0</version>
-    <name>DDTroops Parent</name>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.spring.platform</groupId>
-                <artifactId>platform-bom</artifactId>
-                <!-- <version>1.1.3.RELEASE</version> -->
-                <version>1.0.1.RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-               
-            </plugins>
-        </pluginManagement>
-    </build>
 
-    <modules>
-        <module>ddtroops-persistence</module>
-        <module>ddtroops-api</module>
-        <module>ddtroops-service</module>
-        <module>ddtroops-mvc</module>
-        <module>ddtroops-rest</module>
-    </modules>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tomcat.version>2.2</tomcat.version>
+  </properties>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>2.2</tomcat.version>
-    </properties>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cz.muni.fi.pa165.ddtroops</groupId>
+  <artifactId>ddtroops-parent</artifactId>
+  <packaging>pom</packaging>
 
+  <version>1.0</version>
+
+  <name>DDTroops Parent</name>
+  <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.spring.platform</groupId>
+        <artifactId>platform-bom</artifactId>
+        <!-- <version>1.1.3.RELEASE</version> -->
+        <version>1.0.1.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.dozer</groupId>
+        <artifactId>dozer</artifactId>
+        <version>5.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>2.0.2-beta</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <modules>
+    <module>ddtroops-persistence</module>
+    <module>ddtroops-api</module>
+    <module>ddtroops-service</module>
+    <module>ddtroops-sample-data</module>
+    <module>ddtroops-mvc</module>
+    <module>ddtroops-rest</module>
+  </modules>
+
+
+
+  <dependencies>
+  </dependencies>
+
 </project>
