@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -79,7 +80,7 @@ public class HeroFacadeImpl implements HeroFacade {
     }
 
     @Override
-    public HeroDTO update(HeroDTO hero) {
+    public HeroDTO update(HeroUpdateDTO hero) {
         Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
         try {
 

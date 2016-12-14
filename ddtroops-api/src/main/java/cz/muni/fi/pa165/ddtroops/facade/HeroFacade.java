@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.facade;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 
 import java.util.Collection;
 
@@ -47,7 +48,7 @@ public interface HeroFacade {
      * @param hero hero that will be updated
      * @return updated hero
      */
-    HeroDTO update(HeroDTO hero);
+    HeroDTO update(HeroUpdateDTO hero);
 
     /**
      * Removes particular hero
