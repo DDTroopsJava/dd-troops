@@ -22,6 +22,10 @@ public class EntitiesMapping extends BeanMappingBuilder {
                 .fields(field("roles").accessible(true), field("roles").accessible(true));
         mapping(Troop.class, TroopDTO.class, TypeMappingOptions.mapNull(false))
                 .fields(field("heroes").accessible(true), field("heroes").accessible(true));
+        mapping(Troop.class, TroopUpdateDTO.class, TypeMappingOptions.mapNull(false))
+                .fields(field("heroes").accessible(true), field("heroes").accessible(true));
+        mapping(Troop.class, TroopCreateDTO.class, TypeMappingOptions.mapNull(false))
+                .fields(field("heroes").accessible(true), field("heroes").accessible(true));
         mapping(Role.class, RoleDTO.class, TypeMappingOptions.mapNull(false));
     }
 }

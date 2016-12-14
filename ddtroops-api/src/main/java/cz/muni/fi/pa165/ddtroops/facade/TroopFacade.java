@@ -1,6 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.facade;
 
+import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
+import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 
 import java.util.List;
 
@@ -38,8 +40,16 @@ public interface TroopFacade {
      * @param troopDTO
      * @return
      */
-    TroopDTO update(TroopDTO troopDTO);
+    TroopDTO update(TroopUpdateDTO troopDTO);
 
+    /**
+     * Creates a troop with the parameters of the given DTO
+     * 
+     * @param troopCreateDTO
+     * @return DTO of the newly created Troop
+     */
+    TroopDTO create(TroopCreateDTO troopCreateDTO);
+    
     /**
      * Deletes the given troop
      *
