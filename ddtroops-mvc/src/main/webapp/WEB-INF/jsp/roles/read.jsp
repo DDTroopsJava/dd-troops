@@ -29,6 +29,7 @@
           <thead>
           <tr>
             <th>Name</th>
+            <th>Description</th>
             <th>Attack power</th>
             <th>Defense power</th>
             <my:protected>
@@ -44,6 +45,10 @@
                     <my:a href="/${end}/read/${role.id}"><c:out value="${role.name}"/> </my:a>
                   </td>
 
+                  <td>
+                    <c:out value="${role.description}"/>
+                  </td>
+                  
                   <td>
                     <c:out value="${role.attackPower}"/>
                   </td>
