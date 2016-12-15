@@ -25,7 +25,9 @@
         <div>
             <form:label path="roles" cssClass="control-label">Hero roles</form:label>
             <div>
-                <form:select multiple="true" path="roles" items="${heroEdit.roles}" />
+             <form:select path="roles" >
+                    <form:options items="${heroRole}" itemLabel="name" itemValue="id"/>
+                </form:select>
                 <form:errors path="roles" cssClass="help-block"/>
             </div>
         </div>

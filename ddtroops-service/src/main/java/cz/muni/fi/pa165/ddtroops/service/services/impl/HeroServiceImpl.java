@@ -30,7 +30,8 @@ public class HeroServiceImpl implements HeroService {
         }
         try {
             hero.getRoles().forEach(r -> {r.addHero(hero); roleDao.save(r);});
-            return heroDao.save(hero);
+            Hero save = heroDao.save(hero);
+            return save;
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create hero named " + hero.getName() + " with id" + hero.getId(), e);
         }

@@ -6,7 +6,11 @@ import javax.validation.Valid;
 import cz.muni.fi.pa165.ddtroops.dto.HeroCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
+import cz.muni.fi.pa165.ddtroops.entity.Role;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
+import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.tools.RoleEditor;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.HeroCreateDTOValidator;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.HeroUpdateDTOValidator;
 import org.slf4j.Logger;
@@ -26,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/heroes")
 public class HeroController {
@@ -35,15 +41,23 @@ public class HeroController {
     @Autowired
     private HeroFacade heroFacade;
 
+    @Autowired
+    private RoleFacade roleFacade;
+
+    @Autowired
+    private RoleEditor roleEditor;
+
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        if (binder.getTarget() instanceof HeroUpdateDTO) {
+        /*if (binder.getTarget() instanceof HeroUpdateDTO) {
             binder.addValidators(new HeroUpdateDTOValidator());
         }
 
         if (binder.getTarget() instanceof HeroCreateDTO) {
             binder.addValidators(new HeroCreateDTOValidator());
-        }
+        }*/
+
+        binder.registerCustomEditor(Role.class, this.roleEditor);
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
@@ -77,6 +91,7 @@ public class HeroController {
         HeroDTO heroDTO = heroFacade.findById(id);
 
         model.addAttribute("heroEdit", heroDTO);
+        model.addAttribute("heroRole", roleFacade.findAll());
         return "/heroes/edit";
     }
 
@@ -102,6 +117,7 @@ public class HeroController {
             }
 
             model.addAttribute("heroEdit", formBean);
+            model.addAttribute("heroRole", roleFacade.findAll());
             return "/heroes/edit";
         }
 
