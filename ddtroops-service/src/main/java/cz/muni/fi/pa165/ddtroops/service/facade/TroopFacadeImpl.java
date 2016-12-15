@@ -1,8 +1,10 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
+import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
+import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -123,6 +125,20 @@ public class TroopFacadeImpl implements TroopFacade {
         try {
             List<Troop> topNTroops = troopService.topN(n,mission,troopSize);
             return beanMappingService.mapTo(topNTroops,TroopDTO.class);
+        } catch (DDTroopsServiceException e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
+    public TroopDTO removeHero(TroopDTO troopDTO, HeroDTO heroDTO) {
+        Troop troopEntity = beanMappingService.mapTo(troopDTO, Troop.class);
+        Hero heroEntity = beanMappingService.mapTo(heroDTO, Hero.class);
+        try {
+            Troop t = troopService.removeHero(troopEntity, heroEntity);
+            troopDTO.setId(troopEntity.getId());
+            return beanMappingService.mapTo(t, TroopDTO.class);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
