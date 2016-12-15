@@ -62,7 +62,7 @@
                                           onclick="closeModal(${hero.id})">Close
                                   </button>
                                 <form style="float: right; margin-left: 10px" method="post"
-                                      action="${pageContext.request.contextPath}/${end}/removehero/${troop.id}/${hero.id}">
+                                      action="${pageContext.request.contextPath}/${end}/removehero/addhero/${troop.id}/${hero.id}">
                                   <input type="submit" class="btn btn-primary" value="Remove"/>
                                 </form>
                               </jsp:attribute>

@@ -89,6 +89,11 @@ public class RoleController {
 
         formBean.setId(id);
 
+        if (roleFacade.findByName(formBean.getName()) != null) {
+             redirectAttributes.addFlashAttribute("alert_warning", "Role with name " + formBean.getName() + " already exists");
+             return "redirect:" + uriBuilder.path("/roles/edit/{id}").buildAndExpand(id).encode().toUriString();
+        }
+        
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.trace("ObjectError: {}", ge);
@@ -121,6 +126,11 @@ public class RoleController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String create(@Valid @ModelAttribute("roleCreate") RoleDTO formBean, BindingResult bindingResult,
                             Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        
+        if (roleFacade.findByName(formBean.getName()) != null) {
+             redirectAttributes.addFlashAttribute("alert_warning", "Role with name " + formBean.getName() + " already exists");
+             return "redirect:" + uriBuilder.path("/roles/create").build().encode().toUriString();
+        }
         
         log.debug("Create Role {})", formBean);
 
