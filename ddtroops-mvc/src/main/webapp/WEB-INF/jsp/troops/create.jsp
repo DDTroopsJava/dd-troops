@@ -24,14 +24,14 @@
             <form:errors path="name" cssClass="help-block"/>
           </div>
         </div>
-       <div class="form-group ${email_error?'has-error':''}">
+       <div class="form-group ${mission_error?'has-error':''}">
          <form:label path="mission" cssClass="col-sm-2 control-label">Mission</form:label>
          <div class="col-sm-10">
            <form:input path="mission" cssClass="form-control"/>
            <form:errors path="mission" cssClass="help-block"/>
          </div>
        </div>
-        <div class="form-group ${phone_error?'has-error':''}">
+        <div class="form-group ${gold_error?'has-error':''}">
           <form:label path="gold" cssClass="col-sm-2 control-label">Gold</form:label>
           <div class="col-sm-10">
             <form:input path="gold" cssClass="form-control"/>
@@ -44,7 +44,10 @@
     
     <Br>
     <Br>
-    <button class="btn btn-primary" type="button" name="back" onclick="history.back()">Return</button>
+    <button class="btn btn-primary"
+            onclick="location.href='${pageContext.request.contextPath}/${end}'">
+      Return
+    </button>
 
 </jsp:attribute>
 </my:pagetemplate>

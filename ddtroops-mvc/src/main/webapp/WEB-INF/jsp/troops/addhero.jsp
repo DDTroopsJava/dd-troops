@@ -9,6 +9,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <my:pagetemplate title="Add hero">
     <jsp:attribute name="body">
@@ -72,32 +73,33 @@
                 </c:forEach>
             </tbody>
         </table>
-      <br>
-        <form method="post" action="${pageContext.request.contextPath}/${end}/addhero/${troop.id}"
-                   cssClass="form-horizontal">
+        <br>
+        <c:if test="${fn:length(heroes) gt 0}">
+            <form method="post" action="${pageContext.request.contextPath}/${end}/addhero/${troop.id}"
+                       cssClass="form-horizontal">
 
-            <div class="form-group">
-                <label cssClass="col-sm-2 control-label">Add hero</label>
-                    <select name="heroId" cssClass="form-control" style="display: block;
-                                                                         width: 100%;
-                                                                         height: 34px;
-                                                                         padding: 6px 12px;
-                                                                         font-size: 14px;
-                                                                         line-height: 1.42857143;
-                                                                         color: #555;
-                                                                         background-color: #fff;
-                                                                         background-image: none;
-                                                                         border: 1px solid #ccc;
-                                                                         border-radius: 4px;">
-                        <c:forEach items="${heroes}" var="h">
-                            <option value="${h.id}">${h.name}</option>
-                        </c:forEach>
-                    </select>
-            </div>
+                <div class="form-group">
+                    <label cssClass="col-sm-2 control-label">Add hero</label>
+                        <select name="heroId" cssClass="form-control" style="display: block;
+                                                                             width: 100%;
+                                                                             height: 34px;
+                                                                             padding: 6px 12px;
+                                                                             font-size: 14px;
+                                                                             line-height: 1.42857143;
+                                                                             color: #555;
+                                                                             background-color: #fff;
+                                                                             background-image: none;
+                                                                             border: 1px solid #ccc;
+                                                                             border-radius: 4px;">
+                            <c:forEach items="${heroes}" var="h">
+                                <option value="${h.id}">${h.name}</option>
+                            </c:forEach>
+                        </select>
+                </div>
 
-          <button class="btn btn-primary" type="submit">Add Hero</button>
-        </form>
-
+              <button class="btn btn-primary" type="submit">Add Hero</button>
+            </form>
+        </c:if>
         <Br>
         <Br>
         <button class="btn btn-primary"

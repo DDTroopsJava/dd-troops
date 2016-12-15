@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.ddtroops.mvc.validators;
 
+import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -10,7 +11,7 @@ import org.springframework.validation.Validator;
 public class TroopUpdateDTOValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
-        return false;
+        return TroopUpdateDTO.class.isAssignableFrom(aClass);
     }
 
     @Override
