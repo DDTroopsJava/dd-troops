@@ -10,6 +10,8 @@ import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopCreateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopUpdateDTOValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +39,19 @@ public class TroopController {
 
     @Autowired
     HeroFacade heroFacade;
-    
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        if (binder.getTarget() instanceof TroopCreateDTO) {
+            binder.addValidators(new TroopCreateDTOValidator());
+        }
+
+        if (binder.getTarget() instanceof TroopUpdateDTO) {
+            binder.addValidators(new TroopUpdateDTOValidator());
+        }
+    }
+
+
     @RequestMapping(value="", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
         log.debug("List all");

@@ -7,7 +7,7 @@ import cz.muni.fi.pa165.ddtroops.dto.UserCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserLoginDTO;
 import cz.muni.fi.pa165.ddtroops.facade.UserFacade;
-import cz.muni.fi.pa165.ddtroops.mvc.forms.UserCreateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.UserCreateDTOValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

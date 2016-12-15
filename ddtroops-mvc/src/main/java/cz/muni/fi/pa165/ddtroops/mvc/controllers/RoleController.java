@@ -3,9 +3,12 @@ package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import cz.muni.fi.pa165.ddtroops.dto.RoleCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.RoleUpdateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.RoleCreateDTOValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +40,17 @@ public class RoleController {
         log.debug("List all");
         model.addAttribute("roles", roleFacade.findAll());
         return "roles/list";
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        if (binder.getTarget() instanceof RoleCreateDTO) {
+            binder.addValidators(new RoleCreateDTOValidator());
+        }
+
+        if (binder.getTarget() instanceof RoleUpdateDTO) {
+            binder.addValidators(new RoleUpdateDTOValidator());
+        }
     }
 
     @RequestMapping(value = "/read/{id}", method = RequestMethod.GET)

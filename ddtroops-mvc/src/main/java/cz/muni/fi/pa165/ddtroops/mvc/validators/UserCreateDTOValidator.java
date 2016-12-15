@@ -1,4 +1,4 @@
-package cz.muni.fi.pa165.ddtroops.mvc.forms;
+package cz.muni.fi.pa165.ddtroops.mvc.validators;
 
 import cz.muni.fi.pa165.ddtroops.dto.UserCreateDTO;
 import org.springframework.validation.Errors;
