@@ -25,7 +25,7 @@
         <div>
             <form:label path="roles" cssClass="control-label">Hero roles</form:label>
             <div>
-                <form:checkboxes path="roles" items="${heroEdit.roles}" />
+                <form:select multiple="true" path="roles" items="${heroEdit.roles}" />
                 <form:errors path="roles" cssClass="help-block"/>
             </div>
         </div>

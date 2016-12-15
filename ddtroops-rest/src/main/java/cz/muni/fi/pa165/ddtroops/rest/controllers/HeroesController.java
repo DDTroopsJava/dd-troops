@@ -44,9 +44,9 @@ public class HeroesController {
 
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public final HeroDTO updateUser(@RequestBody HeroUpdateDTO hero) throws Exception {
+    public final HeroDTO updateHero(@RequestBody HeroUpdateDTO hero) throws Exception {
 
-        logger.debug("rest updateUser()");
+        logger.debug("rest updateHero()");
 
         try {
             return heroFacade.update(hero);
