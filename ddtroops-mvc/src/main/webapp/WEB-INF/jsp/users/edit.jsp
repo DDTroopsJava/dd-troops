@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" trimDirectiveWhitespaces="false" session="false" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" trimDirectiveWhitespaces="false" session="true" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -34,13 +34,16 @@
           </div>
         </div>
 
-       <div class="form-group ${admin_error?'has-error':''}">
-         <form:label path="name" cssClass="col-sm-2 control-label">Admin</form:label>
-         <div class="col-sm-10">
-           <form:checkbox path="admin" cssClass="form-control"/>
-           <form:errors path="admin" cssClass="help-block"/>
+      <c:if test="${sessionScope.user.admin}">
+         <div class="form-group ${admin_error?'has-error':''}">
+           <form:label path="name" cssClass="col-sm-2 control-label">Admin</form:label>
+           <div class="col-sm-10">
+             <form:checkbox path="admin" cssClass="form-control"/>
+             <form:errors path="admin" cssClass="help-block"/>
+           </div>
          </div>
-       </div>
+      </c:if>
+
       <button class="btn btn-primary" type="submit">Update User</button>
     </form:form>
 
