@@ -44,7 +44,10 @@
       
     <Br>
     <Br>
-    <button class="btn btn-primary" type="button" name="back" onclick="history.back()">Return</button>
+    <button class="btn btn-primary"
+            onclick="location.href='${pageContext.request.contextPath}/${end}'">
+      Return
+    </button>
 
 </jsp:attribute>
 </my:pagetemplate>
