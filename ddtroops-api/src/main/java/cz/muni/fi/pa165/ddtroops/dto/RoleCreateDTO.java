@@ -1,14 +1,23 @@
 package cz.muni.fi.pa165.ddtroops.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Created by Petr Kolacek.
  * @author Petr Kolacek
  */
 public class RoleCreateDTO {
-    
+
+    @NotNull
+    @Size(min = 3, max = 50)
     private String name;
+    @NotNull
     private String description;
+    @Min(0)
     private int attackPower;
+    @Min(0)
     private int defensePower;
     
     public String getName() {

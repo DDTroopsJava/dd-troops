@@ -3,14 +3,24 @@ package cz.muni.fi.pa165.ddtroops.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Created by pstanko.
  * @author pstanko
  */
 public class TroopCreateDTO {
-    
+
+    @NotNull
+    @Size(min = 3, max = 50)
     private String name;
+    @NotNull
+    @Size(min = 3, max = 150)
     private String mission;
+    @NotNull
+    @Min(0)
     private int gold;
     private Set<HeroDTO> heroes = new HashSet<>();
     
