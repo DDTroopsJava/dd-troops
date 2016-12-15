@@ -83,6 +83,8 @@ public class UsersController {
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
 
+
+
         log.debug("[USER] Edit {}", id);
         UserDTO userDTO = userFacade.findById(id);
 
@@ -107,6 +109,11 @@ public class UsersController {
 
 
         formBean.setId(id);
+
+        if(!logUser.isAdmin() && logUser.getId() == id){
+            formBean.setAdmin(false);
+        }
+
         log.debug("[USER] Update: {}", formBean);
         UserDTO result = userFacade.update(formBean);
 

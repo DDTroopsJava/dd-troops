@@ -103,7 +103,7 @@ public class HeroController {
         HeroDTO hero = heroFacade.create(formBean);
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
 
-        return "redirect:" + uriBuilder.path("/").build().toUriString();
+        return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
     }
 
     private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
