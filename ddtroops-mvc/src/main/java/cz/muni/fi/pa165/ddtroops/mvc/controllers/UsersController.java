@@ -3,9 +3,12 @@ package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import cz.muni.fi.pa165.ddtroops.dto.UserCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.UserFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.forms.UserCreateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.mvc.forms.UserUpdateDTOValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +38,17 @@ public class UsersController {
 
     @Autowired
     private UserFacade userFacade;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        if (binder.getTarget() instanceof UserCreateDTO) {
+            binder.addValidators(new UserCreateDTOValidator());
+        }
+
+        if (binder.getTarget() instanceof UserUpdateDTO) {
+            binder.addValidators(new UserUpdateDTOValidator());
+        }
+    }
 
     @RequestMapping(value="", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
@@ -84,7 +100,6 @@ public class UsersController {
         }
 
 
-
         log.debug("[USER] Edit {}", id);
         UserDTO userDTO = userFacade.findById(id);
 
@@ -107,15 +122,12 @@ public class UsersController {
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
 
-
         formBean.setId(id);
 
         if(!logUser.isAdmin() && logUser.getId() == id){
             formBean.setAdmin(false);
         }
 
-        log.debug("[USER] Update: {}", formBean);
-        UserDTO result = userFacade.update(formBean);
 
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
@@ -125,8 +137,12 @@ public class UsersController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.trace("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/users/edit/{id}").buildAndExpand(id).encode().toUriString();
+            model.addAttribute("userEdit", formBean);
+            return "users/edit";
         }
+
+        log.debug("[USER] Update: {}", formBean);
+        UserDTO result = userFacade.update(formBean);
 
         redirectAttributes.addFlashAttribute("alert_success", "User " + result.getEmail() + " was updated");
         return "redirect:" + uriBuilder.path("/users/read/{id}").buildAndExpand(id).encode().toUriString();

@@ -1,11 +1,11 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
-import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,12 +70,9 @@ public class RoleController {
                           UriComponentsBuilder uriBuilder,
                           RedirectAttributes redirectAttributes,
                           HttpServletRequest request) {
- 
- 
+
         formBean.setId(id);
-        log.debug("[ROLE] Update: {}", formBean);
-        RoleDTO result = roleFacade.update(formBean);
- 
+
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.trace("ObjectError: {}", ge);
@@ -84,10 +81,15 @@ public class RoleController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.trace("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/roles/edit/{id}").buildAndExpand(id).encode().toUriString();
+
+            model.addAttribute("roleEdit", formBean);
+            return "/roles/edit";
         }
- 
-         redirectAttributes.addFlashAttribute("alert_success", "Role " + result.getName() + " was updated");
+
+        log.debug("[ROLE] Update: {}", formBean);
+        RoleDTO result = roleFacade.update(formBean);
+
+        redirectAttributes.addFlashAttribute("alert_success", "Role " + result.getName() + " was updated");
          return "redirect:" + uriBuilder.path("/roles/read/{id}").buildAndExpand(id).encode().toUriString();
     }
     
@@ -98,8 +100,14 @@ public class RoleController {
         model.addAttribute("roleCreate", new RoleDTO());
         return "/roles/create";
     }
-       
-    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
+
+    
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String create(@Valid @ModelAttribute("roleCreate") RoleDTO formBean, BindingResult bindingResult,
+                            Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        
+        log.debug("Create Role {})", formBean);
+
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.debug("ObjectError: {}", ge);
@@ -108,20 +116,11 @@ public class RoleController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.debug("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
+
+            model.addAttribute("roleCreate", formBean);
+            return "/roles/create";
         }
-        return null;
-    }
-    
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@Valid @ModelAttribute("roleCreate") RoleDTO formBean, BindingResult bindingResult,
-                            Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
-        
-        log.debug("Create ROle {})", formBean);
-        
-        String res = check(bindingResult,model, uriBuilder);
-        if(res!=null) return res;
-        
+
         RoleDTO role = roleFacade.create(formBean);
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + role.getName() + " succeeded");
      

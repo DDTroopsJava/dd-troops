@@ -75,11 +75,22 @@ public class HeroController {
 
 
         formBean.setId(id);
+
+        if (bindingResult.hasErrors()) {
+            for (ObjectError ge : bindingResult.getGlobalErrors()) {
+                log.debug("ObjectError: {}", ge);
+            }
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+                log.debug("FieldError: {}", fe);
+            }
+
+            model.addAttribute("heroEdit", formBean);
+            return "/heroes/edit";
+        }
+
         log.debug("[HERO] Update: {}", formBean);
         HeroDTO result = heroFacade.update(formBean);
-
-        String res = check(bindingResult,model, uriBuilder);
-        if(res!=null) return res;
 
         redirectAttributes.addFlashAttribute("alert_success", "Hero " + result.getName() + " was updated");
         return "redirect:" + uriBuilder.path("/heroes/read/{id}").buildAndExpand(id).encode().toUriString();
@@ -97,16 +108,6 @@ public class HeroController {
                            Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
         log.debug("Create Hero {})", formBean);
 
-        String res = check(bindingResult,model, uriBuilder);
-        if(res!=null) return res;
-
-        HeroDTO hero = heroFacade.create(formBean);
-        redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
-
-        return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
-    }
-
-    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.debug("ObjectError: {}", ge);
@@ -115,10 +116,16 @@ public class HeroController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.debug("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
+            model.addAttribute("heroCreate", formBean);
+            return "heroes/create";
         }
-        return null;
+
+        HeroDTO hero = heroFacade.create(formBean);
+        redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
+
+        return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
     }
+
 
 }
 
