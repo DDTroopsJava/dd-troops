@@ -1,15 +1,17 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
-import javax.servlet.http.HttpServletRequest;
-
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
-import javax.validation.Valid;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopCreateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopUpdateDTOValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +39,19 @@ public class TroopController {
 
     @Autowired
     HeroFacade heroFacade;
-    
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        if (binder.getTarget() instanceof TroopCreateDTO) {
+            binder.addValidators(new TroopCreateDTOValidator());
+        }
+
+        if (binder.getTarget() instanceof TroopUpdateDTO) {
+            binder.addValidators(new TroopUpdateDTOValidator());
+        }
+    }
+
+
     @RequestMapping(value="", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
         log.debug("List all");
@@ -97,10 +113,7 @@ public class TroopController {
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
 
-
         formBean.setId(id);
-        log.debug("[TROOP] Update: {}", formBean);
-        TroopDTO result = troopFacade.update(formBean);
 
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
@@ -110,8 +123,13 @@ public class TroopController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.trace("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/troops/edit/{id}").buildAndExpand(id).encode().toUriString();
+
+            model.addAttribute("troopEdit", formBean);
+            return "troops/edit";
         }
+
+        log.debug("[TROOP] Update: {}", formBean);
+        TroopDTO result = troopFacade.update(formBean);
 
         redirectAttributes.addFlashAttribute("alert_success", "Troop " + result.getName() + " was updated");
         return "redirect:" + uriBuilder.path("/troops/read/{id}").buildAndExpand(id).encode().toUriString();
@@ -127,6 +145,7 @@ public class TroopController {
         
         log.debug("[TROOP] Create {}");
         model.addAttribute("troopCreate", new TroopCreateDTO());
+
         return "/troops/create";
     }
     
@@ -145,9 +164,6 @@ public class TroopController {
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
 
-        log.debug("[TROOP] Create: {}", formBean);
-        TroopDTO result = troopFacade.create(formBean);
-
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.trace("ObjectError: {}", ge);
@@ -156,8 +172,12 @@ public class TroopController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.trace("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/troops/create").buildAndExpand().encode().toUriString();
+            model.addAttribute("troopCreate", formBean);
+            return "/troops/create";
         }
+
+        log.debug("[TROOP] Create: {}", formBean);
+        TroopDTO result = troopFacade.create(formBean);
 
         redirectAttributes.addFlashAttribute("alert_success", "Troop " + result.getName() + " was created");
         return "redirect:" + uriBuilder.path("/troops/read/" + result.getId()).buildAndExpand(result.getId()).encode().toUriString();
