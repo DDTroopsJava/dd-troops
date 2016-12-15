@@ -7,6 +7,7 @@ import cz.muni.fi.pa165.ddtroops.dto.UserCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserLoginDTO;
 import cz.muni.fi.pa165.ddtroops.facade.UserFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.validators.UserCreateDTOValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +36,14 @@ public class AuthenticationController {
 
     @Autowired
     private UserFacade userFacade;
+
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        if (binder.getTarget() instanceof UserCreateDTO) {
+            binder.addValidators(new UserCreateDTOValidator());
+        }
+    }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String loginUser(Model model, HttpServletRequest request) {
@@ -61,7 +72,12 @@ public class AuthenticationController {
         return "auth/register";
     }
 
-    private String check(BindingResult bindingResult, Model model, UriComponentsBuilder uriBuilder){
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(@Valid @ModelAttribute("userRegister") UserCreateDTO formBean, BindingResult bindingResult,
+        Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        log.debug("register(userRegister={})", formBean);
+
+
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
                 log.debug("ObjectError: {}", ge);
@@ -70,18 +86,15 @@ public class AuthenticationController {
                 model.addAttribute(fe.getField() + "_error", true);
                 log.debug("FieldError: {}", fe);
             }
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
+
+            model.addAttribute("userRegister", formBean);
+            return "/auth/register";
         }
-        return null;
-    }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@Valid @ModelAttribute("userRegister") UserCreateDTO formBean, BindingResult bindingResult,
-        Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
-        log.debug("register(userRegister={})", formBean);
-
-        String res = check(bindingResult,model, uriBuilder);
-        if(res!=null) return res;
+        if(userFacade.findByEmail(formBean.getEmail()) != null){
+            redirectAttributes.addFlashAttribute("alert_warning", "Email " + formBean.getEmail() + " already exists!");
+            return "redirect:" + uriBuilder.path("/auth/register").build().toUriString();
+        }
 
         UserDTO user = userFacade.register(formBean);
         request.getSession().setAttribute("user", user);
@@ -96,8 +109,17 @@ public class AuthenticationController {
         Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
         log.debug("login(userLogin={})", formBean);
 
-        String res = check(bindingResult,model, uriBuilder);
-        if(res!=null) return res;
+        if (bindingResult.hasErrors()) {
+            for (ObjectError ge : bindingResult.getGlobalErrors()) {
+                log.debug("ObjectError: {}", ge);
+            }
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+                log.debug("FieldError: {}", fe);
+            }
+            model.addAttribute("userLogin", new UserLoginDTO());
+            return "/auth/login";
+        }
 
         UserDTO matchingUser = userFacade.findByEmail(formBean.getEmail());
         if(matchingUser==null) {
