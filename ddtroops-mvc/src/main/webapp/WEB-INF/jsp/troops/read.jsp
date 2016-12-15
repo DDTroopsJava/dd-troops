@@ -15,6 +15,7 @@
                 if (modal)
                     modal.modal('show');
             }
+            
 
             function closeModal(suffix) {
                 var modal = $("#modal_" + suffix);
@@ -78,6 +79,53 @@
 
           </tbody>
         </table>
+        <br/>
+        
+        <table class="table">
+            <caption>Heroes of troop <c:out value="${troop.name}"/></caption>
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Level</th>
+              <th>Remove from troop</th>
+            </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${troop.heroes}" var="hero">
+                    <tr>
+                      <td>
+                        <my:a href="/heroes/read/${hero.id}"><c:out value="${hero.name}"/> </my:a>
+                      </td>
+
+                      <td>
+                        <c:out value="${hero.level}"/>
+                      </td>
+                        <td>
+                          <button class="glyphicon glyphicon-trash btn" onclick=" openModal('hero'+${hero.id}) ">
+                          </button>
+
+
+                          <my:modal_template suffix="hero${hero.id}" title="Remove hero">
+                              <jsp:attribute name="body">
+                                  <strong>Are you sure you want to remove the hero: <c:out value="${hero.name}"/></strong>
+                              </jsp:attribute>
+                              <jsp:attribute name="footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                          onclick="closeModalHero(${hero.id})">Close
+                                  </button>
+                                <form style="float: right; margin-left: 10px" method="post"
+                                      action="${pageContext.request.contextPath}/${end}/removehero/read/${troop.id}/${hero.id}">
+                                  <input type="submit" class="btn btn-primary" value="Remove"/>
+                                </form>
+                              </jsp:attribute>
+                          </my:modal_template>
+                        </td>
+
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+      <br>
 
 
     </jsp:attribute>

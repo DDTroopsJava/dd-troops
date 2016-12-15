@@ -283,8 +283,8 @@ public class TroopController {
         return "redirect:" + uriBuilder.path("/troops/addhero/{id}").buildAndExpand(id).encode().toUriString();
     }
     
-    @RequestMapping(value="/removehero/{id}/{heroId}", method = RequestMethod.POST)
-    public String removeHeroFromTroop(@PathVariable long id, @PathVariable long heroId,
+    @RequestMapping(value="/removehero/{page}/{id}/{heroId}", method = RequestMethod.POST)
+    public String removeHeroFromTroop(@PathVariable String page, @PathVariable long id, @PathVariable long heroId,
             Model model, 
             HttpServletRequest request, 
             RedirectAttributes redirectAttributes, 
@@ -304,6 +304,7 @@ public class TroopController {
         TroopDTO result = troopFacade.removeHero(editedTroop, removedHero);
         
         redirectAttributes.addFlashAttribute("alert_success", "Troop " + result.getName() + " was updated: Hero " + removedHero.getName() + " was succesfully removed.");
-        return "redirect:" + uriBuilder.path("/troops/addhero/{id}").buildAndExpand(id).encode().toUriString();
+        return "redirect:" + uriBuilder.path("/troops/" + page + "/{id}").buildAndExpand(id).encode().toUriString();
     }
+    
 }
