@@ -20,12 +20,5 @@ public class UserUpdateDTOValidator implements Validator {
         if (!user.getPhone().matches("\\+?\\d+")) {
             errors.rejectValue("phone", "UserDTO.phone.format", "Phone does not meet specified format!");
         }
-        if (!user.getEmail().matches(".+@.+\\....?")) {
-            errors.rejectValue("phone", "UserDTO.email.format", "Email does not meet specified format!");
-        }
-        if(user.getName().isEmpty()){
-            errors.rejectValue("name", "UserDTO.name.length", "User name should not be empty");
-        }
-
     }
 }

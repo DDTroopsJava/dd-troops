@@ -25,13 +25,5 @@ public class UserCreateDTOValidator implements Validator {
         if(!user.getEmail().matches(".+@.+\\....?")){
             errors.rejectValue("email", "UserDTO.email.format", "Email does not meet specified format!");
         }
-
-        if(user.getName().isEmpty()){
-            errors.rejectValue("name", "UserDTO.name.length", "User name should not be empty");
-        }
-
-        if(user.getPassword().isEmpty()){
-            errors.rejectValue("password", "UserDTO.password.length", "Password should not be empty");
-        }
     }
 }

@@ -1,12 +1,19 @@
 package cz.muni.fi.pa165.ddtroops.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Created by pstanko.
  * @author pstanko
  */
 public class UserUpdatePassDTO {
     private Long id;
+    @NotNull
+    @Size(min = 5, max = 150)
     private String currentPassword;
+    @NotNull
+    @Size(min = 5, max = 150)
     private String newPassword;
 
     public UserUpdatePassDTO(Long id, String current, String newPassword) {
