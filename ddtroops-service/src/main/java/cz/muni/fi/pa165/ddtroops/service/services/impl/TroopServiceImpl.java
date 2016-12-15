@@ -8,7 +8,9 @@ import java.util.stream.Stream;
 
 import cz.muni.fi.pa165.ddtroops.dao.HeroDao;
 import cz.muni.fi.pa165.ddtroops.dao.TroopDao;
+import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
+import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.muni.fi.pa165.ddtroops.service.services.TroopService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,5 +138,19 @@ public class TroopServiceImpl implements TroopService {
             throw new DDTroopsServiceException("Can't return Top N if N is negative!");
         }
 
+    }
+
+    @Override
+    public Troop removeHero(Troop t, Hero h) throws DDTroopsServiceException {
+        t.removeHero(h);
+        
+        try {
+            heroDao.save(h);
+            return update(t);
+
+        } catch (Throwable ex) {
+            throw new DDTroopsServiceException(
+                    "Cannot remove hero from troop with id: " + t.getId() + " and name: " + t.getName(), ex);
+        }
     }
 }

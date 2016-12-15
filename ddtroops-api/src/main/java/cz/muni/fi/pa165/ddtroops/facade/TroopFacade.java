@@ -1,6 +1,9 @@
 package cz.muni.fi.pa165.ddtroops.facade;
 
+import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
+import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 
 import java.util.List;
 
@@ -38,8 +41,25 @@ public interface TroopFacade {
      * @param troopDTO
      * @return
      */
-    TroopDTO update(TroopDTO troopDTO);
+    TroopDTO update(TroopUpdateDTO troopDTO);
 
+    /**
+     * Creates a troop with the parameters of the given DTO
+     * 
+     * @param troopCreateDTO
+     * @return DTO of the newly created Troop
+     */
+    TroopDTO create(TroopCreateDTO troopCreateDTO);
+    
+    /**
+     * Removes the given HeroDTO from the given TroopDTO
+     * 
+     * @param troopDTO
+     * @param heroDTO
+     * @return DTO of the updated Troop
+     */
+    TroopDTO removeHero(TroopDTO troopDTO, HeroDTO heroDTO);
+    
     /**
      * Deletes the given troop
      *

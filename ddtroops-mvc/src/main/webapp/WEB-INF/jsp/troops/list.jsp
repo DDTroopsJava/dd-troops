@@ -32,6 +32,7 @@
             <my:protected>
               <th>Delete</th>
               <th>Update</th>
+              <th>Add Hero</th>
             </my:protected>
 
           </tr>
@@ -74,6 +75,11 @@
                               onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${troop.id}'">
                       </button>
                     </td>
+                    <td>
+                      <button class="glyphicon glyphicon-user btn"
+                              onclick="location.href='${pageContext.request.contextPath}/${end}/addhero/${troop.id}'">
+                      </button>
+                    </td>
                   </my:protected>
                 </tr>
 
@@ -85,6 +91,13 @@
               <button class="btn btn-primary"
                       onclick="location.href='${pageContext.request.contextPath}/${end}/create'">
                 Add Troop
+              </button>
+      </my:protected>
+        
+      <my:protected>
+              <button class="btn btn-primary"
+                      onclick="location.href='${pageContext.request.contextPath}/${end}/battle'">
+                BATTLE!
               </button>
       </my:protected>
 
