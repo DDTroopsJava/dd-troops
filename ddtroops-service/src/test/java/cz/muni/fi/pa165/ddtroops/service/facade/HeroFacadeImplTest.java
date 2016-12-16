@@ -3,7 +3,6 @@ package cz.muni.fi.pa165.ddtroops.service.facade;
 import static org.testng.Assert.*;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
-import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
@@ -132,13 +131,4 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
         return heroDTO;
     }
 
-    private HeroUpdateDTO getUpdateHeroHelper(HeroDTO hero) {
-        HeroUpdateDTO heroDTO = new HeroUpdateDTO();
-        heroDTO.setId(hero.getId());
-        heroDTO.setName(hero.getName());
-        heroDTO.setLevel(hero.getLevel());
-        heroDTO.setRoles(hero.getRoles());
-
-        return heroDTO;
-    }
 }

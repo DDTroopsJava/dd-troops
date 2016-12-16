@@ -23,14 +23,14 @@
     </script>
 
         <table class="table">
-            <caption>User ${user.name}</caption>
+            <caption>User <c:out value="${user.name}"/></caption>
             <thead>
             <tr>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Joined</th>
-                <th>Admin?</th>
+                <th>Admin</th>
                 <th>Delete</th>
                 <th>Update</th>
             </tr>
@@ -51,7 +51,15 @@
                         <fmt:formatDate value="${user.joinedDate}" pattern="yyyy-MM-dd"/>
                     </td>
                     <td>
-                        <c:out value="${user.admin}"/>
+
+                        <c:choose>
+                        <c:when test="${user.admin}">
+                            <span class= "glyphicon glyphicon-ok"> </span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class= "glyphicon glyphicon-remove"> </span>
+                        </c:otherwise>
+                        </c:choose>
                     </td>
                     <td>
                         <button class="glyphicon glyphicon-trash btn" onclick=" openModal(${user.id}) ">

@@ -8,7 +8,6 @@ package cz.muni.fi.pa165.ddtroops.service.facade;
 import static org.testng.Assert.*;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
-import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
@@ -184,20 +183,13 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
 
     private void setupBattle()
     {
-        hero1.getRoles().add(role1);
-        hero2.getRoles().add(role2);
-        hero3.getRoles().add(role3);
+        hero1 = heroFacade.addRole(hero1.getId(), role1.getId());
+        hero2 = heroFacade.addRole(hero2.getId(), role2.getId());
+        hero3 = heroFacade.addRole(hero3.getId(), role3.getId());
 
-        hero1 = heroFacade.update((hero1));
-        hero2 = heroFacade.update((hero2));
-        hero3 = heroFacade.update((hero3));
-
-        troop1.getHeroes().add(hero1);
-        troop1.getHeroes().add(hero2);
-        troop2.getHeroes().add(hero3);
-
-        troop1 = troopFacade.update(getUpdateTroop(troop1));
-        troop2 = troopFacade.update(getUpdateTroop(troop2));
+        troop1 = troopFacade.addHero(troop1.getId(), hero1.getId());
+        troop1 = troopFacade.addHero(troop1.getId(), hero2.getId());
+        troop2 = troopFacade.addHero(troop2.getId(), hero3.getId());
     }
 
     @Test
@@ -233,15 +225,5 @@ public class TroopFacadeImplTest extends AbstractTestNGSpringContextTests {
         troopDTO.setGold(troop.getGold());
         troopDTO.setHeroes(troop.getHeroes());
         return troopDTO;
-    }
-    
-    private HeroUpdateDTO getUpdateHeroHelper(HeroDTO hero) {
-        HeroUpdateDTO heroDTO = new HeroUpdateDTO();
-        heroDTO.setId(hero.getId());
-        heroDTO.setName(hero.getName());
-        heroDTO.setLevel(hero.getLevel());
-        heroDTO.setRoles(hero.getRoles());
-
-        return heroDTO;
     }
 }

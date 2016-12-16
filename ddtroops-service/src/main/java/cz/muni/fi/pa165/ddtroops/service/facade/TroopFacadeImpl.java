@@ -1,10 +1,12 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
-import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
-import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -15,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * @author xgono
@@ -89,10 +89,10 @@ public class TroopFacadeImpl implements TroopFacade {
         }
         return null;
     }
-    
+
     @Override
     public void delete(Long id) {
-        if(id == null){
+        if (id == null) {
             throw new IllegalArgumentException("id");
         }
 
@@ -106,15 +106,15 @@ public class TroopFacadeImpl implements TroopFacade {
     }
 
     @Override
-    public TroopDTO battle(TroopDTO troop1DTO, TroopDTO troop2DTO)  {
+    public TroopDTO battle(TroopDTO troop1DTO, TroopDTO troop2DTO) {
         Troop t1 = beanMappingService.mapTo(troop1DTO, Troop.class);
         Troop t2 = beanMappingService.mapTo(troop2DTO, Troop.class);
         try {
-            Troop troopWinner = troopService.battle(t1,t2);
+            Troop troopWinner = troopService.battle(t1, t2);
             if (troopWinner == null)
                 return null;
-            return beanMappingService.mapTo(troopWinner,TroopDTO.class);
-        }  catch (DDTroopsServiceException e) {
+            return beanMappingService.mapTo(troopWinner, TroopDTO.class);
+        } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
         return null;
@@ -123,8 +123,8 @@ public class TroopFacadeImpl implements TroopFacade {
     @Override
     public List<TroopDTO> topN(int n, String mission, Long troopSize) {
         try {
-            List<Troop> topNTroops = troopService.topN(n,mission,troopSize);
-            return beanMappingService.mapTo(topNTroops,TroopDTO.class);
+            List<Troop> topNTroops = troopService.topN(n, mission, troopSize);
+            return beanMappingService.mapTo(topNTroops, TroopDTO.class);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
@@ -132,16 +132,36 @@ public class TroopFacadeImpl implements TroopFacade {
     }
 
     @Override
-    public TroopDTO removeHero(TroopDTO troopDTO, HeroDTO heroDTO) {
-        Troop troopEntity = beanMappingService.mapTo(troopDTO, Troop.class);
-        Hero heroEntity = beanMappingService.mapTo(heroDTO, Hero.class);
+    public TroopDTO removeHero(long troopId, long heroId) {
+
         try {
-            Troop t = troopService.removeHero(troopEntity, heroEntity);
-            troopDTO.setId(troopEntity.getId());
+            Troop t = troopService.removeHero(troopId, heroId);
             return beanMappingService.mapTo(t, TroopDTO.class);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
         return null;
+    }
+
+    @Override
+    public TroopDTO addHero(long troopId, long heroId) {
+
+        try {
+            Troop t = troopService.addHero(troopId, heroId);
+            return beanMappingService.mapTo(t, TroopDTO.class);
+        } catch (DDTroopsServiceException e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
+    public Set<TroopDTO> allHeroes(long troopId)
+    {
+        return troopService
+            .allHeroes(troopId)
+            .stream()
+            .map( (t) -> beanMappingService.mapTo(t, TroopDTO.class) )
+            .collect(Collectors.toSet());
     }
 }

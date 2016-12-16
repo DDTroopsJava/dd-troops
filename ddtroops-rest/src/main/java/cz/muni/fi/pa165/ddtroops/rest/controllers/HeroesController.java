@@ -30,7 +30,7 @@ public class HeroesController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public final HeroDTO createHero(@RequestBody HeroDTO hero) throws Exception { // POZOR
 
-        logger.debug("rest createHero()");
+        logger.debug("rest create()");
 
         try {
             return heroFacade.create(hero);

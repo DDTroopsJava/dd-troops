@@ -1,9 +1,10 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopDTO;
 import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
@@ -12,7 +13,6 @@ import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopCreateDTOValidator;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopUpdateDTOValidator;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,11 +197,6 @@ public class TroopController {
     @RequestMapping(value = "/battle", method = RequestMethod.GET)
     public String prepareTroops(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
-        
         log.debug("[TROOP] Battle {}");
         model.addAttribute("troops", troopFacade.findAll());
         return "/troops/battle";
@@ -213,10 +208,7 @@ public class TroopController {
             RedirectAttributes redirectAttributes, 
             UriComponentsBuilder uriBuilder) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+
         log.debug("[TROOP] Battle {}");
         
         Long firstId = Long.parseLong(request.getParameter("firstTroopId"));
@@ -270,27 +262,12 @@ public class TroopController {
         if(!logUser.isAdmin() && logUser.getId() != id){
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
-        
-        TroopDTO editedTroop = troopFacade.findById(id);
 
-        TroopUpdateDTO updatedTroop = new TroopUpdateDTO();
-        updatedTroop.setId(id);
-        updatedTroop.setName(editedTroop.getName());
-        updatedTroop.setMission(editedTroop.getMission());
-        updatedTroop.setGold(editedTroop.getGold());
-        updatedTroop.setHeroes(editedTroop.getHeroes());
         
-        log.debug("[TROOP] Add Hero: {}", editedTroop);
         Long heroId = Long.parseLong(request.getParameter("heroId"));
-        HeroDTO addedHero = heroFacade.findById(heroId);
-        // add the selected hero to the troop
-        editedTroop.getHeroes().add(addedHero);
-        
-        // save the troop to DB
-        TroopDTO result = troopFacade.update(updatedTroop);
+        TroopDTO troop = troopFacade.addHero(id, heroId);
 
-
-        redirectAttributes.addFlashAttribute("alert_success", "Troop " + result.getName() + " was updated: Hero " + addedHero.getName() + " was succesfully added.");
+        redirectAttributes.addFlashAttribute("alert_success", "Troop " + troop.getName() + " was updated: Hero was succesfully added.");
         return "redirect:" + uriBuilder.path("/troops/addhero/{id}").buildAndExpand(id).encode().toUriString();
     }
     
@@ -307,24 +284,18 @@ public class TroopController {
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
         
-        TroopDTO editedTroop = troopFacade.findById(id);
-        
+
         log.debug("[TROOP] Remove Hero: {}", heroId);
-        HeroDTO removedHero = heroFacade.findById(heroId);
         // save the troop to DB
-        TroopDTO result = troopFacade.removeHero(editedTroop, removedHero);
+        TroopDTO result = troopFacade.removeHero(id, heroId);
         
-        redirectAttributes.addFlashAttribute("alert_success", "Troop " + result.getName() + " was updated: Hero " + removedHero.getName() + " was succesfully removed.");
+        redirectAttributes.addFlashAttribute("alert_success", "Troop " + result.getName() + " was updated: Hero was succesfully removed.");
         return "redirect:" + uriBuilder.path("/troops/" + page + "/{id}").buildAndExpand(id).encode().toUriString();
     }
     
     @RequestMapping(value = "/topn", method = RequestMethod.GET)
     public String viewTopNTroops(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
         
         log.debug("[TROOP] TopN {}");
         return "/troops/topn";
@@ -336,10 +307,6 @@ public class TroopController {
             RedirectAttributes redirectAttributes, 
             UriComponentsBuilder uriBuilder) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
         log.debug("[TROOP] TopN Sent {}");
         
         

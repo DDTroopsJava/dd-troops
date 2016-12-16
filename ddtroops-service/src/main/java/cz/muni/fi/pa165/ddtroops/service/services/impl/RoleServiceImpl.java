@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.service.services.impl;
 
+import java.util.List;
+
 import cz.muni.fi.pa165.ddtroops.dao.HeroDao;
 import cz.muni.fi.pa165.ddtroops.dao.RoleDao;
 import cz.muni.fi.pa165.ddtroops.entity.Role;
@@ -7,8 +9,6 @@ import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.muni.fi.pa165.ddtroops.service.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by Petr Koláček
@@ -30,7 +30,7 @@ public class RoleServiceImpl implements RoleService {
         }
         try {
             Role save = roleDao.save(role);
-            role.getHeroes().forEach(h -> heroDao.save(h));
+            //role.getHeroes().forEach(h -> heroDao.save(h));
             return save;
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create role named " + role.getName() + " with id" + role.getId(), e);
@@ -76,7 +76,7 @@ public class RoleServiceImpl implements RoleService {
             throw new IllegalArgumentException("Role is null.");
         }
         try {
-            role.getHeroes().forEach(h -> heroDao.save(h));
+            //role.getHeroes().forEach(h -> heroDao.save(h));
             return roleDao.save(role);
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot update role named " + role.getName()
@@ -88,7 +88,10 @@ public class RoleServiceImpl implements RoleService {
     public void delete(Role role) throws DDTroopsServiceException {
         try {
             roleDao.delete(role);
-            role.getHeroes().forEach(h -> heroDao.save(h));
+            role.getHeroes().forEach(h -> {
+                h.removeRole(role);
+                heroDao.save(h);
+            });
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot deleteAll role named " + role.getName()
                     + " with id" + role.getId(), e);

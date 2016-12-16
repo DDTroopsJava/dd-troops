@@ -88,6 +88,10 @@
                 </tr>
           </tbody>
         </table>
+      <button class="btn"
+              onclick="location.href='${pageContext.request.contextPath}/${end}'">
+        Return
+      </button>
 
     </jsp:attribute>
 </my:pagetemplate>

@@ -122,7 +122,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
     private Hero hero(String name, int level){
         Hero hero = new Hero(name);
         hero.setLevel(level);
-        heroService.createHero(hero);
+        heroService.create(hero);
         heroes.put(name.toLowerCase(), hero);
         return hero;
     }

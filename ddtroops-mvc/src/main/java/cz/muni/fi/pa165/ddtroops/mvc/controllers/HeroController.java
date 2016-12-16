@@ -45,10 +45,11 @@ public class HeroController {
     }
 
     @ModelAttribute("roles")
-    public Collection<RoleDTO> categories() {
+    public Collection<RoleDTO> allRoles() {
         log.debug("roles()");
         return roleFacade.findAll();
     }
+
 
     @RequestMapping(value="", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
@@ -166,14 +167,8 @@ public class HeroController {
         @PathVariable long role_id,
         UriComponentsBuilder uriBuilder, HttpServletRequest request)
     {
-        HeroDTO hero = heroFacade.findById(hero_id);
-        RoleDTO role = roleFacade.findById(role_id);
 
-        hero.getRoles().add(role);
-
-        log.debug("Adding role: {}: {}", hero.getName(), role);
-
-        heroFacade.update(hero);
+        heroFacade.addRole(hero_id, role_id);
 
         return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
     }
@@ -186,15 +181,8 @@ public class HeroController {
             UriComponentsBuilder uriBuilder, HttpServletRequest request) {
 
 
-        HeroDTO hero = heroFacade.findById(hero_id);
-        RoleDTO role = roleFacade.findById(role_id);
+        heroFacade.removeRole(hero_id, role_id);
 
-        if(hero.getRoles().contains(role)) {
-            hero.getRoles().remove(role);
-            log.debug("Deleting role: {}: {}", hero.getName(), role);
-
-            heroFacade.update(hero);
-        }
 
         return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
     }
