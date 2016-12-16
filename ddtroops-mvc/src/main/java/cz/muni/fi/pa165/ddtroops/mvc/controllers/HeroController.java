@@ -1,10 +1,11 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
-import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
@@ -38,12 +39,15 @@ public class HeroController {
     @Autowired
     private RoleFacade roleFacade;
 
-    @Autowired
-    private RoleEditor roleEditor;
-
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(RoleDTO.class, roleEditor);
+        binder.registerCustomEditor(RoleDTO.class, new RoleEditor(roleFacade));
+    }
+
+    @ModelAttribute("roles")
+    public Collection<RoleDTO> categories() {
+        log.debug("roles()");
+        return roleFacade.findAll();
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
@@ -51,6 +55,14 @@ public class HeroController {
         log.debug("List all");
         model.addAttribute("heroes", heroFacade.findAll());
         return "heroes/list";
+    }
+
+    @RequestMapping(value = "/addrole/{id}", method = RequestMethod.GET)
+    public String addRoleGet(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        log.debug(" Read ({})", id);
+        model.addAttribute("hero", heroFacade.findById(id));
+        // roles should be passed
+        return "heroes/add_roles";
     }
 
     @RequestMapping(value = "/read/{id}", method = RequestMethod.GET)
@@ -83,7 +95,7 @@ public class HeroController {
 
     @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
     public String update(@PathVariable long id,
-                         @Valid @ModelAttribute("heroEdit")HeroUpdateDTO formBean,
+                         @Valid @ModelAttribute("heroEdit")HeroDTO formBean,
                          BindingResult bindingResult,
                          Model model,
                          UriComponentsBuilder uriBuilder,
@@ -103,9 +115,10 @@ public class HeroController {
             }
 
             model.addAttribute("heroEdit", formBean);
-            model.addAttribute("heroRole", roleFacade.findAll());
+            model.addAttribute("listOfRoles", roleFacade.findAll());
             return "/heroes/edit";
         }
+
         log.debug("GET ROLES from form {}", formBean.getRoles());
 
         log.debug("[HERO] Update: {}", formBean);
@@ -145,6 +158,45 @@ public class HeroController {
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
 
         return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
+    }
+
+    @RequestMapping(value="/addrole/{hero_id}/{role_id}", method = RequestMethod.POST)
+    public String addRole(
+        @PathVariable long hero_id,
+        @PathVariable long role_id,
+        UriComponentsBuilder uriBuilder, HttpServletRequest request)
+    {
+        HeroDTO hero = heroFacade.findById(hero_id);
+        RoleDTO role = roleFacade.findById(role_id);
+
+        hero.getRoles().add(role);
+
+        log.debug("Adding role: {}: {}", hero.getName(), role);
+
+        heroFacade.update(hero);
+
+        return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
+    }
+
+
+    @RequestMapping(value="/delrole/{hero_id}/{role_id}", method = RequestMethod.POST)
+    public String deleteRole(
+        @PathVariable long hero_id,
+        @PathVariable long role_id,
+            UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+
+
+        HeroDTO hero = heroFacade.findById(hero_id);
+        RoleDTO role = roleFacade.findById(role_id);
+
+        if(hero.getRoles().contains(role)) {
+            hero.getRoles().remove(role);
+            log.debug("Deleting role: {}: {}", hero.getName(), role);
+
+            heroFacade.update(hero);
+        }
+
+        return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
     }
 
 

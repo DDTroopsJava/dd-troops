@@ -1,11 +1,9 @@
 package cz.muni.fi.pa165.ddtroops.mvc.tools;
 
+import java.beans.PropertyEditorSupport;
+
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.beans.PropertyEditorSupport;
 
 /**
  * Created by Peter Zaoral.
@@ -16,11 +14,13 @@ import java.beans.PropertyEditorSupport;
 /**
  * Converts a String to a Role (when submitting form)
  */
-@Component
-public class RoleEditor extends PropertyEditorSupport {
+    public class RoleEditor extends PropertyEditorSupport {
 
-    @Autowired
     private RoleFacade roleFacade;
+
+    public RoleEditor(RoleFacade roleFacade) {
+        this.roleFacade = roleFacade;
+    }
 
     @Override
     public void setAsText(String text) {

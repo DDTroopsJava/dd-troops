@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
+import static org.testng.Assert.*;
+
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
@@ -12,8 +14,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by Peter Zaoral.
@@ -99,7 +99,7 @@ public class HeroFacadeImplTest extends AbstractTestNGSpringContextTests {
     public void shouldUpdateHero() throws Exception {
         hero1.setName("Rambo");
         logger.info("Hero id: " + hero1.getId());
-        heroFacade.update(getUpdateHeroHelper(hero1));
+        heroFacade.update((hero1));
         assertEquals(heroFacade.findAll().size(), 2);
         assertEquals(heroFacade.findById(hero1.getId()), hero1);
     }
