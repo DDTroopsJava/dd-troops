@@ -83,6 +83,10 @@ public class Troop implements Comparable<Troop> {
     public Set<Hero> getHeroes() {
         return Collections.unmodifiableSet(heroes);
     }
+    
+    public void setHeroes(Set<Hero> heroes) {
+        this.heroes = heroes;
+    }
 
     public void addHero(Hero hero) {
         heroes.add(hero);

@@ -10,9 +10,10 @@ import cz.muni.fi.pa165.ddtroops.dao.HeroDao;
 import cz.muni.fi.pa165.ddtroops.dao.TroopDao;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
-import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.muni.fi.pa165.ddtroops.service.services.TroopService;
+import java.util.ArrayList;
+import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,9 +59,27 @@ public class TroopServiceImpl implements TroopService {
     @Override
     public Troop update(Troop t) throws DDTroopsServiceException {
         try {
-
-            t.getHeroes().forEach(h -> {  h.setTroop(t);  heroDao.save(h);});
-            return troopDao.save(t);
+            
+            t.getHeroes().forEach(h -> h.setTroopWithoutUpdate(null));
+            
+            ArrayList<Long> heroIDs = new ArrayList<>();
+            for (Hero h : t.getHeroes()) {
+                heroIDs.add(h.getId());
+            }
+            
+            t.getHeroes().forEach(h -> heroDao.save(h));
+            
+            t.setHeroes(new HashSet<Hero>());
+            Troop t2 = troopDao.save(t);
+            
+            ArrayList<Hero> heroes = new ArrayList<>();
+            for (Long id : heroIDs) {
+                Hero h = heroDao.findOne(id);
+                heroes.add(h);
+            }
+            
+            heroes.forEach(h -> {  h.setTroop(t2);  heroDao.save(h);});
+            return troopDao.save(t2);
 
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
