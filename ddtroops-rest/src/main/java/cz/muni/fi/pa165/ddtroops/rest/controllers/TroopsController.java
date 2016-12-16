@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiUris.ROOT_URI_ORDERS)
 public class TroopsController {
     
-    private final static Logger logger = LoggerFactory.getLogger(UsersController.class);
+    private final static Logger logger = LoggerFactory.getLogger(TroopsController.class);
 
     @Autowired
     private TroopFacade troopFacade;

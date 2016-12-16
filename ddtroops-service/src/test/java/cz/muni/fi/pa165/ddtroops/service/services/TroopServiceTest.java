@@ -69,6 +69,7 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
     private Role role3;
 
     private List<Troop> troops = new ArrayList<>();
+    private List<Hero> heroes = new ArrayList<>();
 
     @BeforeMethod
     public void prepareTestTroops() {
@@ -110,6 +111,12 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
             int argumentAt = invoke.getArgumentAt(0, Long.class).intValue();
             if (argumentAt >= troops.size()) return null;
             return troops.get(argumentAt);
+        });
+        
+        when(heroDao.findOne(anyLong())).thenAnswer(invoke -> {
+            int argumentAt = invoke.getArgumentAt(0, Long.class).intValue();
+            if (argumentAt >= heroes.size()) return null;
+            return heroes.get(argumentAt);
         });
 
         when(troopDao.findByName(anyString())).thenAnswer(invoke -> {
@@ -361,16 +368,30 @@ public class TroopServiceTest extends AbstractTestNGSpringContextTests {
 
         // should have AP = 10;
         hero1FromTroop1 = TestUtils.createHero("Hero nr. 1 from Troop nr. 1 with role1", role1, 1);
+        hero1FromTroop1.setId(1L);
         // should have AP = 5;
         hero2FromTroop1 = TestUtils.createHero("Hero nr. 2 from Troop nr. 1 with role2", role2, 1);
+        hero2FromTroop1.setId(2L);
 
         // should have AP = 5;
         hero1FromTroop2 = TestUtils.createHero("Hero nr. 1 from Troop nr. 2 with role2", role2, 1);
+        hero1FromTroop2.setId(3L);
         // should have AP = 100;
         hero2FromTroop2 = TestUtils.createHero("Hero nr. 2 from Troop nr. 2 with role3", role3, 1);
+        hero2FromTroop2.setId(4L);
 
         // should have AP = 1000;
         hero1FromTroop3 = TestUtils.createHero("Hero nr. 1 from Troop nr. 3 with role4", role3, 10);
+        hero1FromTroop3.setId(5L);
+        
+        heroes = new ArrayList<>();
+
+        heroes.add(TestUtils.createHero("root"));
+        heroes.add(hero1FromTroop1);
+        heroes.add(hero2FromTroop1);
+        heroes.add(hero1FromTroop2);
+        heroes.add(hero2FromTroop2);
+        heroes.add(hero1FromTroop3);
 
         when(heroDao.save(any(Hero.class))).thenAnswer( invoke -> invoke.getArgumentAt(0, Hero.class));
 
