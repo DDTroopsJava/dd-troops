@@ -29,8 +29,9 @@ public class RoleServiceImpl implements RoleService {
             throw new IllegalArgumentException("Role is null.");
         }
         try {
+            Role save = roleDao.save(role);
             role.getHeroes().forEach(h -> heroDao.save(h));
-            return roleDao.save(role);
+            return save;
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot create role named " + role.getName() + " with id" + role.getId(), e);
         }

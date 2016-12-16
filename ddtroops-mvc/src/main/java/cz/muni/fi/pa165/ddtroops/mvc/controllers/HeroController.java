@@ -3,12 +3,12 @@ package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import cz.muni.fi.pa165.ddtroops.dto.HeroCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
-import cz.muni.fi.pa165.ddtroops.mvc.validators.HeroCreateDTOValidator;
-import cz.muni.fi.pa165.ddtroops.mvc.validators.HeroUpdateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.tools.RoleEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +35,15 @@ public class HeroController {
     @Autowired
     private HeroFacade heroFacade;
 
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        if (binder.getTarget() instanceof HeroUpdateDTO) {
-            binder.addValidators(new HeroUpdateDTOValidator());
-        }
+    @Autowired
+    private RoleFacade roleFacade;
 
-        if (binder.getTarget() instanceof HeroCreateDTO) {
-            binder.addValidators(new HeroCreateDTOValidator());
-        }
+    @Autowired
+    private RoleEditor roleEditor;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(RoleDTO.class, roleEditor);
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
@@ -77,6 +77,7 @@ public class HeroController {
         HeroDTO heroDTO = heroFacade.findById(id);
 
         model.addAttribute("heroEdit", heroDTO);
+        model.addAttribute("listOfRoles", roleFacade.findAll());
         return "/heroes/edit";
     }
 
@@ -102,10 +103,14 @@ public class HeroController {
             }
 
             model.addAttribute("heroEdit", formBean);
+            model.addAttribute("heroRole", roleFacade.findAll());
             return "/heroes/edit";
         }
+        log.debug("GET ROLES from form {}", formBean.getRoles());
 
         log.debug("[HERO] Update: {}", formBean);
+
+        log.debug("[HERO] Update TO STRING: {}", formBean.toString());
         HeroDTO result = heroFacade.update(formBean);
 
         redirectAttributes.addFlashAttribute("alert_success", "Hero " + result.getName() + " was updated");

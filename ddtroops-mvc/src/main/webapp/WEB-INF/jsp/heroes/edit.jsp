@@ -13,22 +13,31 @@
                modelAttribute="heroEdit" cssClass="form-horizontal">
 
         <div class="form-group ${name_error?'has-error':''}">
-          <form:label path="name" cssClass="col-sm-2 control-label">Name</form:label>
-          <div class="col-sm-10">
-            <form:input path="name" cssClass="form-control"/>
-            <form:errors path="name" cssClass="help-block"/>
-          </div>
-        </div>
-        
-        <input type="hidden" id = "level" name="level" value="${heroEdit.level}">
-
-        <div>
-            <form:label path="roles" cssClass="control-label">Hero roles</form:label>
-            <div>
-                <form:checkboxes path="roles" items="${heroEdit.roles}" />
-                <form:errors path="roles" cssClass="help-block"/>
+            <form:label path="name" cssClass="col-sm-2 control-label">Name</form:label>
+            <div class="col-sm-10">
+                <form:input path="name" cssClass="form-control"/>
+                <form:errors path="name" cssClass="help-block"/>
             </div>
         </div>
+        
+        <input type="hidden" id="level" name="level" value="${heroEdit.level}">
+
+        <div class="form-group">
+            <form:label path="roles" cssClass="control-label">Hero roles</form:label>
+                <%--<div>
+                 <form:select path="roles" >
+                        <form:options items="${heroRole}" itemLabel="name" itemValue="id"/>
+                    </form:select>
+                    <form:errors path="roles" cssClass="help-block"/>
+                </div>--%>
+            <form:select path="roles" name="roles">
+                <c:forEach items="${listOfRoles}" var="role">
+                <option value="${role.id}"> <c:out value="${role.name}"/> </option>
+                 </c:forEach>
+            </form:select>
+
+        </div>
+
 
       <button class="btn btn-primary" type="submit">Update Hero</button>
     </form:form>
