@@ -1,7 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
+import static org.testng.Assert.*;
+
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
-import cz.muni.fi.pa165.ddtroops.dto.RoleUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
 import cz.muni.fi.pa165.ddtroops.service.config.ServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * /**
@@ -87,7 +86,7 @@ public class RoleFacadeImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testUpdate() throws Exception {
         role2.setDescription("Everybody wants to be a pikeman");
-        roleFacade.update(getUpdateRoleHelper(role2));
+        roleFacade.update((role2));
         assertEquals(roleFacade.findAll().size(), 3);
         assertEquals(roleFacade.findById(role2.getId()), role2);
         assertEquals(roleFacade.findById(role2.getId()).getDescription(), "Everybody wants to be a pikeman");
@@ -108,15 +107,7 @@ public class RoleFacadeImplTest extends AbstractTestNGSpringContextTests {
         assertFalse(roleFacade.findAll().contains(role1));
     }
     
-    private RoleUpdateDTO getUpdateRoleHelper(RoleDTO role) {
-        RoleUpdateDTO roleDTO = new RoleUpdateDTO();
-        roleDTO.setId(role.getId());
-        roleDTO.setName(role.getName());
-        roleDTO.setDescription(role.getDescription());
-        roleDTO.setAttackPower(role.getAttackPower());
-        roleDTO.setDefensePower(role.getDefensePower());
-        return roleDTO;
-    }
+
 
 
 }

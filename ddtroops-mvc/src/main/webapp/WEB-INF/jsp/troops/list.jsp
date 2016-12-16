@@ -100,6 +100,13 @@
                 BATTLE!
               </button>
       </my:protected>
+        
+      <my:protected>
+              <button class="btn btn-primary"
+                      onclick="location.href='${pageContext.request.contextPath}/${end}/topn'">
+                View Top N Troops
+              </button>
+      </my:protected>
 
     </jsp:attribute>
 </my:pagetemplate>

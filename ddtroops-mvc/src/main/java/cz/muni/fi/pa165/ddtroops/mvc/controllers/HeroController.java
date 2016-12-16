@@ -1,14 +1,15 @@
 package cz.muni.fi.pa165.ddtroops.mvc.controllers;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import cz.muni.fi.pa165.ddtroops.dto.HeroCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
-import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
-import cz.muni.fi.pa165.ddtroops.mvc.validators.HeroCreateDTOValidator;
-import cz.muni.fi.pa165.ddtroops.mvc.validators.HeroUpdateDTOValidator;
+import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.tools.RoleEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +36,18 @@ public class HeroController {
     @Autowired
     private HeroFacade heroFacade;
 
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        if (binder.getTarget() instanceof HeroUpdateDTO) {
-            binder.addValidators(new HeroUpdateDTOValidator());
-        }
+    @Autowired
+    private RoleFacade roleFacade;
 
-        if (binder.getTarget() instanceof HeroCreateDTO) {
-            binder.addValidators(new HeroCreateDTOValidator());
-        }
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(RoleDTO.class, new RoleEditor(roleFacade));
+    }
+
+    @ModelAttribute("roles")
+    public Collection<RoleDTO> categories() {
+        log.debug("roles()");
+        return roleFacade.findAll();
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
@@ -51,6 +55,14 @@ public class HeroController {
         log.debug("List all");
         model.addAttribute("heroes", heroFacade.findAll());
         return "heroes/list";
+    }
+
+    @RequestMapping(value = "/addrole/{id}", method = RequestMethod.GET)
+    public String addRoleGet(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        log.debug(" Read ({})", id);
+        model.addAttribute("hero", heroFacade.findById(id));
+        // roles should be passed
+        return "heroes/add_roles";
     }
 
     @RequestMapping(value = "/read/{id}", method = RequestMethod.GET)
@@ -77,12 +89,13 @@ public class HeroController {
         HeroDTO heroDTO = heroFacade.findById(id);
 
         model.addAttribute("heroEdit", heroDTO);
+        model.addAttribute("listOfRoles", roleFacade.findAll());
         return "/heroes/edit";
     }
 
     @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
     public String update(@PathVariable long id,
-                         @Valid @ModelAttribute("heroEdit")HeroUpdateDTO formBean,
+                         @Valid @ModelAttribute("heroEdit")HeroDTO formBean,
                          BindingResult bindingResult,
                          Model model,
                          UriComponentsBuilder uriBuilder,
@@ -102,10 +115,15 @@ public class HeroController {
             }
 
             model.addAttribute("heroEdit", formBean);
+            model.addAttribute("listOfRoles", roleFacade.findAll());
             return "/heroes/edit";
         }
 
+        log.debug("GET ROLES from form {}", formBean.getRoles());
+
         log.debug("[HERO] Update: {}", formBean);
+
+        log.debug("[HERO] Update TO STRING: {}", formBean.toString());
         HeroDTO result = heroFacade.update(formBean);
 
         redirectAttributes.addFlashAttribute("alert_success", "Hero " + result.getName() + " was updated");
@@ -140,6 +158,45 @@ public class HeroController {
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
 
         return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
+    }
+
+    @RequestMapping(value="/addrole/{hero_id}/{role_id}", method = RequestMethod.POST)
+    public String addRole(
+        @PathVariable long hero_id,
+        @PathVariable long role_id,
+        UriComponentsBuilder uriBuilder, HttpServletRequest request)
+    {
+        HeroDTO hero = heroFacade.findById(hero_id);
+        RoleDTO role = roleFacade.findById(role_id);
+
+        hero.getRoles().add(role);
+
+        log.debug("Adding role: {}: {}", hero.getName(), role);
+
+        heroFacade.update(hero);
+
+        return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
+    }
+
+
+    @RequestMapping(value="/delrole/{hero_id}/{role_id}", method = RequestMethod.POST)
+    public String deleteRole(
+        @PathVariable long hero_id,
+        @PathVariable long role_id,
+            UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+
+
+        HeroDTO hero = heroFacade.findById(hero_id);
+        RoleDTO role = roleFacade.findById(role_id);
+
+        if(hero.getRoles().contains(role)) {
+            hero.getRoles().remove(role);
+            log.debug("Deleting role: {}: {}", hero.getName(), role);
+
+            heroFacade.update(hero);
+        }
+
+        return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
     }
 
 

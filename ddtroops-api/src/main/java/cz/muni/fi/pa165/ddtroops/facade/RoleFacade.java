@@ -1,9 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.facade;
 
-import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
-import cz.muni.fi.pa165.ddtroops.dto.RoleUpdateDTO;
-
 import java.util.Collection;
+
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 
 /**
  * Created by Petr Kolacek
@@ -49,7 +48,7 @@ public interface RoleFacade {
      * @param role updating role
      * @return updated role
      */
-    RoleDTO update(RoleUpdateDTO role);
+    RoleDTO update(RoleDTO role);
 
     /**
      * Deletes role
