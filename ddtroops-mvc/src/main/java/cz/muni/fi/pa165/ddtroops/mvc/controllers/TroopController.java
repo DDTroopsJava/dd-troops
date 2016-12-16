@@ -342,11 +342,27 @@ public class TroopController {
         }
         log.debug("[TROOP] TopN Sent {}");
         
+        
         int number = Integer.parseInt(request.getParameter("number"));
+        
+        if (number <= 0) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Number of results has to be greater than zero!");
+            return "redirect:" + uriBuilder.path("/troops/topn").build().toUriString();
+        }
+            
         String mission = request.getParameter("string") ;
-        Long troopSize = request.getParameter("troopSize") == null ? null : Long.parseLong(request.getParameter("troopSize"));
+        String troopSize = request.getParameter("troopSize");
+        Long troopSizeLong = null;
+        if (troopSize != null && !troopSize.equals("")) {
+            troopSizeLong = Long.parseLong(request.getParameter("troopSize"));
+           
+            if (troopSizeLong < 0) {
+                redirectAttributes.addFlashAttribute("alert_warning", "Troop size can't be negative!");
+                return "redirect:" + uriBuilder.path("/troops/topn").build().toUriString();
+            }
+        }
 
-        List<TroopDTO> troops = troopFacade.topN(number, mission, troopSize);
+        List<TroopDTO> troops = troopFacade.topN(number, mission, troopSizeLong);
         System.err.println(troops.toString());
         
         model.addAttribute("troops", troops);
