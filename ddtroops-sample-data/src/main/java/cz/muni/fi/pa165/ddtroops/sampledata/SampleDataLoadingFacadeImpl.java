@@ -75,11 +75,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
 
     private void loadHeroes() throws IOException
     {
-        Role master = role("master", "Master of them all", 1000, 1000);
-
-
         Hero terminator = hero("Terminator", 10);
-        terminator.addRole(master);
         Hero chuck = hero("Chuck", 10000);
         Hero superman = hero("Superman", 5);
     }

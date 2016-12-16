@@ -1,7 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.mvc.tools;
 
-import cz.muni.fi.pa165.ddtroops.entity.Role;
-import cz.muni.fi.pa165.ddtroops.service.services.RoleService;
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
+import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +14,23 @@ import java.beans.PropertyEditorSupport;
  */
 
 /**
- *  Converts a String to a Role (when submitting form)
+ * Converts a String to a Role (when submitting form)
  */
 @Component
 public class RoleEditor extends PropertyEditorSupport {
+
     @Autowired
-    private RoleService roleService;
+    private RoleFacade roleFacade;
 
     @Override
     public void setAsText(String text) {
-        Role role = this.roleService.findById(Long.valueOf(text));
-    this.setValue(role);
+        Long id = Long.parseLong(text);
+        RoleDTO role = this.roleFacade.findById(id);
+        this.setValue(role);
     }
 
+    @Override
+    public String getAsText() {
+        return super.getAsText();
+    }
 }

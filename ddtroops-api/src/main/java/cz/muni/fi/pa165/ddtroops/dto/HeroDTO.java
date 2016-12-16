@@ -1,6 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.dto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,7 +14,7 @@ public class HeroDTO {
 
     private String name;
 
-    private Set<RoleDTO> roles = new HashSet<>();
+    private List<RoleDTO> roles = new ArrayList<>();
 
     private TroopDTO troop;
 
@@ -47,11 +49,11 @@ public class HeroDTO {
         this.name = name;
     }
 
-    public Set<RoleDTO> getRoles() {
+    public List<RoleDTO> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleDTO> roles) {
+    public void setRoles(List<RoleDTO> roles) {
         this.roles = roles;
     }
 

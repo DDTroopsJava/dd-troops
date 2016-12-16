@@ -76,8 +76,9 @@ public class HeroServiceImpl implements HeroService {
             throw new IllegalArgumentException("Hero is null.");
         }
         try {
+            Hero save = heroDao.save(hero);
             hero.getRoles().forEach(r -> {r.addHero(hero); roleDao.save(r);});
-            return heroDao.save(hero);
+            return save;
         } catch (Throwable e) {
             throw new DDTroopsServiceException("Cannot update hero named " + hero.getName()
                     + " with id" + hero.getId(), e);
