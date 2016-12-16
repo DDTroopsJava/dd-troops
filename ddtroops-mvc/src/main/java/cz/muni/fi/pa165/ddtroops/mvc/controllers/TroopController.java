@@ -11,6 +11,7 @@ import cz.muni.fi.pa165.ddtroops.dto.TroopUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.TroopFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.Tools;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopCreateDTOValidator;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.TroopUpdateDTOValidator;
 import org.slf4j.Logger;
@@ -72,9 +73,8 @@ public class TroopController {
     public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
         UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
 
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         TroopDTO troop = troopFacade.findById(id);
         troopFacade.delete(id);
@@ -84,13 +84,12 @@ public class TroopController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editTroop(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
+    public String editTroop(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
         UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
 
-        if(!logUser.isAdmin() && logUser.getId() != id){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         log.debug("[TROOP] Edit {}", id);
         TroopDTO troopDTO = troopFacade.findById(id);
@@ -108,11 +107,9 @@ public class TroopController {
         RedirectAttributes redirectAttributes,
         HttpServletRequest request) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
 
-        if(!logUser.isAdmin() && logUser.getId() != id){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(!(res != null && res.isEmpty())) return res;
 
         formBean.setId(id);
 
@@ -142,12 +139,9 @@ public class TroopController {
     }
     
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String createTroop(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
-
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+    public String createTroop(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
         
         log.debug("[TROOP] Create {}");
         model.addAttribute("troopCreate", new TroopCreateDTO());
@@ -164,11 +158,8 @@ public class TroopController {
         UriComponentsBuilder uriBuilder, 
         HttpServletRequest request) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         if (bindingResult.hasErrors()) {
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
@@ -233,13 +224,10 @@ public class TroopController {
     }
     
     @RequestMapping(value = "/addhero/{id}", method = RequestMethod.GET)
-    public String addHero(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
+    public String addHero(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-
-        if(!logUser.isAdmin() && logUser.getId() != id){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         log.debug("[TROOP] Add Hero {}", id);
         TroopDTO troopDTO = troopFacade.findById(id);
@@ -257,11 +245,8 @@ public class TroopController {
             RedirectAttributes redirectAttributes, 
             UriComponentsBuilder uriBuilder) {
 
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-
-        if(!logUser.isAdmin() && logUser.getId() != id){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         
         Long heroId = Long.parseLong(request.getParameter("heroId"));
@@ -277,12 +262,9 @@ public class TroopController {
             HttpServletRequest request, 
             RedirectAttributes redirectAttributes, 
             UriComponentsBuilder uriBuilder) {
-        
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
 
-        if(!logUser.isAdmin() && logUser.getId() != id){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(!(res != null && res.isEmpty())) return res;
         
 
         log.debug("[TROOP] Remove Hero: {}", heroId);

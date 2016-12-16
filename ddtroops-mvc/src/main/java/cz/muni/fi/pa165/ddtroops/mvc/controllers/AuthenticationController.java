@@ -49,7 +49,7 @@ public class AuthenticationController {
     public String loginUser(Model model, HttpServletRequest request) {
 
         if(request.getSession().getAttribute("user") != null){
-            return "/user";
+            return "home";
         }
 
         log.debug("[AUTH] Login");
@@ -62,7 +62,7 @@ public class AuthenticationController {
     public String logoutUser(Model model, HttpServletRequest request) {
         log.debug("[AUTH] Login");
         request.getSession().removeAttribute("user");
-        return "/home";
+        return "home";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -137,6 +137,6 @@ public class AuthenticationController {
         request.getSession().setAttribute("user", matchingUser);
         //report success
         redirectAttributes.addFlashAttribute("alert_success", "Login " + formBean.getEmail() + " succeeded ");
-        return "redirect:" + uriBuilder.path("/users").build().toUriString();
+        return "redirect:" + uriBuilder.path("/heroes").build().toUriString();
     }
 }

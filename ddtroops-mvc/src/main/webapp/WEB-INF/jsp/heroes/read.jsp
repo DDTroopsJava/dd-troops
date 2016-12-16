@@ -24,7 +24,7 @@
         </script>
 
         <table class="table">
-          <caption>Hero   <c:out value="${hero.name}"/></caption>
+          <caption>Hero <c:out value="${hero.name}"/></caption>
           <thead>
           <tr>
             <th>Name</th>

@@ -11,5 +11,9 @@
         Welcome to DD-Troops.
       </h1>
 
+      <pre>
+        Let's have some fun!
+      </pre>
+
     </jsp:attribute>
 </my:pagetemplate>
