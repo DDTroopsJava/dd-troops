@@ -29,6 +29,7 @@
           <tr>
             <th>Name</th>
             <th>Level</th>
+            <th>Roles</th>
 
             <my:protected>
               <th>Delete</th>
@@ -47,6 +48,11 @@
 
                   <td>
                     <c:out value="${hero.level}"/>
+                  </td>
+                  <td>
+                    <my:a href="/${end}/addrole/${hero.id}">
+                     Add role
+                    </my:a>
                   </td>
 
                   <my:protected>

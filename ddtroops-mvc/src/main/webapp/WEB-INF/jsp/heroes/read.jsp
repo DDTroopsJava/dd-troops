@@ -29,6 +29,7 @@
           <tr>
             <th>Name</th>
             <th>Level</th>
+            <th>Roles</th>
             <my:protected>
               <th>Delete</th>
               <th>Update</th>
@@ -44,6 +45,10 @@
 
                   <td>
                     <c:out value="${hero.level}"/>
+                  </td>
+
+                  <td>
+                    <my:a href="/${end}/addrole/${hero.id}">Add role</my:a>
                   </td>
 
                   <my:protected>
@@ -78,6 +83,36 @@
                 </tr>
           </tbody>
         </table>
+
+
+       <table class="table">
+         <caption>Roles</caption>
+         <thead>
+         <tr>
+           <th>Name</th>
+           <th>Attack power</th>
+           <th>Defense power</th>
+
+         </tr>
+         </thead>
+         <tbody>
+         <c:forEach items="${hero.roles}" var="role">
+                <tr>
+                  <td>
+                    <my:a href="/roles/read/${role.id}"><c:out value="${role.name}"/> </my:a>
+                  </td>
+
+                  <td>
+                    <c:out value="${role.attackPower}"/>
+                  </td>
+
+                  <td>
+                    <c:out value="${role.defensePower}"/>
+                  </td>
+                </tr>
+            </c:forEach>
+         </tbody>
+       </table>
 
     </jsp:attribute>
 </my:pagetemplate>
