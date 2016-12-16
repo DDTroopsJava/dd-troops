@@ -25,7 +25,7 @@
         </script>
 
         <table class="table">
-          <caption>Role ${role.name}</caption>
+          <caption>Role <c:out value="${role.name}"/></caption>
           <thead>
           <tr>
             <th>Name</th>
@@ -88,6 +88,10 @@
                 </tr>
           </tbody>
         </table>
+      <button class="btn"
+              onclick="location.href='${pageContext.request.contextPath}/${end}'">
+        Return
+      </button>
 
     </jsp:attribute>
 </my:pagetemplate>

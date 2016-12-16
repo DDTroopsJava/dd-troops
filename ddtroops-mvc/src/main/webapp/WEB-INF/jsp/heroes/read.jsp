@@ -24,13 +24,14 @@
         </script>
 
         <table class="table">
-          <caption>Hero ${hero.name}</caption>
+          <caption>Hero <c:out value="${hero.name}"/></caption>
           <thead>
           <tr>
             <th>Name</th>
             <th>Level</th>
-            <th>Roles</th>
+            <th>Number of Roles</th>
             <my:protected>
+              <th>Roles</th>
               <th>Delete</th>
               <th>Update</th>
             </my:protected>
@@ -38,20 +39,25 @@
           </tr>
           </thead>
           <tbody>
-                <tr>
-                  <td>
-                    <my:a href="/${end}/read/${hero.id}"><c:out value="${hero.name}"/> </my:a>
-                  </td>
+          <tr>
+            <td>
+              <my:a href="/${end}/read/${hero.id}"><c:out value="${hero.name}"/> </my:a>
+            </td>
 
-                  <td>
-                    <c:out value="${hero.level}"/>
-                  </td>
+            <td>
+              <c:out value="${hero.level}"/>
+            </td>
 
-                  <td>
-                    <my:a href="/${end}/addrole/${hero.id}">Add role</my:a>
-                  </td>
+            <td>
+              <c:out value="${hero.roles.size()}"/>
+            </td>
 
-                  <my:protected>
+            <my:protected>
+                <td>
+                    <my:a href="/${end}/addrole/${hero.id}">
+                      <span class="glyphicon glyphicon-tower"> </span>
+                    </my:a>
+                </td>
                     <td>
                       <button class="glyphicon glyphicon-trash btn" onclick=" openModal(${hero.id}) ">
                       </button>
@@ -80,7 +86,7 @@
                     </td>
                 </my:protected>
 
-                </tr>
+          </tr>
           </tbody>
         </table>
 
@@ -113,6 +119,11 @@
             </c:forEach>
          </tbody>
        </table>
+
+       <button class="btn"
+               onclick="location.href='${pageContext.request.contextPath}/${end}'">
+         Return
+       </button>
 
     </jsp:attribute>
 </my:pagetemplate>

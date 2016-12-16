@@ -16,9 +16,9 @@
 
     
     <form method="post" action="${pageContext.request.contextPath}/${end}/battle"
-               cssClass="form-horizontal">
+               css="form-horizontal">
        <div class="form-group">
-            <label cssClass="col-sm-2 control-label">First troop</label>
+            <label css="col-sm-2 control-label">First troop</label>
             
             <select name="firstTroopId" style="display: block;
                                                 width: 100%;
@@ -37,9 +37,9 @@
             </select>             
             
         </div>
-            <label cssClass="col-sm-2 control-label">vs.</label>
+            <label css="col-sm-2 control-label">vs.</label>
         <div class="form-group">
-            <label cssClass="col-sm-2 control-label">Second troop</label>
+            <label css="col-sm-2 control-label">Second troop</label>
             <select name="secondTroopId" style="display: block;
                                                 width: 100%;
                                                 height: 34px;
@@ -61,7 +61,7 @@
       
     <Br>
     <Br>
-    <button class="btn btn-primary"
+    <button class="btn"
             onclick="location.href='${pageContext.request.contextPath}/${end}'">
       Return
     </button>

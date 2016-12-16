@@ -1,5 +1,10 @@
 package cz.muni.fi.pa165.ddtroops.dao;
 
+import static org.junit.Assert.*;
+import static org.testng.AssertJUnit.assertEquals;
+
+import java.util.List;
+
 import cz.muni.fi.pa165.ddtroops.PersistenceSampleApplicationContext;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
@@ -13,11 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * @author pstanko
@@ -132,6 +132,9 @@ public class TroopDaoTest extends AbstractTestNGSpringContextTests {
     public void shouldDeleteTroop() throws Exception {
         List<Troop> allBeforeDelete = troopDao.findAll();
         assertEquals(allBeforeDelete.size(), 3);
+
+        troop3.getHeroes().forEach(hero -> troop3.removeHero(hero));
+        troop3 = troopDao.save(troop3);
 
         troopDao.delete(troop3);
 

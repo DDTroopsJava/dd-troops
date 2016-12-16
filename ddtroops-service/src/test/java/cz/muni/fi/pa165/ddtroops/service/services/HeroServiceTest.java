@@ -118,7 +118,7 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     public void shouldCreateNewHero() throws Exception {
         int origSize = heroes.size();
         Hero newHero = TestUtils.createHero("new_hero");
-        heroService.createHero(newHero);
+        heroService.create(newHero);
         assertEquals(heroes.size(), origSize + 1);
         assertEquals(newHero.getId().intValue(), heroes.size() - 1); // should have next id
         assertTrue(heroes.contains(newHero));
@@ -128,8 +128,8 @@ public class HeroServiceTest extends AbstractTestNGSpringContextTests {
     public void shouldNotRegisterExistingHero() throws Exception {
         Hero newHero = TestUtils.createHero("new_hero");
         Hero newHero2 = TestUtils.createHero("new_hero");
-        heroService.createHero(newHero);
-        heroService.createHero(newHero2);
+        heroService.create(newHero);
+        heroService.create(newHero2);
     }
 
     @Test

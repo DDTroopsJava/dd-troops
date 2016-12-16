@@ -135,26 +135,5 @@ public class Hero {
         this.troop = troop;
     }
 
-    @PreUpdate
-    @PrePersist
-    public void updateRolesAndTroop()
-    {
-        for (Role role : roles) {
-            role.addHero(this);
-        }
-        if(troop != null) {
-            troop.addHero(this);
-        }
-    }
-
-    @PreRemove
-    public void removeRolesAndTroop() {
-        for (Role role : roles) {
-            role.removeHero(this);
-        }
-        if (troop != null) {
-            troop.removeHero(this);
-        }
-    }
 
 }

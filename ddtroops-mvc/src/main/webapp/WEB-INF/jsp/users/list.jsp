@@ -52,7 +52,14 @@
                     <fmt:formatDate value="${user.joinedDate}" pattern="yyyy-MM-dd"/>
                   </td>
                   <td>
-                    <c:out value="${user.admin}"/>
+                     <c:choose>
+                        <c:when test="${user.admin}">
+                            <span class= "glyphicon glyphicon-ok"> </span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class= "glyphicon glyphicon-remove"> </span>
+                        </c:otherwise>
+                        </c:choose>
                   </td>
                   <td>
                     <button class="glyphicon glyphicon-trash btn" onclick=" openModal(${user.id}) ">
@@ -83,6 +90,11 @@
             </c:forEach>
           </tbody>
         </table>
+
+      <button class="btn"
+              onclick="location.href='${pageContext.request.contextPath}'">
+          Return
+      </button>
 
     </jsp:attribute>
 </my:pagetemplate>
