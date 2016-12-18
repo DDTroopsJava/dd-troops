@@ -29,6 +29,7 @@
           <tr>
             <th>Name</th>
             <th>Mission</th>
+            <th>Number of heroes</th>
             <my:protected>
               <th>Delete</th>
               <th>Update</th>
@@ -46,6 +47,10 @@
 
                   <td>
                     <c:out value="${troop.mission}"/>
+                  </td>
+                  <td>
+                    <c:out value="${troop.heroes.size()}"/>
+
                   </td>
                   <my:protected>
 
@@ -94,19 +99,14 @@
               </button>
       </my:protected>
         
-      <my:protected>
               <button class="btn btn-primary"
                       onclick="location.href='${pageContext.request.contextPath}/${end}/battle'">
                 BATTLE!
               </button>
-      </my:protected>
-        
-      <my:protected>
               <button class="btn btn-primary"
                       onclick="location.href='${pageContext.request.contextPath}/${end}/topn'">
                 View Top N Troops
               </button>
-      </my:protected>
 
     </jsp:attribute>
 </my:pagetemplate>

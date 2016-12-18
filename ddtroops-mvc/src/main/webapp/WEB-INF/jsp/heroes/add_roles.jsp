@@ -69,6 +69,11 @@
           </tbody>
         </table>
 
+       <button class="btn"
+               onclick="location.href='${pageContext.request.contextPath}/${end}/read/${hero.id}'">
+         Return
+       </button>
+
 
     </jsp:attribute>
 </my:pagetemplate>

@@ -1,5 +1,10 @@
 package cz.muni.fi.pa165.ddtroops.dao;
 
+import static org.testng.Assert.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import cz.muni.fi.pa165.ddtroops.PersistenceSampleApplicationContext;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Role;
@@ -13,8 +18,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * Craeted by xgono
@@ -35,6 +38,9 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private TroopDao troopDao;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private Hero hero1;
     private Hero hero2;
@@ -137,11 +143,14 @@ public class HeroDaoTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testDeleteExistingHero() throws Exception {
         // delete hero2
-        heroDao.delete(hero2);
+        Hero h = new Hero("My super hero");
+        h = heroDao.save(h);
 
-        assertEquals(heroDao.findAll().size(), 1, "Failed to delete anything");
+        heroDao.delete(h);
+
+        assertEquals(heroDao.findAll().size(), 2, "Failed to delete anything");
         assertTrue(heroDao.findAll().contains(hero1), "Deleted wrong hero");
-        assertFalse(heroDao.findAll().contains(hero2), "Failed to delete the right hero");
+        assertFalse(heroDao.findAll().contains(h), "Failed to delete the right hero");
     }
 
     @Test

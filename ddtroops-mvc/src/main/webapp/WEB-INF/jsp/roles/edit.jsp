@@ -46,6 +46,10 @@
 
       <button class="btn btn-primary" type="submit">Update Role</button>
     </form:form>
+  <button class="btn"
+          onclick="location.href='${pageContext.request.contextPath}/${end}'">
+    Return
+  </button>
 
 </jsp:attribute>
 </my:pagetemplate>

@@ -1,8 +1,11 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -35,7 +38,7 @@ public class HeroFacadeImpl implements HeroFacade {
     public HeroDTO create(HeroDTO hero) {
         Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
         try {
-            heroService.createHero(heroEntity);
+            heroService.create(heroEntity);
         } catch (DDTroopsServiceException e) {
             logger.warn(e.getMessage(), e);
         }
@@ -117,4 +120,27 @@ public class HeroFacadeImpl implements HeroFacade {
         }
         return false;
     }
+
+    @Override
+    public HeroDTO addRole(final Long heroId, final Long roleId) {
+        Hero hero = heroService.addRole(heroId, roleId);
+        return beanMappingService.mapTo(hero, HeroDTO.class);
+    }
+
+    @Override
+    public HeroDTO removeRole(final Long heroId, final Long roleId) {
+        Hero hero = heroService.removeRole(heroId, roleId);
+        return beanMappingService.mapTo(hero, HeroDTO.class);
+
+    }
+
+    @Override
+    public Set<RoleDTO> heroRoles(final Long heroId) {
+        return heroService.getRoles(heroId)
+            .stream()
+            .map((h) -> beanMappingService.mapTo(h, RoleDTO.class))
+            .collect(Collectors.toSet());
+    }
+
+
 }

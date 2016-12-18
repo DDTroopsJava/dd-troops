@@ -102,7 +102,7 @@
         </c:if>
         <Br>
         <Br>
-        <button class="btn btn-primary"
+        <button class="btn"
                 onclick="location.href='${pageContext.request.contextPath}/${end}'">
           Return
         </button>
