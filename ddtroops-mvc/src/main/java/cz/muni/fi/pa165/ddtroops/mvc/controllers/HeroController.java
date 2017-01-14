@@ -9,7 +9,6 @@ import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
-import cz.muni.fi.pa165.ddtroops.mvc.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +54,8 @@ public class HeroController {
     public String addRoleGet(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug(" Read ({})", id);
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         model.addAttribute("hero", heroFacade.findById(id));
         // roles should be passed
@@ -73,8 +72,8 @@ public class HeroController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
 
         HeroDTO hero = heroFacade.findById(id);
@@ -87,8 +86,8 @@ public class HeroController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editHero(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
 
         log.debug("[HERO] Edit {}", id);
@@ -109,8 +108,8 @@ public class HeroController {
                          RedirectAttributes redirectAttributes,
                          HttpServletRequest request) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         formBean.setId(id);
 
@@ -142,8 +141,8 @@ public class HeroController {
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String createHero(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
         log.debug("[Hero] Create");
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
         model.addAttribute("heroCreate", new HeroDTO());
         return "heroes/create";
     }
@@ -182,8 +181,8 @@ public class HeroController {
         @PathVariable long role_id,
         UriComponentsBuilder uriBuilder, HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         heroFacade.addRole(hero_id, role_id);
 
@@ -197,8 +196,8 @@ public class HeroController {
         @PathVariable long role_id,
             UriComponentsBuilder uriBuilder, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         heroFacade.removeRole(hero_id, role_id);
 

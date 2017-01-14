@@ -31,11 +31,9 @@
             <th>Level</th>
             <th>Number of roles</th>
 
-            <my:protected>
               <th>Roles</th>
               <th>Delete</th>
               <th>Update</th>
-            </my:protected>
 
           </tr>
           </thead>
@@ -56,7 +54,6 @@
                   </td>
 
 
-                  <my:protected>
                     <td>
                       <my:a href="/${end}/addrole/${hero.id}">
                         <span class="glyphicon glyphicon-tower"> </span>
@@ -88,19 +85,16 @@
                               onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${hero.id}'">
                       </button>
                     </td>
-                </my:protected>
-
                 </tr>
             </c:forEach>
           </tbody>
         </table>
 
-      <my:protected>
               <button class="btn btn-primary"
                       onclick="location.href='${pageContext.request.contextPath}/${end}/create'">
                 Add Hero
               </button>
-       </my:protected>
+
        <button class="btn"
                onclick="location.href='${pageContext.request.contextPath}/'">
          Return

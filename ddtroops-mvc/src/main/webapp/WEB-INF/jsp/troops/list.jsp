@@ -33,8 +33,9 @@
             <my:protected>
               <th>Delete</th>
               <th>Update</th>
-              <th>Add Hero</th>
             </my:protected>
+            <th>Add Hero</th>
+
 
           </tr>
           </thead>
@@ -80,12 +81,12 @@
                               onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${troop.id}'">
                       </button>
                     </td>
-                    <td>
-                      <button class="glyphicon glyphicon-user btn"
-                              onclick="location.href='${pageContext.request.contextPath}/${end}/addhero/${troop.id}'">
-                      </button>
-                    </td>
                   </my:protected>
+                  <td>
+                    <button class="glyphicon glyphicon-user btn"
+                            onclick="location.href='${pageContext.request.contextPath}/${end}/addhero/${troop.id}'">
+                    </button>
+                  </td>
                 </tr>
 
             </c:forEach>

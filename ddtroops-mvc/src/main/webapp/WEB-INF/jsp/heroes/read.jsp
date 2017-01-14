@@ -30,11 +30,9 @@
             <th>Name</th>
             <th>Level</th>
             <th>Number of Roles</th>
-            <my:protected>
               <th>Roles</th>
               <th>Delete</th>
               <th>Update</th>
-            </my:protected>
 
           </tr>
           </thead>
@@ -52,7 +50,6 @@
               <c:out value="${hero.roles.size()}"/>
             </td>
 
-            <my:protected>
                 <td>
                     <my:a href="/${end}/addrole/${hero.id}">
                       <span class="glyphicon glyphicon-tower"> </span>
@@ -84,8 +81,6 @@
                               onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${hero.id}'">
                       </button>
                     </td>
-                </my:protected>
-
           </tr>
           </tbody>
         </table>

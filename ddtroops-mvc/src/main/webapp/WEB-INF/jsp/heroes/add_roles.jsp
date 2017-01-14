@@ -16,9 +16,7 @@
             <th>Name</th>
             <th>Attack power</th>
             <th>Defense power</th>
-            <my:protected>
-              <th>Action</th>
-            </my:protected>
+            <th>Action</th>
 
           </tr>
           </thead>
@@ -37,7 +35,6 @@
                     <c:out value="${role.defensePower}"/>
                   </td>
 
-                  <my:protected>
                     <td>
                       <c:choose>
 
@@ -63,7 +60,6 @@
 
                     </td>
 
-                  </my:protected>
                 </tr>
             </c:forEach>
           </tbody>
