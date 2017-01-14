@@ -222,8 +222,8 @@ public class TroopController {
     @RequestMapping(value = "/addhero/{id}", method = RequestMethod.GET)
     public String addHero(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         log.debug("[TROOP] Add Hero {}", id);
         TroopDTO troopDTO = troopFacade.findById(id);
@@ -241,8 +241,8 @@ public class TroopController {
             RedirectAttributes redirectAttributes, 
             UriComponentsBuilder uriBuilder) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(res != null) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         
         Long heroId = Long.parseLong(request.getParameter("heroId"));
@@ -259,8 +259,8 @@ public class TroopController {
             RedirectAttributes redirectAttributes, 
             UriComponentsBuilder uriBuilder) {
 
-        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(!(res != null && res.isEmpty())) return res;
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(!(res != null && res.isEmpty())) return res;
         
 
         log.debug("[TROOP] Remove Hero: {}", heroId);
@@ -274,7 +274,6 @@ public class TroopController {
     @RequestMapping(value = "/topn", method = RequestMethod.GET)
     public String viewTopNTroops(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
 
-        
         log.debug("[TROOP] TopN {}");
         return "/troops/topn";
     }
