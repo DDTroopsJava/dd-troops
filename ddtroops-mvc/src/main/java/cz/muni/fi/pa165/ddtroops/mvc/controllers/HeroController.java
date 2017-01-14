@@ -165,6 +165,11 @@ public class HeroController {
             return "heroes/create";
         }
 
+        if (heroFacade.findByName(formBean.getName()) != null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Hero with the name " + formBean.getName() + " already exists");
+            return "redirect:" + uriBuilder.path("/heroes/create").build().toUriString();
+        }
+
         HeroDTO hero = heroFacade.create(formBean);
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
 
