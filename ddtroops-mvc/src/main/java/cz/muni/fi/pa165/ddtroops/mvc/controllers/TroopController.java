@@ -109,7 +109,8 @@ public class TroopController {
 
 
         String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
-        if(!(res != null && res.isEmpty())) return res;
+        if (res != null) 
+            return res;
 
         formBean.setId(id);
 
@@ -124,11 +125,6 @@ public class TroopController {
 
             model.addAttribute("troopEdit", formBean);
             return "troops/edit";
-        }
-
-        if (troopFacade.findByName(formBean.getName()) != null) {
-            redirectAttributes.addFlashAttribute("alert_warning", "Troop with the name " + formBean.getName() + " already exists");
-            return "redirect:" + uriBuilder.path("/troops/edit/{id}").buildAndExpand(id).encode().toUriString();
         }
         
         log.debug("[TROOP] Update: {}", formBean);
