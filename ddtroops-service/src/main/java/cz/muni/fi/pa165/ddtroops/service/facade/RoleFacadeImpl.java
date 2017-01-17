@@ -1,7 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
+import java.util.Collection;
+
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
-import cz.muni.fi.pa165.ddtroops.dto.RoleUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.entity.Role;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -12,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 /**
  * Created by Petr Koláček
@@ -76,7 +75,7 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     @Override
-    public RoleDTO update(RoleUpdateDTO role) {
+    public RoleDTO update(RoleDTO role) {
         Role roleEntity = beanMappingService.mapTo(role, Role.class);
         try {
             Role r = roleService.update(roleEntity);

@@ -129,6 +129,11 @@ public class TroopController {
             return "troops/edit";
         }
 
+        if (troopFacade.findByName(formBean.getName()) != null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Troop with the name " + formBean.getName() + " already exists");
+            return "redirect:" + uriBuilder.path("/troops/edit/{id}").buildAndExpand(id).encode().toUriString();
+        }
+        
         log.debug("[TROOP] Update: {}", formBean);
         TroopDTO result = troopFacade.update(formBean);
 
@@ -177,6 +182,11 @@ public class TroopController {
             return "/troops/create";
         }
 
+        if (troopFacade.findByName(formBean.getName()) != null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Troop with the name " + formBean.getName() + " already exists");
+            return "redirect:" + uriBuilder.path("/troops/create").build().toUriString();
+        }
+        
         log.debug("[TROOP] Create: {}", formBean);
         TroopDTO result = troopFacade.create(formBean);
 

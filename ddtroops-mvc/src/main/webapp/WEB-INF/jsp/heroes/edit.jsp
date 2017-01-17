@@ -20,15 +20,20 @@
           </div>
         </div>
         
-        <input type="hidden" id = "level" name="level" value="${heroEdit.level}">
+        <input type="hidden" id="level" name="level" value="${heroEdit.level}">
 
-        <div>
-            <form:label path="roles" cssClass="control-label">Hero roles</form:label>
-            <div>
-                <form:checkboxes path="roles" items="${heroEdit.roles}" />
-                <form:errors path="roles" cssClass="help-block"/>
-            </div>
-        </div>
+         <div class="form-group">
+           <form:label path="roles" cssClass="col-sm-2 control-label">Roles</form:label>
+           <div class="col-sm-10">
+                <form:select path="roles" cssClass="form-control">
+                    <c:forEach items="${roles}" var="role">
+                        <form:option value="${role.id}">${role.name}</form:option>
+                    </c:forEach>
+                </form:select>
+             <p class="help-block"><form:errors path="roles" cssClass="error"/></p>
+           </div>
+         </div>
+
 
       <button class="btn btn-primary" type="submit">Update Hero</button>
     </form:form>

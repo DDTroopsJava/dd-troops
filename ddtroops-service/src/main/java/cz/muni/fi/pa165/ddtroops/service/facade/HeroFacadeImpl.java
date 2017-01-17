@@ -1,7 +1,8 @@
 package cz.muni.fi.pa165.ddtroops.service.facade;
 
+import java.util.Collection;
+
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
-import cz.muni.fi.pa165.ddtroops.dto.HeroUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
@@ -12,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 /**
  * Created by Peter Zaoral.
@@ -80,7 +79,7 @@ public class HeroFacadeImpl implements HeroFacade {
     }
 
     @Override
-    public HeroDTO update(HeroUpdateDTO hero) {
+    public HeroDTO update(HeroDTO hero) {
         Hero heroEntity = beanMappingService.mapTo(hero, Hero.class);
         try {
 
