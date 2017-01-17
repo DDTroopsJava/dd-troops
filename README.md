@@ -14,6 +14,7 @@ You can find documentation on [WIKI](https://github.com/DDTroopsJava/dd-troops/w
 ### Presentation
 
 [OverLeaf](https://www.overleaf.com/7746943zqhpjfvgxchv)
+[PDF](https://www.dropbox.com/s/pyqksdrrhodthks/dungeons-dragons-pa165%20.pdf?dl=0)
 
 ### MVC 
 
