@@ -29,12 +29,11 @@
           <tr>
             <th>Name</th>
             <th>Level</th>
-            <th>Roles</th>
+            <th>Number of roles</th>
 
-            <my:protected>
+              <th>Roles</th>
               <th>Delete</th>
               <th>Update</th>
-            </my:protected>
 
           </tr>
           </thead>
@@ -50,12 +49,16 @@
                     <c:out value="${hero.level}"/>
                   </td>
                   <td>
-                    <my:a href="/${end}/addrole/${hero.id}">
-                     Add role
-                    </my:a>
+                    <c:out value="${hero.roles.size()}"/>
+
                   </td>
 
-                  <my:protected>
+
+                    <td>
+                      <my:a href="/${end}/addrole/${hero.id}">
+                        <span class="glyphicon glyphicon-tower"> </span>
+                      </my:a>
+                    </td>
                     <td>
                       <button class="glyphicon glyphicon-trash btn" onclick=" openModal(${hero.id}) ">
                       </button>
@@ -82,19 +85,20 @@
                               onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${hero.id}'">
                       </button>
                     </td>
-                </my:protected>
-
                 </tr>
             </c:forEach>
           </tbody>
         </table>
 
-      <my:protected>
               <button class="btn btn-primary"
                       onclick="location.href='${pageContext.request.contextPath}/${end}/create'">
                 Add Hero
               </button>
-       </my:protected>
+
+       <button class="btn"
+               onclick="location.href='${pageContext.request.contextPath}/'">
+         Return
+       </button>
 
     </jsp:attribute>
 </my:pagetemplate>

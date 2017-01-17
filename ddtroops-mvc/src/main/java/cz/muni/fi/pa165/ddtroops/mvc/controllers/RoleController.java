@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class RoleController {
     @RequestMapping(value="", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
         log.debug("List all");
+
         model.addAttribute("roles", roleFacade.findAll());
         return "roles/list";
     }
@@ -47,6 +49,10 @@ public class RoleController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
+
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
+
         RoleDTO role = roleFacade.findById(id);
         roleFacade.delete(id);
         log.debug("delete role({})", id);
@@ -55,7 +61,9 @@ public class RoleController {
     }
     
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editRole(@PathVariable long id, Model model) {
+    public String editRole(@PathVariable long id, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder) {
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
         log.debug("[ROLE] Edit {}", id);
         RoleDTO roleDTO = roleFacade.findById(id);
         model.addAttribute("roleEdit", roleDTO);
@@ -70,6 +78,9 @@ public class RoleController {
                           UriComponentsBuilder uriBuilder,
                           RedirectAttributes redirectAttributes,
                           HttpServletRequest request) {
+
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         formBean.setId(id);
 
@@ -100,7 +111,9 @@ public class RoleController {
     
         
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String createRole(Model model,  HttpServletRequest request) {
+    public String createRole(Model model,  HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
         log.debug("[ROLE] Create");
         model.addAttribute("roleCreate", new RoleDTO());
         return "/roles/create";
@@ -110,7 +123,10 @@ public class RoleController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String create(@Valid @ModelAttribute("roleCreate") RoleDTO formBean, BindingResult bindingResult,
                             Model model, RedirectAttributes redirectAttributes, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
-        
+
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
+
         if (roleFacade.findByName(formBean.getName()) != null) {
              redirectAttributes.addFlashAttribute("alert_warning", "Role with name " + formBean.getName() + " already exists");
              return "redirect:" + uriBuilder.path("/roles/create").build().encode().toUriString();

@@ -2,7 +2,9 @@ package cz.muni.fi.pa165.ddtroops.service.services.impl;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -10,7 +12,6 @@ import cz.muni.fi.pa165.ddtroops.dao.HeroDao;
 import cz.muni.fi.pa165.ddtroops.dao.TroopDao;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Troop;
-import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.service.exceptions.DDTroopsServiceException;
 import cz.muni.fi.pa165.ddtroops.service.services.TroopService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +58,37 @@ public class TroopServiceImpl implements TroopService {
 
     @Override
     public Troop update(Troop t) throws DDTroopsServiceException {
-        try {
-
-            t.getHeroes().forEach(h -> {  h.setTroop(t);  heroDao.save(h);});
-            return troopDao.save(t);
+      /*  try {
+            
+            t.getHeroes().forEach(h -> h.setTroopWithoutUpdate(null));
+            
+            ArrayList<Long> heroIDs = new ArrayList<>();
+            for (Hero h : t.getHeroes()) {
+                heroIDs.add(h.getId());
+            }
+            
+            t.getHeroes().forEach(h -> heroDao.save(h));
+            
+            t.setHeroes(new HashSet<Hero>());
+            Troop t2 = troopDao.save(t);
+            
+            ArrayList<Hero> heroes = new ArrayList<>();
+            for (Long id : heroIDs) {
+                Hero h = heroDao.findOne(id);
+                heroes.add(h);
+            }
+            
+            heroes.forEach(h -> {  h.setTroop(t2);  heroDao.save(h);});
+            return troopDao.save(t2);
 
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
                     "Cannot update troop with id: " + t.getId() + " and name: " + t.getName(), ex);
+        }*/
+        try{
+            return troopDao.save(t);
+        }catch (Throwable e){
+            throw new DDTroopsServiceException("Cannot update Troop",e);
         }
     }
 
@@ -76,8 +100,12 @@ public class TroopServiceImpl implements TroopService {
     @Override
     public void delete(Troop t) throws DDTroopsServiceException {
         try {
+            t.getHeroes().forEach(h -> {
+                t.removeHero(h);
+                heroDao.save(h);
+            });
             troopDao.delete(t);
-            t.getHeroes().forEach(h -> heroDao.save(h));
+
         } catch (Throwable ex) {
             throw new DDTroopsServiceException(
                     "Cannot deleteAll troop with id: " + t.getId() + " and name: " + t.getName(), ex);
@@ -141,16 +169,50 @@ public class TroopServiceImpl implements TroopService {
     }
 
     @Override
-    public Troop removeHero(Troop t, Hero h) throws DDTroopsServiceException {
-        t.removeHero(h);
-        
-        try {
-            heroDao.save(h);
-            return update(t);
+    public Troop addHero(long troopId, long heroId){
+        Troop troop = troopDao.findOne(troopId);
+        Hero hero = heroDao.findOne(heroId);
 
-        } catch (Throwable ex) {
-            throw new DDTroopsServiceException(
-                    "Cannot remove hero from troop with id: " + t.getId() + " and name: " + t.getName(), ex);
+        if(troop == null){
+            throw new DDTroopsServiceException("Cannot find troop!");
         }
+
+        if(hero == null){
+            throw new DDTroopsServiceException("Cannot find hero!");
+        }
+
+        troop.addHero(hero);
+        troop = troopDao.save(troop);
+        heroDao.save(hero);
+        return troop;
     }
+
+    @Override
+    public Troop removeHero(long troopId, long heroId){
+        Troop troop = troopDao.findOne(troopId);
+        Hero hero = heroDao.findOne(heroId);
+
+        if(troop == null){
+            throw new DDTroopsServiceException("Cannot find troop!");
+        }
+
+        if(hero == null){
+            throw new DDTroopsServiceException("Cannot find hero!");
+        }
+
+        troop.removeHero(hero);
+        troop = troopDao.save(troop);
+        heroDao.save(hero);
+        return troop;
+    }
+
+    public Set<Hero> allHeroes(long troopId) {
+        Troop troop = troopDao.findOne(troopId);
+        if(troop == null){
+            throw new DDTroopsServiceException("Cannot find troop!");
+        }
+
+        return new HashSet<>(troop.getHeroes());
+    }
+
 }

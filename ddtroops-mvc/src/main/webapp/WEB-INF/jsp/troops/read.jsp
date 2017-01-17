@@ -25,14 +25,16 @@
         </script>
 
         <table class="table">
-          <caption>Troop ${troop.name}</caption>
+          <caption>Troop <c:out value="${troop.name}"/></caption>
           <thead>
           <tr>
             <th>Name</th>
             <th>Mission</th>
+            <th>Number of heroes</th>
             <my:protected>
               <th>Delete</th>
               <th>Update</th>
+              <th>Add hero</th>
             </my:protected>
 
           </tr>
@@ -45,6 +47,9 @@
 
                   <td>
                     <c:out value="${troop.mission}"/>
+                  </td>
+                  <td>
+                    <c:out value="${troop.heroes.size()}"/>
                   </td>
                   <my:protected>
 
@@ -74,6 +79,13 @@
                               onclick="location.href='${pageContext.request.contextPath}/${end}/edit/${troop.id}'">
                       </button>
                     </td>
+                    <td>
+                      <td>
+                        <button class="glyphicon glyphicon-user btn"
+                                onclick="location.href='${pageContext.request.contextPath}/${end}/addhero/${troop.id}'">
+                        </button>
+                      </td>
+                    </td>
                   </my:protected>
                 </tr>
 
@@ -87,7 +99,9 @@
             <tr>
               <th>Name</th>
               <th>Level</th>
-              <th>Remove from troop</th>
+              <my:protected>
+                <th>Remove from troop</th>
+              </my:protected>
             </tr>
             </thead>
             <tbody>
@@ -100,12 +114,13 @@
                       <td>
                         <c:out value="${hero.level}"/>
                       </td>
-                        <td>
-                          <button class="glyphicon glyphicon-trash btn" onclick=" openModal('hero'+${hero.id}) ">
-                          </button>
+                      <my:protected>
+                         <td>
+                           <button class="glyphicon glyphicon-trash btn" onclick=" openModal('hero'+${hero.id}) ">
+                           </button>
 
 
-                          <my:modal_template suffix="hero${hero.id}" title="Remove hero">
+                           <my:modal_template suffix="hero${hero.id}" title="Remove hero">
                               <jsp:attribute name="body">
                                   <strong>Are you sure you want to remove the hero: <c:out value="${hero.name}"/></strong>
                               </jsp:attribute>
@@ -119,7 +134,9 @@
                                 </form>
                               </jsp:attribute>
                           </my:modal_template>
-                        </td>
+                         </td>
+                      </my:protected>
+
 
                     </tr>
                 </c:forEach>
@@ -129,10 +146,11 @@
 
         <Br>
         <Br>
-        <button class="btn btn-primary"
+        <button class="btn"
                 onclick="location.href='${pageContext.request.contextPath}/${end}'">
           Return
         </button>
+
 
     </jsp:attribute>
 </my:pagetemplate>

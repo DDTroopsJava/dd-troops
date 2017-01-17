@@ -1,8 +1,10 @@
 package cz.muni.fi.pa165.ddtroops.facade;
 
 import java.util.Collection;
+import java.util.Set;
 
 import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
+import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 
 /**
  * Created by Peter Zaoral.
@@ -63,4 +65,10 @@ public interface HeroFacade {
      * @return true if all heroes was deleted, false otherwise
      */
     Boolean deleteAll();
+
+    HeroDTO removeRole(Long heroId, Long roleId);
+
+    HeroDTO addRole(Long heroId, Long roleId);
+
+    Set<RoleDTO> heroRoles(Long heroId);
 }

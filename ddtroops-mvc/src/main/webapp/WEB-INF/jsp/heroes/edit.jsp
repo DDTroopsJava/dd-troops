@@ -22,21 +22,14 @@
         
         <input type="hidden" id="level" name="level" value="${heroEdit.level}">
 
-         <div class="form-group">
-           <form:label path="roles" cssClass="col-sm-2 control-label">Roles</form:label>
-           <div class="col-sm-10">
-                <form:select path="roles" cssClass="form-control">
-                    <c:forEach items="${roles}" var="role">
-                        <form:option value="${role.id}">${role.name}</form:option>
-                    </c:forEach>
-                </form:select>
-             <p class="help-block"><form:errors path="roles" cssClass="error"/></p>
-           </div>
-         </div>
-
 
       <button class="btn btn-primary" type="submit">Update Hero</button>
     </form:form>
+
+  <button class="btn"
+          onclick="location.href='${pageContext.request.contextPath}/${end}'">
+    Return
+  </button>
 
 </jsp:attribute>
 </my:pagetemplate>

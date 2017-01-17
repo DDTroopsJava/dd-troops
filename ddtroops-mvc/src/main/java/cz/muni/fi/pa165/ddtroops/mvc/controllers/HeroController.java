@@ -9,7 +9,6 @@ import cz.muni.fi.pa165.ddtroops.dto.HeroDTO;
 import cz.muni.fi.pa165.ddtroops.dto.RoleDTO;
 import cz.muni.fi.pa165.ddtroops.facade.HeroFacade;
 import cz.muni.fi.pa165.ddtroops.facade.RoleFacade;
-import cz.muni.fi.pa165.ddtroops.mvc.tools.RoleEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,16 +36,12 @@ public class HeroController {
     @Autowired
     private RoleFacade roleFacade;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(RoleDTO.class, new RoleEditor(roleFacade));
-    }
-
     @ModelAttribute("roles")
-    public Collection<RoleDTO> categories() {
+    public Collection<RoleDTO> allRoles() {
         log.debug("roles()");
         return roleFacade.findAll();
     }
+
 
     @RequestMapping(value="", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
@@ -58,8 +51,12 @@ public class HeroController {
     }
 
     @RequestMapping(value = "/addrole/{id}", method = RequestMethod.GET)
-    public String addRoleGet(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+    public String addRoleGet(@PathVariable long id, Model model, UriComponentsBuilder uriBuilder, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug(" Read ({})", id);
+
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
+
         model.addAttribute("hero", heroFacade.findById(id));
         // roles should be passed
         return "heroes/add_roles";
@@ -75,6 +72,10 @@ public class HeroController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
+
+
         HeroDTO hero = heroFacade.findById(id);
         heroFacade.delete(id);
         log.debug("delete hero({})", id);
@@ -83,10 +84,15 @@ public class HeroController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editHero(@PathVariable long id, Model model) {
+    public String editHero(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
+
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
+
 
         log.debug("[HERO] Edit {}", id);
         HeroDTO heroDTO = heroFacade.findById(id);
+
 
         model.addAttribute("heroEdit", heroDTO);
         model.addAttribute("listOfRoles", roleFacade.findAll());
@@ -102,6 +108,8 @@ public class HeroController {
                          RedirectAttributes redirectAttributes,
                          HttpServletRequest request) {
 
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
         formBean.setId(id);
 
@@ -131,8 +139,10 @@ public class HeroController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String createHero(Model model, HttpServletRequest request) {
+    public String createHero(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
         log.debug("[Hero] Create");
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
         model.addAttribute("heroCreate", new HeroDTO());
         return "heroes/create";
     }
@@ -154,6 +164,11 @@ public class HeroController {
             return "heroes/create";
         }
 
+        if (heroFacade.findByName(formBean.getName()) != null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Hero with the name " + formBean.getName() + " already exists");
+            return "redirect:" + uriBuilder.path("/heroes/create").build().toUriString();
+        }
+
         HeroDTO hero = heroFacade.create(formBean);
         redirectAttributes.addFlashAttribute("alert_success", "Creation of " + hero.getName() + " succeeded");
 
@@ -164,16 +179,12 @@ public class HeroController {
     public String addRole(
         @PathVariable long hero_id,
         @PathVariable long role_id,
-        UriComponentsBuilder uriBuilder, HttpServletRequest request)
+        UriComponentsBuilder uriBuilder, HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        HeroDTO hero = heroFacade.findById(hero_id);
-        RoleDTO role = roleFacade.findById(role_id);
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
-        hero.getRoles().add(role);
-
-        log.debug("Adding role: {}: {}", hero.getName(), role);
-
-        heroFacade.update(hero);
+        heroFacade.addRole(hero_id, role_id);
 
         return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
     }
@@ -183,18 +194,12 @@ public class HeroController {
     public String deleteRole(
         @PathVariable long hero_id,
         @PathVariable long role_id,
-            UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+            UriComponentsBuilder uriBuilder, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
+//        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+//        if(res != null) return res;
 
-        HeroDTO hero = heroFacade.findById(hero_id);
-        RoleDTO role = roleFacade.findById(role_id);
-
-        if(hero.getRoles().contains(role)) {
-            hero.getRoles().remove(role);
-            log.debug("Deleting role: {}: {}", hero.getName(), role);
-
-            heroFacade.update(hero);
-        }
+        heroFacade.removeRole(hero_id, role_id);
 
         return "redirect:" + uriBuilder.path("/heroes/read/{hero_id}").buildAndExpand(hero_id).toUriString();
     }

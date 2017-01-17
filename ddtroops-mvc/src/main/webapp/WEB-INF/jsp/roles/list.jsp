@@ -99,6 +99,10 @@
                 Add role
               </button>
       </my:protected>
+      <button class="btn"
+              onclick="location.href='${pageContext.request.contextPath}/'">
+        Return
+      </button>
 
     </jsp:attribute>
 </my:pagetemplate>

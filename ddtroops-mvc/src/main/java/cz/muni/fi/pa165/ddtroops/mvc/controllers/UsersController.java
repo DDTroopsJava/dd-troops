@@ -7,6 +7,7 @@ import cz.muni.fi.pa165.ddtroops.dto.UserCreateDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserDTO;
 import cz.muni.fi.pa165.ddtroops.dto.UserUpdateDTO;
 import cz.muni.fi.pa165.ddtroops.facade.UserFacade;
+import cz.muni.fi.pa165.ddtroops.mvc.Tools;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.UserCreateDTOValidator;
 import cz.muni.fi.pa165.ddtroops.mvc.validators.UserUpdateDTOValidator;
 import org.slf4j.Logger;
@@ -51,12 +52,10 @@ public class UsersController {
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
-    public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
+    public String list(Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
         log.debug("[USERS] List all");
-        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
-        if(user == null || !user.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
         model.addAttribute("users", userFacade.findAll());
         return "users/list";
     }
@@ -77,11 +76,8 @@ public class UsersController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String delete(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
-        UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
-
-        if(!logUser.isAdmin()){
-            return "redirect:" + uriBuilder.path("/").build().toUriString();
-        }
+        String res = Tools.redirectNonAdmin(request, uriBuilder, redirectAttributes);
+        if(res != null) return res;
 
         UserDTO user = userFacade.findById(id);
         userFacade.delete(id);
@@ -91,14 +87,13 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editUser(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder) {
+    public String editUser(@PathVariable long id, Model model, HttpServletRequest request, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
 
         UserDTO logUser = (UserDTO) request.getSession().getAttribute("user");
 
         if(!logUser.isAdmin() && logUser.getId() != id){
             return "redirect:" + uriBuilder.path("/").build().toUriString();
         }
-
 
         log.debug("[USER] Edit {}", id);
         UserDTO userDTO = userFacade.findById(id);
@@ -128,14 +123,16 @@ public class UsersController {
             formBean.setAdmin(false);
         }
 
-
+        log.debug("User - update");
         if (bindingResult.hasErrors()) {
+            log.debug("User - has errors:");
+
             for (ObjectError ge : bindingResult.getGlobalErrors()) {
-                log.trace("ObjectError: {}", ge);
+                log.debug("ObjectError: {}", ge);
             }
             for (FieldError fe : bindingResult.getFieldErrors()) {
                 model.addAttribute(fe.getField() + "_error", true);
-                log.trace("FieldError: {}", fe);
+                log.debug("FieldError: {}", fe);
             }
             model.addAttribute("userEdit", formBean);
             return "users/edit";

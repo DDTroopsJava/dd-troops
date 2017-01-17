@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.ddtroops.dao;
 
+import static org.testng.Assert.*;
+
 import cz.muni.fi.pa165.ddtroops.PersistenceSampleApplicationContext;
 import cz.muni.fi.pa165.ddtroops.entity.Hero;
 import cz.muni.fi.pa165.ddtroops.entity.Role;
@@ -12,8 +14,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 
 /**
@@ -149,14 +149,6 @@ public class RoleDaoTest extends AbstractTestNGSpringContextTests {
         roleDao.delete(role3);
         assertEquals(roleDao.findAll().size(), 2, "Failed to delete role.");
         assertFalse(roleDao.findAll().contains(role3), "Failed to delete the right role.");
-    }
-
-    @Test
-    public void testDeleteExistingRoleWithHero() throws Exception {
-        role1.addHero(hero);
-        roleDao.delete(role1);
-        assertEquals(roleDao.findAll().size(), 2, "Failed to delete role.");
-        assertFalse(roleDao.findAll().contains(role1), "Failed to delete the right role.");
     }
 
 }

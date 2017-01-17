@@ -15,7 +15,7 @@
         <div class="form-group">
           <label form="number" class="col-sm-2 control-label">Number of results</label>
           <div class="col-sm-10">
-             <input type="number" name="number" id="number" class="form-control" required/>
+              <input type="number" name="number" id="number" class="form-control" required/>
           </div>
         </div>
        <div class="form-group">
@@ -67,7 +67,10 @@
            
     <Br>
     <Br>
-    <button class="btn btn-primary" type="button" name="back" onclick="history.back()">Return</button>
+    <button class="btn"
+            onclick="location.href='${pageContext.request.contextPath}/${end}'">
+      Return
+    </button>
 
 </jsp:attribute>
 </my:pagetemplate>

@@ -1,10 +1,17 @@
 package cz.muni.fi.pa165.ddtroops.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by xgono
@@ -83,6 +90,10 @@ public class Troop implements Comparable<Troop> {
     public Set<Hero> getHeroes() {
         return Collections.unmodifiableSet(heroes);
     }
+    
+    public void setHeroes(Set<Hero> heroes) {
+        this.heroes = heroes;
+    }
 
     public void addHero(Hero hero) {
         heroes.add(hero);
@@ -119,21 +130,6 @@ public class Troop implements Comparable<Troop> {
         return heroes.size();
     }
 
-
-    @PreRemove
-    private void removeHeroesFromTroop() {
-        for (Hero hero : heroes) {
-            hero.setTroopWithoutUpdate(null);
-        }
-    }
-
-    @PreUpdate
-    @PrePersist
-    private void updateHeroesFromTroop() {
-        for (Hero hero : heroes) {
-            hero.setTroopWithoutUpdate(this);
-        }
-    }
 
     @Override
     public boolean equals(Object obj) {
