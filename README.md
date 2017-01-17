@@ -11,6 +11,10 @@ This is a School project for Java classes.
 
 You can find documentation on [WIKI](https://github.com/DDTroopsJava/dd-troops/wiki).
 
+### Presentation
+
+[OverLeaf](https://www.overleaf.com/7746943zqhpjfvgxchv)
+
 ### MVC 
 
 * RUN: ``mvn clean install && cd ddtroops-mvc && mvn tomcat7:run``
